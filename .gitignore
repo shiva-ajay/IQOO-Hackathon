@@ -28,3 +28,4 @@ app/libs/*.aar
 .claude/sessions/
 .claude/state/
 ui_*.xml
+app/src/main/cpp/libs/

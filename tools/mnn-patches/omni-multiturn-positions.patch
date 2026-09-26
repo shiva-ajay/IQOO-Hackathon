@@ -1,0 +1,35 @@
+diff --git a/transformers/llm/engine/src/omni.cpp b/transformers/llm/engine/src/omni.cpp
+index 4df7ed6..1d94a9b 100644
+--- a/transformers/llm/engine/src/omni.cpp
++++ b/transformers/llm/engine/src/omni.cpp
+@@ -2235,13 +2235,16 @@ VARP Omni::gen_position_ids(int seq_len) {
+     auto ptr = positionIds->writeMap<int>();
+     if (mContext->gen_seq_len > 0) {
+         for (int i = 0; i < seq_len; ++i) {
+-            auto pos = mContext->gen_seq_len + mPositionIds.back() + i;
++            // FixLens patch: prefill positions are offset by the KV length (all_seq_len), so decode must be too;
++            // upstream omits it, which breaks every turn after the first when reuse_kv=true.
++            auto pos = mTurnPosOffset + mContext->gen_seq_len + mPositionIds.back() + i;
+             for (int axis = 0; axis < axes; axis++) {
+                 ptr[i + seq_len * axis] = pos;
+             }
+         }
+     } else {
+         bool hunyuan = mConfig->config_.value("vision_type", "") == "hunyuan_vl";
++        mTurnPosOffset = hunyuan ? 0 : mContext->all_seq_len;
+         auto axisValue = [this](int axis, int i) {
+             const std::vector<int>* values = nullptr;
+             if (axis == 0) {
+diff --git a/transformers/llm/engine/src/omni.hpp b/transformers/llm/engine/src/omni.hpp
+index 87f5746..73a786d 100644
+--- a/transformers/llm/engine/src/omni.hpp
++++ b/transformers/llm/engine/src/omni.hpp
+@@ -248,6 +248,8 @@ private:
+     // m_rope position ids
+     void addPositionIds(int t, int h = -1, int w = -1);
+     MropeInfo mPositionIds;
++    // FixLens patch: KV length when the current prompt was prefilled (multi-turn reuse_kv).
++    int mTurnPosOffset = 0;
+     bool mIsEmbedding = false;
+ };
+ }

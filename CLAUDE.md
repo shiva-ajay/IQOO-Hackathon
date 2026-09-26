@@ -348,6 +348,13 @@ Notes:
   single `libMNN.so` from `project/android/build_64.sh`. Images go in the prompt as `<img>/abs/path.jpg</img>`; tokens
   stream via `GenerateProgressListener.onProgress` (return true = stop). Qwen3-VL `image_max_pixels` defaults to 16.7 MP,
   so cap it. Details and the M1 transplant plan: [docs/mnn-donor-notes.md](docs/mnn-donor-notes.md).
+- **Sessions + memory (2026-09-26), see [docs/sessions-plan.md](docs/sessions-plan.md):** the app opens on a sessions
+  list (models load behind it); each session is `filesDir/sessions/<id>/session.json` + keyframes. The VLM keeps one
+  session's conversation in the KV cache (`reuse_kv`, `use_template:false`, `max_all_tokens` 4096; prompts are raw Qwen
+  chat-template text built in `guide/FixyPrompts.kt`); cancelled turns and side requests are rolled back with
+  `eraseHistory`. `guide/ConversationContext.kt` rebuilds from notes (`guide/MemoryRules.kt`) + last 2 turns on
+  session switch or near the limit. **libMNN.so must include `tools/mnn-patches/omni-multiturn-positions.patch`**
+  (upstream Qwen-VL decode positions ignore the KV offset, which breaks every turn after the first).
 - MNN Chat on the phone: Play build `com.alibaba.mnnllm.android.release` v0.8.4. Local models are loaded from
   `/data/local/tmp/mnn_models/<name>/`.
 

@@ -1,0 +1,6 @@
+<resources>
+    <!-- FixLens palette (design/logo/README.md) -->
+    <color name="fixlens_ink">#FF0F1C2E</color>
+    <color name="fixlens_amber">#FFFF9F1C</color>
+    <color name="fixlens_paper">#FFF6F1E7</color>
+</resources>
