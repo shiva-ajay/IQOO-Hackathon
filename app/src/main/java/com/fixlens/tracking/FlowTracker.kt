@@ -52,7 +52,8 @@ class FlowTracker(private val onReGround: (labels: List<String>) -> Unit) {
     data class Target(val box: PxBox, val label: String, val isPoint: Boolean = false)
 
     /** Targets to follow, all on the frame stamped [keyframeTimestampNs]. */
-    class Seed(val targets: List<Target>, val keyframeTimestampNs: Long, val isCurrent: () -> Boolean)
+    /** [quiet]: a silent re-ground of parts already shown, so the UI re-locks briefly instead of replaying the full lock-on. */
+    class Seed(val targets: List<Target>, val keyframeTimestampNs: Long, val quiet: Boolean = false, val isCurrent: () -> Boolean)
 
     private sealed interface Command {
         class Start(val seed: Seed) : Command
@@ -90,7 +91,7 @@ class FlowTracker(private val onReGround: (labels: List<String>) -> Unit) {
         var smooth: PxBox = ref
     }
 
-    private class Track(val seedId: Int, val keyframeTs: Long, val expand: Float) {
+    private class Track(val seedId: Int, val keyframeTs: Long, val expand: Float, val quiet: Boolean) {
         val targets = ArrayList<TrackedTarget>()
         /** The area the targets span, on the seed frame and now. */
         var refUnion = PxBox(0f, 0f, 0f, 0f)
@@ -157,7 +158,7 @@ class FlowTracker(private val onReGround: (labels: List<String>) -> Unit) {
             _state.value = MarkerState(
                 t.seedId,
                 t.targets.map { MarkerState.Target(it.smooth, it.label, it.isPoint) },
-                ring.width, ring.height, t.confidence, t.status, ring.timestamp(0),
+                ring.width, ring.height, t.confidence, t.status, ring.timestamp(0), t.quiet,
             )
         }
         // Seed frames include the fast-forward, which is logged on its own.
@@ -177,7 +178,7 @@ class FlowTracker(private val onReGround: (labels: List<String>) -> Unit) {
         val frame = ring.frame(age)
         val targets = seed.targets.map { TrackedTarget(it.box.clampTo(w, h), it.label, it.isPoint) }
         val (points, expand) = detect(frame, union(targets.map { it.ref }))
-        val t = Track(++seedCounter, seed.keyframeTimestampNs, expand)
+        val t = Track(++seedCounter, seed.keyframeTimestampNs, expand, seed.quiet)
         t.targets += targets
         t.refUnion = union(targets.map { it.ref })
         t.rawUnion = t.refUnion

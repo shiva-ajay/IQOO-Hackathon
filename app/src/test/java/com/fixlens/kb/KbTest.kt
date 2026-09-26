@@ -1,6 +1,9 @@
 package com.fixlens.kb
 
+import com.fixlens.guide.MemoryRules
 import com.fixlens.kb.Retriever.Match
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -74,21 +77,70 @@ class KbTest {
         assertEquals(Match.None, r.find("OE"))
     }
 
-    @Test fun `stage 2 keywords with a clear winner`() {
+    private val generic = KnowledgeBase(
+        "t",
+        listOf(
+            entry("drain", appliance = "washing_machine", brand = "generic", aliases = listOf("not draining")).copy(
+                brandCodes = listOf(BrandCode("LG", listOf("OE"), listOf("oh e")), BrandCode("Samsung", listOf("5C", "5E"))),
+            ),
+            entry("door", appliance = "washing_machine", brand = "generic", aliases = listOf("door won't open")).copy(
+                brandCodes = listOf(BrandCode("Samsung", listOf("dC")), BrandCode("LG", listOf("dE"))),
+            ),
+            entry("ac_cool", appliance = "air_conditioner", brand = "generic", aliases = listOf("not cooling")),
+            entry("fridge_cool", appliance = "refrigerator", brand = "generic", aliases = listOf("not cooling")),
+        ),
+    )
+
+    @Test fun `brand codes lead to the generic entry`() {
+        val r = Retriever(generic)
+        assertEquals("drain", found(r.find("it's showing 5C")))
+        assertEquals("drain", found(r.find("my LG says oh e")))
+        assertEquals("door", found(r.find("error dC on my samsung")))
+        // A letters-only code needs a cue or a brand, so "dE" in passing isn't read as a code.
+        assertEquals(Match.None, r.find("de"))
+        // With the brand known, another brand's code doesn't count.
+        assertEquals(Match.None, r.find("error 5C", brand = "LG"))
+    }
+
+    @Test fun `negations match either way`() {
+        val r = Retriever(generic)
+        assertEquals("drain", found(r.find("my washing machine won't drain", appliance = "washing_machine")))
+        assertEquals("door", found(r.find("the door doesn't open", appliance = "washing_machine")))
+    }
+
+    @Test fun `the appliance decides a symptom two appliances share`() {
+        val r = Retriever(generic)
+        assertEquals(Match.None, r.find("it's not cooling"))
+        val (appliance, _) = MemoryRules.kbContext("my fridge is not cooling", null)
+        assertEquals("fridge_cool", found(r.find("my fridge is not cooling", appliance)))
+        val (ac, _) = MemoryRules.kbContext("the AC isn't cooling", null)
+        assertEquals("ac_cool", found(r.find("the AC isn't cooling", ac)))
+    }
+
+    @Test fun `every KB appliance can be named by the user`() {
+        val unknown = bundled.entries.map { it.appliance }.toSet() - MemoryRules.KB_APPLIANCES
+        assertTrue("appliances the notes never name: $unknown", unknown.isEmpty())
+    }
+
+    @Serializable
+    private data class Query(val q: String, val expect: String, val from: String = "")
+
+    /** tools/kb/test_queries.json, written with the entries: each question, looked up the way the app does. */
+    @Test fun `the test queries find their entries`() {
+        val queries = Json.decodeFromString<List<Query>>(File("../tools/kb/test_queries.json").readText())
         val r = Retriever(bundled)
-        val oil = r.find("how do I check the engine oil?")
-        assertEquals("car_check_engine_oil", found(oil))
-        assertEquals(2, (oil as Match.Found).stage)
-        assertEquals("car_check_coolant", found(r.find("where do I add coolant")))
-        assertEquals("car_top_up_washer_fluid", found(r.find("I need to fill the wiper fluid")))
-        assertEquals("car_electrical_wiring", found(r.find("can you help me fix the wiring")))
-        assertEquals("laptop_open_bottom_cover", found(r.find("how do I open this laptop to clean it")))
+        val wrong = queries.mapNotNull { q ->
+            val (appliance, brand) = MemoryRules.kbContext(q.q, null)
+            val got = (r.find(q.q, appliance, brand) as? Match.Found)?.entry?.id ?: "NONE"
+            if (got == q.expect) null else "[${q.from}] \"${q.q}\" -> $got, expected ${q.expect} (appliance $appliance)"
+        }
+        assertTrue("${wrong.size} of ${queries.size} wrong:\n" + wrong.joinToString("\n"), wrong.isEmpty())
     }
 
     @Test fun `no match refuses rather than guessing`() {
         val r = Retriever(bundled)
         assertEquals(Match.None, r.find("what's the weather like"))
-        assertEquals(Match.None, r.find("my fridge is making a noise"))
+        assertEquals(Match.None, r.find("my printer has a paper jam", MemoryRules.kbContext("my printer has a paper jam", null).first))
     }
 
     @Test fun `appliance narrows the search`() {

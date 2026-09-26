@@ -187,6 +187,26 @@ passed, so there's no MediaPipe switch. Deviations from the plan above:
 
 **Done when:** spoken question → caption → spoken + captioned answer + marker, with barge-in.
 
+**TTS voice (parked research, 2026-09-26; decide when M3 starts):** Google TTS may sound too robotic.
+Candidates that all run through the sherpa-onnx AAR we already ship (1.13.8 has Kitten, Supertonic,
+Pocket, Kokoro, Matcha and VITS/Piper configs, plus `generateWithCallback` for chunked audio):
+- Shortlist: **Kitten TTS v0.8 mini/micro** (80M/40M) and **Supertonic 3** (99M, int8; check its OpenRAIL licence).
+- Also listen to: Kyutai **Pocket TTS** (100M, streaming).
+- Safe fallback: **Piper** medium.
+- Avoid: **Kokoro** (slower than real time on a 2019 phone).
+- Last resort: Google TTS.
+
+Plan: listen on the laptop first, then measure on the phone: time to first audio (target < 300 ms)
+and RTF, both with the VLM idle and while it is generating. Keep a `SpeechOutput` interface with
+Google as a one-line fallback. Speak sentence by sentence, never raw tokens. Give TTS 2 threads.
+This needs CLAUDE.md §11/§13 and STACK.md updated once chosen.
+
+**Voice out: done (2026-09-27), Piper `en_US-lessac-medium`** (Supertonic 3 was tried first: too heavy, and its
+fast mode sounded echoey). Built as `voice/SpeechChunker` + `voice/SpeechOutput` (see
+CLAUDE.md §11 and §15 for the design and the phone numbers). The Google fallback wasn't built: without the voice
+model Fixy answers in text only. Left: try a spoken question and mic barge-in by hand, then tick M3; optionally
+highlight the caption being spoken.
+
 ---
 
 ## M4 — KB + retrieval + guide state machine (~3 h)
@@ -214,7 +234,7 @@ KB content can be written **during Red Light** (no laptop needed) — do it earl
 - **Verify the DRAFT KB** against the demo car's manual (docs/kb-collection-plan.md §5) and pick the washer brand.
 - Stage 3 (LLM router) isn't built. By user decision, "unknown" gets a normal VLM answer with pointing but no steps,
   instead of the refusal line; `call_technician` and `escalate_if` still escalate.
-- TTS (M3) isn't built, so the steps are shown but not spoken yet.
+- Steps, safety lines and the greeting are now spoken verbatim (M3 voice out).
 - Pointing at a part that isn't in view often marks something else; consider a yes/no visibility check first (~2.5 s).
 
 ---

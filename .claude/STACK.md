@@ -18,7 +18,7 @@ without asking.
 | Tracking | **OpenCV Lucas-Kanade optical flow + RANSAC homography** | OpenCV Android SDK (Maven Central) |
 | Marker overlay | Compose `Canvas` | Built-in |
 | Speech-to-text | **sherpa-onnx**: Silero VAD + **Moonshine Base English (int8)** | sherpa-onnx GitHub releases (AAR + models) |
-| Text-to-speech | **Android `TextToSpeech`**, Google engine, offline English voice | On device |
+| Text-to-speech | **Piper** `en_US-lessac-medium` via the sherpa-onnx `OfflineTts` already in the AAR | sherpa-onnx `tts-models` release |
 | Knowledge base | **JSON in assets** + `kotlinx.serialization`, 4-stage lookup | Gradle |
 | Concurrency | Kotlin coroutines | Gradle |
 | Persona | Fixy: hard-coded greeting + system prompt (no training) | Our code |
@@ -55,11 +55,12 @@ without asking.
 - Audio: `AudioRecord`, 16 kHz, mono, PCM 16-bit, source `VOICE_COMMUNICATION`.
 
 ### Text-to-speech
-- Android `TextToSpeech`. Device setup: preferred engine = Google Speech Recognition & Synthesis,
-  offline English voice downloaded, verified in airplane mode.
-- `setSpeechRate(0.95f)`, `AudioAttributes.USAGE_ASSISTANT`, `QUEUE_ADD` per sentence,
-  `UtteranceProgressListener` for progress.
-- (Out of scope for now: Piper via sherpa-onnx; don't use Kokoro, which is too slow on mobile.)
+- **Piper** `vits-piper-en_US-lessac-medium.tar.bz2` (sherpa-onnx `tts-models` release): `en_US-lessac-medium.onnx`
+  (63 MB), `tokens.txt`, `espeak-ng-data/`. 22.05 kHz, single speaker. No new library: `OfflineTtsVitsModelConfig`.
+- Speed 1.0, 2 ORT threads. `AudioTrack` float stream, `USAGE_MEDIA`, `PERFORMANCE_MODE_LOW_LATENCY`. Text is
+  chunked by clause/sentence and pipelined (see CLAUDE.md §11).
+- Compare voices on the laptop with `tools/tts/audition.py` (sherpa-onnx from pip in a scratch venv).
+- (Tried and dropped: Supertonic 3, heavier and echoey in its fast mode. Don't use Kokoro, which is too slow on mobile.)
 
 ---
 
@@ -106,7 +107,8 @@ Enable the `kotlinx-serialization` plugin.
 | `silero_vad.onnx` | `app/src/main/assets/models/` | ~2 MB |
 | Moonshine Base English int8 (+ tokens) | `app/src/main/assets/models/moonshine-base-en/` | tens of MB |
 | `fixlens_kb.json` | `app/src/main/assets/kb/` | a few KB |
-| Earcon / "let me look" sound | `app/src/main/res/raw/` | small |
+| Piper voice (Fixy's voice) | App external files dir `tts/piper/` (adb push) | ~80 MB with espeak-ng-data |
+| "Let me look." fillers | Rendered by the voice at startup (no file) | — |
 
 ---
 
@@ -138,7 +140,8 @@ Enable the `kotlinx-serialization` plugin.
 | Moonshine transcript | ~0.2–0.5 s |
 | KB retrieval (stages 1–2) | < 5 ms |
 | VLM time to box line | ~1–2 s |
-| First spoken word after the user stops talking | ~2–3 s |
+| First spoken word after the user stops talking | ~2–3 s (a filler plays at once meanwhile) |
+| First answer audio after its first clause is generated | ~0.3 s idle, ~0.4 s while the VLM decodes |
 | Tracker update per frame | < 10 ms (to sustain ~30 fps) |
 | Model load at startup | 5–10 s, behind a splash screen |
 
@@ -158,5 +161,5 @@ Log each of these under the `FixLens` tag.
 
 - Hybrid KB: SQLite FTS5 + sqlite-vec + EmbeddingGemma-300M (RRF fusion).
 - QLoRA fine-tune of Qwen VL on repair-grounding data (Colab or cloud GPU).
-- Wake word "Hey Fixy" (sherpa-onnx keyword spotting), Piper voice, Telugu/Hindi.
+- Wake word "Hey Fixy" (sherpa-onnx keyword spotting), Telugu/Hindi voices.
 - More appliances (refrigerators, water purifiers, inverters, routers) and blinking-LED diagnosis.

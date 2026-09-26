@@ -1,0 +1,183 @@
+{
+  "category": "television",
+  "entries": [
+    {
+      "id": "television_no_power",
+      "appliance": "television",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "TV won't turn on",
+      "meaning": "Let's find out why the TV won't turn on.",
+      "symptoms": ["tv won't turn on", "no power", "tv is dead", "standby light is off", "red light not on", "nothing happens when I press power"],
+      "aliases": ["won't turn on", "not turning on", "won't switch on", "tv not switching on", "no power on the tv", "tv completely dead", "power not coming"],
+      "severity": "diy",
+      "escalate_if": ["light blinking", "light flashing", "burning smell", "sparks", "cord damaged"],
+      "safety": [
+        "Keep your hands dry, and pull plugs out by the plug, never by the cord."
+      ],
+      "steps": [
+        {"n": 1, "say": "Look at the small standby light on the TV's bottom edge. Is it on, off, or blinking?",
+         "target": "the small standby light on the bottom edge of the TV, usually under the logo", "verify": null,
+         "caution": "A blinking light usually means a fault inside the TV."},
+        {"n": 2, "say": "Press the power button on the TV itself, not on the remote.",
+         "target": "the power button on the TV, usually under the logo at the bottom edge", "verify": null,
+         "caution": "On some models it's on the back or side. If the TV turns on, the remote is the problem."},
+        {"n": 3, "say": "Push the power cord firmly into the back of the TV and into the wall socket.",
+         "target": "the power cord where it plugs into the back of the TV", "verify": null,
+         "caution": "If the cord is cut, crushed or scorched, don't plug it in."},
+        {"n": 4, "say": "Plug a lamp or phone charger into the same socket to check the socket works.",
+         "target": "the wall socket the TV is plugged into", "verify": null,
+         "caution": "If the TV is on a power strip or extension, plug it straight into the wall."},
+        {"n": 5, "say": "Unplug the TV, wait two minutes, then plug it back in and press power.",
+         "target": null, "verify": null,
+         "caution": "After plugging in, give it up to twenty seconds to start."},
+        {"n": 6, "say": "If the standby light stays off or keeps blinking, please call a technician.",
+         "target": null, "verify": null, "caution": null}
+      ],
+      "source": "Samsung India 'TV is not turning on' + Samsung 2025 TV Simple User Guide (BN68-20833E) troubleshooting; LG SG help library 'If Your LG TV Won't Turn On'; TCL 'Troubleshoot a TV that will not power on'; Sony TV Help Guide 'The TV does not turn on'; LG + Samsung manual safety sections; checked 2026-09-27"
+    },
+    {
+      "id": "television_sound_no_picture",
+      "appliance": "television",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "TV has sound but no picture",
+      "meaning": "Let's find out why you can hear the TV but the screen stays black.",
+      "symptoms": ["sound but no picture", "black screen with sound", "screen is black", "can hear it but can't see anything", "audio but no video", "screen went dark"],
+      "aliases": ["no picture", "black screen", "screen stays black", "picture gone", "display not coming", "blank screen", "only sound coming"],
+      "severity": "diy",
+      "escalate_if": ["burning smell", "lines on the screen", "cracked screen", "still black screen"],
+      "safety": [
+        "Never open the back of the TV; there's dangerous voltage inside.",
+        "Switch off the TV and the set-top box before you unplug or plug in any cable."
+      ],
+      "steps": [
+        {"n": 1, "say": "Press Home or Menu on the remote. If a menu appears, the screen itself is working.",
+         "target": "the Home or Menu button on the TV remote", "verify": null,
+         "caution": "A picture-off or screen-off setting also wakes up when you press a button."},
+        {"n": 2, "say": "Press Input or Source on the remote and pick the input your set-top box uses.",
+         "target": "the Input or Source button on the TV remote", "verify": null, "caution": null},
+        {"n": 3, "say": "Make sure the set-top box or other device is switched on.",
+         "target": "the set-top box or device connected to the TV", "verify": null, "caution": null},
+        {"n": 4, "say": "With both switched off, pull out the HDMI cable at both ends and push it back firmly.",
+         "target": "the HDMI cable plugged into the back or side of the TV", "verify": null,
+         "caution": "If you have a spare HDMI cable or a free HDMI socket, try that too."},
+        {"n": 5, "say": "Unplug the TV and the set-top box for a minute, then plug both back in.",
+         "target": null, "verify": null, "caution": null},
+        {"n": 6, "say": "If no menu ever appears, or the picture stays black, please call a technician.",
+         "target": null, "verify": null, "caution": null}
+      ],
+      "source": "LG UK help library 'LG TV has sound but no picture' + LG SG 'Won't Turn On' FAQ; Samsung US 'no picture or black screen' + Samsung Gulf 'powers on but black screen'; TCL 'My TV is on, but there is no picture or sound' + TCL Roku 'has power but no video'; Sony help guides (Picture off, no picture from connected equipment); LG + Samsung manual safety; checked 2026-09-27"
+    },
+    {
+      "id": "television_no_signal",
+      "appliance": "television",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "TV shows no signal",
+      "meaning": "Let's get a signal back to your TV.",
+      "symptoms": ["no signal", "says no signal", "check signal cable", "set-top box not showing", "channels not coming", "hdmi not detected"],
+      "aliases": ["no signal on tv", "signal not coming", "weak signal", "tata play not showing", "dth not working", "cable tv not working", "input not detected"],
+      "severity": "diy",
+      "escalate_if": ["burning smell", "cable damaged", "still no signal"],
+      "safety": [
+        "Switch off the TV and the set-top box before you unplug or plug in any cable."
+      ],
+      "steps": [
+        {"n": 1, "say": "Press Input or Source on the remote and choose the input your device is plugged into.",
+         "target": "the Input or Source button on the TV remote", "verify": null,
+         "caution": "If the box is in the HDMI 1 socket, choose HDMI 1."},
+        {"n": 2, "say": "Make sure the set-top box or other device is switched on.",
+         "target": "the set-top box or device connected to the TV", "verify": null, "caution": null},
+        {"n": 3, "say": "With both switched off, pull out the HDMI cable at both ends and push it back firmly.",
+         "target": "the HDMI cable plugged into the back or side of the TV", "verify": null,
+         "caution": "Try another HDMI socket or a spare cable too, then pick that input."},
+        {"n": 4, "say": "If you use an antenna or cable wire, push it firmly into its socket on the TV.",
+         "target": "the round antenna or cable socket on the back of the TV", "verify": null, "caution": null},
+        {"n": 5, "say": "Switch the set-top box off at the wall for thirty seconds, then back on.",
+         "target": "the set-top box connected to the TV", "verify": null,
+         "caution": "Give the box a minute or two to start up."},
+        {"n": 6, "say": "If it still says no signal, please call your set-top box provider or a technician.",
+         "target": null, "verify": null, "caution": null}
+      ],
+      "source": "Samsung 'My TV doesn't detect a device connected via HDMI' + Samsung US 'no picture or black screen'; LG UK 'has sound but no picture' (HDMI + set-top box reset); TCL Fire TV 'Troubleshooting common screen issues' (No Signal) + TCL 'no picture or sound'; Sony i-Manual 'Picture' troubleshooting; checked 2026-09-27"
+    },
+    {
+      "id": "television_remote_not_working",
+      "appliance": "television",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "TV remote not working",
+      "meaning": "Let's find out why the remote isn't working.",
+      "symptoms": ["remote not working", "remote does nothing", "tv not responding to remote", "buttons on the remote don't work", "remote stopped working"],
+      "aliases": ["tv remote not working", "remote dead", "remote not responding", "remote batteries", "change remote batteries", "remote control problem"],
+      "severity": "diy",
+      "escalate_if": ["battery leaking", "remote got wet", "still not working"],
+      "safety": [
+        "Keep batteries away from small children, and don't mix old and new ones."
+      ],
+      "steps": [
+        {"n": 1, "say": "Press the power button on the TV itself to check the TV is working.",
+         "target": "the power button on the TV, usually under the logo at the bottom edge", "verify": null,
+         "caution": "On some models it's on the back or side."},
+        {"n": 2, "say": "Move anything blocking the space between the remote and the front of the TV.",
+         "target": "the remote sensor window on the bottom front edge of the TV", "verify": null,
+         "caution": "A soundbar in front of the TV can block the sensor."},
+        {"n": 3, "say": "Take out the batteries, hold the remote's power button for eight seconds, then fit new ones.",
+         "target": "the battery cover on the back of the TV remote", "verify": null,
+         "caution": "Match the plus and minus marks inside the cover."},
+        {"n": 4, "say": "Point the remote straight at the bottom front of the TV and press power.",
+         "target": "the remote sensor window on the bottom front edge of the TV", "verify": null, "caution": null},
+        {"n": 5, "say": "Point the remote at this phone's camera and press a button. Look for a flashing light at its tip.",
+         "target": "the small dark window at the front tip of the TV remote", "verify": null,
+         "caution": "This camera test doesn't work on every phone."},
+        {"n": 6, "say": "No flashing light means the remote needs replacing. If it flashes but the TV ignores it, please call a technician.",
+         "target": null, "verify": null, "caution": null}
+      ],
+      "source": "Samsung US 'Samsung remote is not working' + Samsung 2025 TV Simple User Guide; LG SG 'If Your LG TV Won't Turn On' (phone camera test) + LG TV Safety and Reference manual; TCL Android TV remote troubleshooting; Sony TV Help Guide 'The remote control does not operate'; checked 2026-09-27"
+    },
+    {
+      "id": "television_damage_or_burning_smell",
+      "appliance": "television",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "TV damaged, smoking or showing lines",
+      "meaning": "Please don't open the TV's back; there's dangerous voltage inside. If you see smoke or smell burning, unplug it.",
+      "symptoms": ["cracked screen", "lines on the screen", "burning smell from the tv", "smoke from the tv", "sparks", "water inside the tv", "tv fell over", "buzzing or crackling inside"],
+      "aliases": ["broken screen", "screen cracked", "vertical lines", "horizontal lines", "open the back of the tv", "open the tv", "replace the backlight", "repair the tv board", "tv smells burnt"],
+      "severity": "call_technician",
+      "escalate_if": ["smoke", "sparks", "burning smell"],
+      "safety": [
+        "Unplug the TV right away if you see smoke or sparks, or smell burning.",
+        "Don't open the back cover; there are no parts inside you can fix yourself."
+      ],
+      "steps": [],
+      "source": "LG TV Safety and Reference owner's manual (MFL71040005) + Samsung 2025 TV Simple User Guide safety ('do not remove cover (or back)', unplug on smoke/odour); TCL Roku 'has power but no video' (unplug on smoke, sparks, burning smell, cracked screen; lines = contact support); checked 2026-09-27"
+    }
+  ],
+  "test_queries": [
+    {"q": "my tv won't turn on", "expect": "television_no_power"},
+    {"q": "the tv is completely dead", "expect": "television_no_power"},
+    {"q": "tv not switching on and the red light is not on", "expect": "television_no_power"},
+    {"q": "nothing happens when I press power", "expect": "television_no_power"},
+    {"q": "I can hear sound but there's no picture", "expect": "television_sound_no_picture"},
+    {"q": "black screen but the audio is playing", "expect": "television_sound_no_picture"},
+    {"q": "the screen went dark", "expect": "television_sound_no_picture"},
+    {"q": "tv says no signal", "expect": "television_no_signal"},
+    {"q": "my tata play is not showing on the tv", "expect": "television_no_signal"},
+    {"q": "it says check signal cable", "expect": "television_no_signal"},
+    {"q": "my tv remote is not working", "expect": "television_remote_not_working"},
+    {"q": "the tv is not responding to the remote", "expect": "television_remote_not_working"},
+    {"q": "do I need to change the remote batteries", "expect": "television_remote_not_working"},
+    {"q": "there are vertical lines on my tv", "expect": "television_damage_or_burning_smell"},
+    {"q": "the screen is cracked", "expect": "television_damage_or_burning_smell"},
+    {"q": "how do I open the back of the tv to replace the backlight", "expect": "television_damage_or_burning_smell"},
+    {"q": "how do I mount my tv on the wall", "expect": "NONE"},
+    {"q": "which streaming apps can I install", "expect": "NONE"}
+  ]
+}

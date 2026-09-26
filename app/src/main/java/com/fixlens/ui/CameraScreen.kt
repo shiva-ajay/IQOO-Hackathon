@@ -12,10 +12,15 @@ import androidx.camera.core.resolutionselector.ResolutionSelector
 import androidx.camera.core.resolutionselector.ResolutionStrategy
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.expandVertically
@@ -27,6 +32,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,6 +43,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -47,29 +54,42 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size as GeoSize
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -99,15 +119,15 @@ fun CameraScreen(viewModel: FixLensViewModel, onBack: () -> Unit) {
 
     val marker = viewModel.marker.collectAsStateWithLifecycle()
     val analysisSize by viewModel.analysisSize.collectAsStateWithLifecycle()
+    val motion = rememberMarkerMotion(marker)
 
     Box(Modifier.fillMaxSize().background(Ink)) {
         CameraPreview(viewModel)
-        MarkerOverlay(marker, analysisSize, state.debugTestBox, state.frozen)
+        MarkerOverlay(marker, motion, analysisSize, state.debugTestBox, state.frozen)
         Scrims()
 
-        val listening = state.engineReady && state.phase == Phase.Listening && state.micOn
         val level by viewModel.micLevel.collectAsStateWithLifecycle()
-        VoiceGlow(level = level, active = listening, modifier = Modifier.fillMaxSize())
+        VoiceGlow(level = level, active = state.talking, modifier = Modifier.fillMaxSize())
 
         Column(Modifier.align(Alignment.TopCenter), horizontalAlignment = Alignment.CenterHorizontally) {
             TopBar(title = state.session?.title.orEmpty(), onBack = onBack)
@@ -121,6 +141,7 @@ fun CameraScreen(viewModel: FixLensViewModel, onBack: () -> Unit) {
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
                 .navigationBarsPadding()
+                .imePadding()
                 .padding(horizontal = 16.dp, vertical = 12.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -136,24 +157,162 @@ fun CameraScreen(viewModel: FixLensViewModel, onBack: () -> Unit) {
                 !state.engineReady -> LoadingCard(state.loadingStep)
                 else -> Column {
                     state.guide?.let { StepBanner(it) }
-                    ConversationCard(state)
+                    ConversationCard(state, orbModifier = Modifier.markerLaunchPad(motion))
                 }
             }
             Spacer(Modifier.height(16.dp))
-            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                Box(Modifier.weight(1f)) {
-                    if (history.isNotEmpty()) {
-                        HistoryButton(count = history.size, open = showHistory, onClick = { showHistory = !showHistory })
+            val controlsEnabled = state.engineReady && state.error == null
+            if (state.typing) {
+                TypeBar(onSend = viewModel::askTyped, onClose = { viewModel.setTyping(false) })
+            } else {
+                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    Box(Modifier.weight(1f)) {
+                        if (history.isNotEmpty()) {
+                            HistoryButton(count = history.size, open = showHistory, onClick = { showHistory = !showHistory })
+                        }
+                    }
+                    MicButton(
+                        held = state.talking,
+                        enabled = controlsEnabled,
+                        onPress = viewModel::startTalking,
+                        onRelease = viewModel::stopTalking,
+                    )
+                    Box(Modifier.weight(1f).padding(start = 16.dp)) {
+                        KeyboardButton(enabled = controlsEnabled, onClick = { viewModel.setTyping(true) })
                     }
                 }
-                MicButton(
-                    on = state.micOn,
-                    enabled = state.engineReady && state.error == null,
-                    onClick = viewModel::toggleMic,
-                )
-                Spacer(Modifier.weight(1f))
             }
         }
+        // Over the cards: comets fly from Fixy's orb in the card up to the parts.
+        HandoffLayer(marker, motion)
+    }
+    BackHandler(enabled = state.typing) { viewModel.setTyping(false) }
+}
+
+/** Typed question input: auto-focuses so the keyboard opens at once; the mic button returns to voice. */
+@Composable
+private fun TypeBar(onSend: (String) -> Unit, onClose: () -> Unit) {
+    var text by remember { mutableStateOf("") }
+    val focus = remember { FocusRequester() }
+    val keyboard = LocalSoftwareKeyboardController.current
+    LaunchedEffect(Unit) {
+        focus.requestFocus()
+        keyboard?.show()
+    }
+    val canSend = text.isNotBlank()
+    fun send() {
+        if (!canSend) return
+        keyboard?.hide()
+        onSend(text)
+    }
+    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            Modifier
+                .weight(1f)
+                .clip(RoundedCornerShape(28.dp))
+                .background(Ink.copy(alpha = 0.88f))
+                .border(1.dp, Amber.copy(alpha = 0.5f), RoundedCornerShape(28.dp))
+                .padding(start = 18.dp, end = 6.dp, top = 6.dp, bottom = 6.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Box(Modifier.weight(1f).padding(vertical = 10.dp)) {
+                if (text.isEmpty()) Text("Ask Fixy…", color = Muted, style = QuestionStyle)
+                BasicTextField(
+                    value = text,
+                    onValueChange = { text = it.take(MAX_TYPED) },
+                    textStyle = QuestionStyle.copy(color = Paper),
+                    cursorBrush = SolidColor(Amber),
+                    maxLines = 4,
+                    keyboardOptions = KeyboardOptions(
+                        capitalization = KeyboardCapitalization.Sentences,
+                        imeAction = ImeAction.Send,
+                    ),
+                    keyboardActions = KeyboardActions(onSend = { send() }),
+                    modifier = Modifier.fillMaxWidth().focusRequester(focus),
+                )
+            }
+            Spacer(Modifier.width(8.dp))
+            Box(
+                Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .background(if (canSend) Amber else Paper.copy(alpha = 0.12f))
+                    .clickable(enabled = canSend, onClick = ::send)
+                    .semantics { contentDescription = "Send question" },
+                contentAlignment = Alignment.Center,
+            ) {
+                SendGlyph(color = if (canSend) Ink else Muted, modifier = Modifier.size(18.dp))
+            }
+        }
+        Spacer(Modifier.width(12.dp))
+        Box(
+            Modifier
+                .size(52.dp)
+                .clip(CircleShape)
+                .background(Ink.copy(alpha = 0.6f))
+                .border(1.dp, Paper.copy(alpha = 0.3f), CircleShape)
+                .clickable {
+                    keyboard?.hide()
+                    onClose()
+                }
+                .semantics { contentDescription = "Back to voice" },
+            contentAlignment = Alignment.Center,
+        ) {
+            MicGlyph(color = Paper, modifier = Modifier.size(22.dp))
+        }
+    }
+}
+
+@Composable
+private fun KeyboardButton(enabled: Boolean, onClick: () -> Unit) {
+    Box(
+        Modifier
+            .size(48.dp)
+            .clip(CircleShape)
+            .background(Ink.copy(alpha = 0.6f))
+            .border(1.dp, Paper.copy(alpha = 0.3f), CircleShape)
+            .clickable(enabled = enabled, onClick = onClick)
+            .semantics { contentDescription = "Type a question" },
+        contentAlignment = Alignment.Center,
+    ) {
+        KeyboardGlyph(color = Paper.copy(alpha = if (enabled) 1f else 0.4f), modifier = Modifier.size(22.dp))
+    }
+}
+
+/** Keyboard icon: a key-cap outline, two rows of keys and a space bar. */
+@Composable
+private fun KeyboardGlyph(color: Color, modifier: Modifier = Modifier) {
+    Canvas(modifier) {
+        val w = size.width
+        val h = size.height
+        val stroke = w * 0.08f
+        drawRoundRect(
+            color = color,
+            topLeft = Offset(w * 0.04f, h * 0.20f),
+            size = GeoSize(w * 0.92f, h * 0.60f),
+            cornerRadius = CornerRadius(w * 0.12f),
+            style = Stroke(stroke),
+        )
+        val key = w * 0.09f
+        for (row in 0..1) {
+            val y = h * (0.36f + 0.14f * row)
+            for (col in 0..4) {
+                drawCircle(color, key / 2f, Offset(w * (0.22f + 0.14f * col), y))
+            }
+        }
+        drawLine(color, Offset(w * 0.32f, h * 0.66f), Offset(w * 0.68f, h * 0.66f), stroke, StrokeCap.Round)
+    }
+}
+
+/** Up arrow for the send button. */
+@Composable
+private fun SendGlyph(color: Color, modifier: Modifier = Modifier) {
+    Canvas(modifier) {
+        val w = size.width
+        val stroke = w * 0.14f
+        drawLine(color, Offset(w * 0.5f, w * 0.88f), Offset(w * 0.5f, w * 0.14f), stroke, StrokeCap.Round)
+        drawLine(color, Offset(w * 0.18f, w * 0.44f), Offset(w * 0.5f, w * 0.12f), stroke, StrokeCap.Round)
+        drawLine(color, Offset(w * 0.82f, w * 0.44f), Offset(w * 0.5f, w * 0.12f), stroke, StrokeCap.Round)
     }
 }
 
@@ -287,6 +446,7 @@ private fun HistoryButton(count: Int, open: Boolean, onClick: () -> Unit) {
 }
 
 private val CardShape = RoundedCornerShape(24.dp)
+private const val MAX_TYPED = 200
 
 @Composable
 private fun CardSurface(beam: Boolean = false, content: @Composable () -> Unit) {
@@ -302,7 +462,7 @@ private fun CardSurface(beam: Boolean = false, content: @Composable () -> Unit) 
 }
 
 @Composable
-private fun ConversationCard(state: UiState) {
+private fun ConversationCard(state: UiState, orbModifier: Modifier = Modifier) {
     val working = state.phase == Phase.Thinking || state.phase == Phase.Answering
     CardSurface(beam = working) {
         Column {
@@ -310,10 +470,11 @@ private fun ConversationCard(state: UiState) {
                 ThinkingOrb(
                     state = when {
                         working -> OrbState.Thinking
-                        state.micOn -> OrbState.Listening
+                        state.talking -> OrbState.Listening
                         else -> OrbState.Idle
                     },
                     size = 22.dp,
+                    modifier = orbModifier,
                 )
                 Spacer(Modifier.width(10.dp))
                 AnimatedContent(
@@ -328,8 +489,10 @@ private fun ConversationCard(state: UiState) {
             if (state.question.isEmpty() && state.answer.isEmpty()) {
                 Spacer(Modifier.height(12.dp))
                 Text(
-                    if (state.micOn) "Point the camera at the problem and ask Fixy what's wrong."
-                    else "Microphone is paused. Tap the mic to talk to Fixy.",
+                    when {
+                        state.typing -> "Point the camera at the problem and type your question."
+                        else -> "Point the camera at the problem, hold the mic and ask Fixy what's wrong."
+                    },
                     color = Muted,
                     style = QuestionStyle,
                 )
@@ -348,7 +511,13 @@ private fun ConversationCard(state: UiState) {
                     Spacer(Modifier.height(14.dp))
                     Box(Modifier.fillMaxWidth().height(1.dp).background(Hairline))
                     Spacer(Modifier.height(14.dp))
-                    Text("Fixy", color = Amber, style = LabelStyle.copy(fontSize = 11.sp))
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text("Fixy", color = Amber, style = LabelStyle.copy(fontSize = 11.sp))
+                        if (state.speaking) {
+                            Spacer(Modifier.width(8.dp))
+                            SpeakingBars()
+                        }
+                    }
                     Spacer(Modifier.height(4.dp))
                     Text(state.answer, color = Paper, style = AnswerStyle)
                 }
@@ -361,9 +530,37 @@ private fun statusLabel(state: UiState): String = when (state.phase) {
     Phase.Thinking -> if (state.partsFound > 0) "Found ${state.partsFound}" else "Looking"
     Phase.Answering -> "Answering"
     else -> when {
-        !state.micOn -> "Paused"
-        state.question.isNotEmpty() && !state.questionFinal -> "Hearing you"
-        else -> "Listening"
+        state.typing -> "Typing"
+        state.talking -> "Listening"
+        state.transcribing -> "Got it"
+        state.speaking -> "Speaking"
+        else -> "Hold to talk"
+    }
+}
+
+/** Three small bars bouncing out of step while Fixy's voice plays. */
+@Composable
+private fun SpeakingBars() {
+    val wave = rememberInfiniteTransition(label = "speaking")
+    val heights = List(3) { i ->
+        wave.animateFloat(
+            initialValue = 0.3f,
+            targetValue = 1f,
+            animationSpec = infiniteRepeatable(tween(320 + i * 90), RepeatMode.Reverse),
+            label = "bar$i",
+        )
+    }
+    Canvas(Modifier.size(width = 14.dp, height = 10.dp)) {
+        val bar = size.width / 5
+        heights.forEachIndexed { i, h ->
+            val barHeight = size.height * h.value
+            drawRoundRect(
+                color = Amber,
+                topLeft = Offset(i * 2 * bar, (size.height - barHeight) / 2),
+                size = GeoSize(bar, barHeight),
+                cornerRadius = CornerRadius(bar / 2),
+            )
+        }
     }
 }
 
@@ -399,26 +596,46 @@ private fun ErrorCard(message: String) {
     }
 }
 
+/** Push-to-talk: audio is only kept while this is held down. */
 @Composable
-private fun MicButton(on: Boolean, enabled: Boolean, onClick: () -> Unit) {
-    val fill by animateFloatAsState(if (on) 1f else 0f, tween(200), label = "mic")
+private fun MicButton(held: Boolean, enabled: Boolean, onPress: () -> Unit, onRelease: () -> Unit) {
+    val press by rememberUpdatedState(onPress)
+    val release by rememberUpdatedState(onRelease)
+    val scale by animateFloatAsState(if (held) 1.18f else 1f, tween(160), label = "micScale")
+    val ring by animateFloatAsState(if (held) 1f else 0f, tween(160), label = "micRing")
     Box(
         Modifier
-            .size(60.dp)
-            .clip(CircleShape)
-            .background(Amber.copy(alpha = 0.12f + 0.88f * fill * (if (enabled) 1f else 0.4f)))
-            .border(1.dp, if (on) Color.Transparent else Paper.copy(alpha = 0.3f), CircleShape)
-            .clickable(enabled = enabled, onClick = onClick)
-            .semantics { contentDescription = if (on) "Pause microphone" else "Resume microphone" },
+            .size(76.dp)
+            .graphicsLayer { scaleX = scale; scaleY = scale }
+            .pointerInput(enabled) {
+                if (!enabled) return@pointerInput
+                detectTapGestures(
+                    onPress = {
+                        press()
+                        // finally: a press cancelled mid-way (the button leaving the screen) still ends the take.
+                        try { tryAwaitRelease() } finally { release() }
+                    },
+                )
+            }
+            .semantics { contentDescription = "Hold to talk to Fixy" },
         contentAlignment = Alignment.Center,
     ) {
-        MicGlyph(color = if (on) Ink else Paper, muted = !on, modifier = Modifier.size(26.dp))
+        Box(Modifier.size(76.dp).clip(CircleShape).background(Amber.copy(alpha = 0.25f * ring)))
+        Box(
+            Modifier
+                .size(60.dp)
+                .clip(CircleShape)
+                .background(Amber.copy(alpha = if (enabled) 1f else 0.4f)),
+            contentAlignment = Alignment.Center,
+        ) {
+            MicGlyph(color = Ink, modifier = Modifier.size(26.dp))
+        }
     }
 }
 
 /** Microphone icon drawn directly, so no icon library is needed. */
 @Composable
-private fun MicGlyph(color: Color, muted: Boolean, modifier: Modifier = Modifier) {
+private fun MicGlyph(color: Color, modifier: Modifier = Modifier) {
     Canvas(modifier) {
         val w = size.width
         val h = size.height
@@ -438,9 +655,6 @@ private fun MicGlyph(color: Color, muted: Boolean, modifier: Modifier = Modifier
         )
         // stand
         drawLine(color, Offset(w * 0.5f, h * 0.74f), Offset(w * 0.5f, h * 0.92f), stroke, StrokeCap.Round)
-        if (muted) {
-            drawLine(color, Offset(w * 0.12f, h * 0.10f), Offset(w * 0.88f, h * 0.90f), stroke, StrokeCap.Round)
-        }
     }
 }
 

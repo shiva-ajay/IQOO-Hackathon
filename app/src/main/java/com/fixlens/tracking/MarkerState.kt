@@ -13,6 +13,8 @@ data class MarkerState(
     val confidence: Float,
     val status: Status,
     val timestampNs: Long,
+    /** This seed is a silent re-ground of parts already shown (see [FlowTracker.Seed.quiet]). */
+    val quiet: Boolean = false,
 ) {
     data class Target(val box: PxBox, val label: String, val isPoint: Boolean)
 

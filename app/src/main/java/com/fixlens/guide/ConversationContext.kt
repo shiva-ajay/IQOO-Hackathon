@@ -3,6 +3,7 @@ package com.fixlens.guide
 import android.util.Log
 import com.fixlens.app.TAG
 import com.fixlens.session.RepairSession
+import com.fixlens.session.Turn
 import com.fixlens.vision.VlmEngine
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.withContext
@@ -23,6 +24,8 @@ class ConversationContext(private val vlm: VlmEngine) {
 
     /** Session whose conversation is in the KV cache, or null if the cache is empty or unknown. */
     private var liveSessionId: String? = null
+    /** The `<past_repairs>` block the cache was built with; a change (it's dropped after the first turn) rebuilds. */
+    private var livePastRepairs: String? = null
     private var kvTokens = 0
     /** True when the cache ends inside an answer that still needs its end token (see [FixyPrompts.CLOSE_ANSWER]). */
     private var answerOpen = false
@@ -30,13 +33,14 @@ class ConversationContext(private val vlm: VlmEngine) {
 
     /**
      * Rebuilds the cache for [session] ahead of the first question (prefill only, nothing generated), so
-     * opening a session costs its replay now, while the user is still framing the shot.
+     * opening a session costs its replay now, while the user is still framing the shot. Also used right after
+     * the reply to a follow-up greeting, to drop the earlier repair from the cache before the next question.
      */
-    suspend fun prewarm(session: RepairSession) = lock.withLock {
-        if (liveSessionId == session.id) return@withLock
-        val replay = session.turns.takeLast(REPLAY_TURNS)
+    suspend fun prewarm(session: RepairSession, pastRepairs: String?) = lock.withLock {
+        if (!needsRebuild(session, pastRepairs)) return@withLock
+        val replay = replayed(session)
         val prompt = buildString {
-            append(FixyPrompts.system(MemoryRules.render(session.memory)))
+            append(header(session, pastRepairs))
             replay.forEachIndexed { i, t ->
                 if (i < replay.lastIndex) append(FixyPrompts.pastTurn(t.question, t.answer))
                 else append(FixyPrompts.userTurn(t.question)).append(t.answer) // left open, like after a live turn
@@ -45,33 +49,36 @@ class ConversationContext(private val vlm: VlmEngine) {
         val result = runGuarded { vlm.generate(prompt, VlmEngine.Keep.UnlessCancelled, resetFirst = true, maxTokens = 0) {} }
         kvTokens = result.kvTokens
         liveSessionId = session.id
+        livePastRepairs = pastRepairs
         answerOpen = replay.isNotEmpty()
         Log.i(TAG, "Prewarmed ${session.id} with ${replay.size} turns (${result.stats})")
     }
 
     /**
      * Appends a question turn (picture + [question] + optional [instruction], e.g. the grounding request) and
-     * streams the reply. Only [question] is replayed on a later rebuild; the instruction isn't.
+     * streams the reply. Only [question] is replayed on a later rebuild; the instruction isn't. [pastRepairs] is
+     * only used when the cache is rebuilt.
      */
     suspend fun ask(
         session: RepairSession,
+        pastRepairs: String?,
         imagePath: String?,
         question: String,
         instruction: String? = null,
         onText: (String) -> Unit,
     ): VlmEngine.Result = lock.withLock {
-        val rebuild = liveSessionId != session.id || kvTokens > COMPACT_AT_TOKENS
+        val rebuild = needsRebuild(session, pastRepairs)
         val content = (imagePath?.let(FixyPrompts::image) ?: "") + question + (instruction?.let { "\n\n$it" } ?: "")
         val prompt = if (rebuild) {
             buildString {
-                append(FixyPrompts.system(MemoryRules.render(session.memory)))
-                session.turns.takeLast(REPLAY_TURNS).forEach { append(FixyPrompts.pastTurn(it.question, it.answer)) }
+                append(header(session, pastRepairs))
+                replayed(session).forEach { append(FixyPrompts.pastTurn(it.question, it.answer)) }
                 append(FixyPrompts.userTurn(content))
             }
         } else {
             (if (answerOpen) FixyPrompts.CLOSE_ANSWER else "") + FixyPrompts.userTurn(content)
         }
-        if (rebuild) Log.i(TAG, "Context rebuild for ${session.id}: ${session.turns.size} turns saved, replaying ${minOf(REPLAY_TURNS, session.turns.size)} (kv was $kvTokens)")
+        if (rebuild) Log.i(TAG, "Context rebuild for ${session.id}: ${session.turns.size} turns saved, replaying ${replayed(session).size} (kv was $kvTokens)")
 
         val result = runGuarded { vlm.generate(prompt, VlmEngine.Keep.UnlessCancelled, resetFirst = rebuild, onText = onText) }
         kvTokens = result.kvTokens
@@ -79,6 +86,7 @@ class ConversationContext(private val vlm: VlmEngine) {
             liveSessionId = null // a cancelled rebuild leaves the cache empty; the next turn rebuilds again
         } else {
             liveSessionId = session.id
+            if (rebuild) livePastRepairs = pastRepairs
             if (!result.cancelled) answerOpen = true
         }
         result
@@ -150,10 +158,27 @@ class ConversationContext(private val vlm: VlmEngine) {
         if (sessionId == null || sessionId == liveSessionId) {
             vlm.reset()
             liveSessionId = null
+            livePastRepairs = null
             kvTokens = 0
             answerOpen = false
         }
     }
+
+    private fun needsRebuild(session: RepairSession, pastRepairs: String?) =
+        liveSessionId != session.id || pastRepairs != livePastRepairs || kvTokens > COMPACT_AT_TOKENS
+
+    /**
+     * The greeting only before the first question. Once the user has answered it, it and a reply about the earlier
+     * repair it asked after ("yes, the car's fine now") are left out, so the old device doesn't color this session.
+     */
+    private fun header(session: RepairSession, pastRepairs: String?) = FixyPrompts.system(
+        MemoryRules.render(session.memory),
+        pastRepairs,
+        session.greeting?.takeIf { session.turns.isEmpty() },
+    )
+
+    private fun replayed(session: RepairSession): List<Turn> =
+        session.turns.drop(if (MemoryRules.openedWithFollowUp(session)) 1 else 0).takeLast(REPLAY_TURNS)
 
     /** If the engine throws, the cache state is unknown: make the next turn rebuild. */
     private inline fun <T> runGuarded(block: () -> T): T =

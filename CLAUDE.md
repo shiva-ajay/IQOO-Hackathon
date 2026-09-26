@@ -102,7 +102,7 @@ A VLM cannot run 30 times per second. So FixLens is a **slow brain** (VLM, runs 
 question, 1–3 s) plus **fast eyes** (a local tracker, runs every frame at 30 fps).
 
 ```
- Mic (tap-to-talk) ──► VAD + STT (sherpa-onnx: Silero + Moonshine) ──┐
+ Mic (push-to-talk) ─► VAD + STT (sherpa-onnx: Silero + Moonshine) ──┐
                                                                      ▼
  Knowledge base (JSON) ─────────────────────────────►  ORCHESTRATOR
                                                      (guide state machine + Fixy prompt)
@@ -217,8 +217,11 @@ post-hackathon plan, not now.
 
 ## 8. Fixy persona
 
-- **Greeting (hard-coded, never generated, played instantly on first tap):**
-  "Hi, I'm Fixy! Point me at what's broken and tell me what's happening."
+- **Greeting (templated, never generated, shown instantly when a new session opens):** the first-ever
+  session gets "Hi, I'm Fixy! Point me at what's broken and tell me what's happening." Later ones get a
+  time-of-day hello that asks after the latest recent repair ("Last time we looked at your washing machine
+  (error OE) yesterday. Is it working fine now?"). See `guide/Recall.kt` and
+  [docs/fixy-memory.md](docs/fixy-memory.md), which also covers `<past_repairs>` and the outcome loop.
 - **System prompt (keep in `guide/FixyPrompts.kt`):**
 ```
 You are Fixy, a friendly repair helper inside the FixLens app.
@@ -275,17 +278,22 @@ Then: one or two short sentences as Fixy, using only the verified step.
 
 ## 11. Voice
 
-- **Input:** tap-to-talk. `AudioRecord` at 16 kHz mono, audio source `VOICE_COMMUNICATION`
-  (echo cancellation). Silero VAD segments speech; Moonshine transcribes each segment.
-  Show a level-reactive "listening…" animation while the user speaks; show the caption after.
+- **Input:** push-to-talk (hold the mic button; always-listening picked up too much background
+  noise). `AudioRecord` at 16 kHz mono, audio source `VOICE_COMMUNICATION` (echo cancellation).
+  Audio is kept only while held (+0.3 s pre-roll and tail). On release, Silero VAD gates the take
+  (no speech → dropped) and Moonshine transcribes the speech span. A keyboard button beside the mic
+  is the typed fallback. Show a level-reactive "listening…" animation while held; captions live.
 - **Commands:** plain string match on the transcript: "done"/"next" → advance,
   "repeat" → re-speak, "back" → previous step, "stop" → stop TTS. Anything else is a question.
-- **Output:** Android `TextToSpeech` (Google engine, offline English voice), `QUEUE_ADD`, one
-  sentence at a time as sentences complete in the stream. KB steps bypass the VLM and are spoken
-  directly. Use `UtteranceProgressListener` to highlight the caption being spoken and to return
-  to listening.
-- **Barge-in:** VAD detects user speech while TTS is playing → `tts.stop()` immediately.
-- **Latency masking:** play a short sound or "Let me look…" as soon as the user stops talking.
+- **Output:** **Piper** `en_US-lessac-medium` (VITS, 22.05 kHz, 63 MB) through sherpa-onnx `OfflineTts` (already in
+  the AAR); model in `files/tts/piper/` (`<voice>.onnx`, `tokens.txt`, `espeak-ng-data/`). `voice/SpeechChunker` cuts
+  the VLM's token stream into pieces (the first clause of a reply, then sentences); `voice/SpeechOutput` synthesizes
+  them on `fixlens-tts` while the previous piece plays on `fixlens-tts-out` (`AudioTrack` float stream, `USAGE_MEDIA`,
+  low-latency). Silence at clip edges is trimmed. KB text, the greeting and fixed lines are spoken verbatim
+  (`SpeechOutput.speak`). The mic is push-to-talk, so no echo gating is needed.
+- **Barge-in:** pressing the mic always stops the voice (`SpeechOutput.stop`: new epoch, queues dropped, track
+  flushed), also after generation has ended; a new turn or guide step stops it too.
+- **Latency masking:** a pre-rendered filler ("Let me look.", …) plays at once when a question goes to the VLM.
 
 ---
 
@@ -305,7 +313,7 @@ Then: one or two short sentences as Fixy, using only the verified step.
 
 ## 13. Out of scope (don't build unless asked)
 
-Wake word ("Hey Fixy"), Piper TTS, Telugu/Hindi, YOLO/detector training, vector
+Wake word ("Hey Fixy"), Telugu/Hindi, YOLO/detector training, vector
 search/embeddings, LLM/VLM fine-tuning, ARCore, cloud anything, accounts or login.
 Several of these are Grand Finale roadmap items and can be mentioned in the pitch.
 
@@ -378,6 +386,22 @@ Notes:
   decision). Verified on the phone: match, safety gate, step pointing (~5 s), back, escalation, auto-check. Known issue:
   asked for a part that isn't in view, the VLM often points at something else anyway (keyboard as "engine").
   `assets/kb/fixlens_kb.json` is a DRAFT (engine oil, coolant, washer fluid, wiring refusal, laptop cover): verify it.
+- **Voice out (M3, 2026-09-27; not ticked until a spoken question + mic barge-in is tried by hand):** Piper
+  `en_US-lessac-medium` from the sherpa-onnx `tts-models` release (`vits-piper-en_US-lessac-medium.tar.bz2`); pick others
+  with `tools/tts/audition.py`, push with `VOICE=<voice> tools/push_models.sh`. Supertonic 3 was tried first and dropped:
+  ~0.3-0.8 s per clause, and its fast 2-step mode sounded metallic/echoey. Piper on the phone: load 490 ms + warm-up
+  60 ms (before the VLM, so the greeting speaks while the VLM loads); a ~1.5-2 s clause in ~270 ms idle, ~370 ms while
+  the VLM decodes (RTF 0.07-0.18). Filler at +0 ms; pieces gapless. A stop can't abort a piece mid-synthesis (≤ ~0.4 s).
+  Debug: `--es say "<text>"`, `--ef ttsspeed F`. Not done: highlighting the caption being spoken.
+- **Casual Fixy (2026-09-27, not yet tried on the phone):** questions are sorted by `guide/Intent.kt` into Chat (no
+  picture, no pointing), Look ("what do you see": describe only) and Repair (points, as before). The persona has no device
+  examples and doesn't pivot to repairs. A new session sees the earlier repair only for the reply to its greeting; then
+  the cache is rebuilt without it. Details: [docs/fixy-memory.md](docs/fixy-memory.md) §1-2.
+- **Lock-on + hand-off motion (2026-09-27, builds; not yet seen on the phone):** each part pointed at gets a comet
+  from Fixy's orb (`ui/MarkerMotion.kt`, drawn over the cards, homing on the tracked box), then a lock-on where it lands
+  (`ui/MarkerOverlay.kt`: flash + shockwaves, dim closes in like an iris, corner brackets spring in with a twist,
+  outline traces round, scan line, name chip pops; settled = breathing ring + a glint lapping the outline) and a haptic
+  tick. Silent re-grounds are `Seed(quiet = true)`: a short re-lock only. One frame clock drives it all (`ui/fx/Motion.kt`).
 
 ---
 

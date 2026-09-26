@@ -90,6 +90,7 @@ class MainActivity : ComponentActivity() {
      * Marker testing (docs/marker-tracking.md): `--es ask "point: <phrase>"` forces what to point at,
      * `--es image /sdcard/.../x.jpg` uses a file instead of the camera, `--ez testbox true` and `--ez freeze true`
      * draw the mapping checks, `--es grounding contract|native` and `--es coords norm|px` switch prompt and scale.
+     * Voice: `--es say "<text>"` speaks a line (timings in the log); `--ef ttsspeed F` changes its speed.
      */
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
@@ -99,6 +100,8 @@ class MainActivity : ComponentActivity() {
         fun flag(name: String) = if (intent.hasExtra(name)) intent.getBooleanExtra(name, false) else null
         vm.debugSettings(flag("testbox"), flag("freeze"), intent.getStringExtra("grounding"), intent.getStringExtra("coords"))
         intent.getStringExtra("ask")?.let { vm.debugAsk(it, intent.getStringExtra("image")) }
+        if (intent.hasExtra("ttsspeed")) vm.debugVoice(intent.getFloatExtra("ttsspeed", 1f))
+        intent.getStringExtra("say")?.let(vm::debugSay)
     }
 
     private fun allGranted() = REQUIRED_PERMISSIONS.all { checkSelfPermission(it) == PackageManager.PERMISSION_GRANTED }

@@ -3,15 +3,41 @@ package com.fixlens.guide
 /** Fixy's persona and the prompt pieces, written as raw Qwen chat-template text (MNN's template is off). */
 object FixyPrompts {
 
-    // Round-1 persona prompt. No KB yet, so Fixy only describes and advises from what it sees.
+    // Persona prompt (docs/fixy-memory.md §2). Kept free of device examples: a small model repeats whatever the
+    // prompt mentions, so naming car parts here made Fixy talk about oil while looking at a laptop.
     const val SYSTEM =
-        "You are Fixy, a friendly repair helper inside the FixLens app. " +
-            "Look at the camera image and answer the user's question like a calm, patient friend. " +
-            "Max 2 short sentences. Always put safety first. " +
-            "Your name is Fixy. Never call yourself an AI model, Qwen, or anything else. " +
-            "Each question comes with the latest camera picture; earlier pictures may show a different view, " +
-            "so answer about the latest picture unless the user asks about an earlier one. " +
-            "When asked to point at something, output the box line first, then your spoken reply."
+        "You are Fixy, the helper inside the FixLens app. You talk like a friendly, easygoing person standing " +
+            "next to the user and looking through their phone camera with them.\n" +
+            "How you talk:\n" +
+            "- Spoken aloud: 1 or 2 short, natural sentences with contractions. No lists, no headings.\n" +
+            "- Answer exactly what was asked, nothing more. A casual question gets a casual answer. Don't turn " +
+            "every reply into a repair, and don't end every reply with a question or an offer to help.\n" +
+            "- Only talk about what's in the latest picture or what the user brought up. Never mention a device, " +
+            "part or problem that isn't there.\n" +
+            "- If asked what you do: you look through the camera, help figure out what's wrong with cars, home " +
+            "appliances and gadgets, and point at the exact part to check. One sentence.\n" +
+            "- Your name is Fixy. Never call yourself an AI model, Qwen, or anything else.\n" +
+            "Rules for repairs:\n" +
+            "- Safety first. Wiring, gas, and opening mains-powered or sealed parts are jobs for a technician; " +
+            "say so kindly.\n" +
+            "- Never invent parts, values, error codes or past events. If you're not sure, say so and suggest " +
+            "a technician.\n" +
+            "- A question may come with the latest camera picture; earlier pictures may show something else, so " +
+            "answer about the latest one.\n" +
+            "- When asked to point at something, output the JSON first, then your spoken reply."
+
+    /** Only while `<past_repairs>` is in the prompt, i.e. for the user's reply to a greeting that asked after it. */
+    private const val PAST_REPAIRS_RULE =
+        "- <past_repairs> is the earlier repair your greeting just asked about. If the user answers about it, " +
+            "reply briefly from that note only; otherwise ignore it. Once answered, it's done: don't bring it up again."
+
+    /** Small talk: no picture, no pointing. */
+    const val CHAT_TURN = "(Just chatting: reply naturally in one short sentence. No repair advice.)"
+
+    /** "What do you see?": describe the picture, no pointing and no repair pitch. */
+    const val LOOK_TURN =
+        "(Say what you see in this picture in one or two short sentences, like telling a friend. Only what's " +
+            "really there; no repair steps unless asked.)"
 
     /** Until the KB gives a target phrase (M4), Fixy points at whatever the question is about. */
     const val DEFAULT_TARGET = "the part I should look at for this question"
@@ -36,7 +62,7 @@ object FixyPrompts {
                     "First: a JSON list, one entry per part: {\"bbox_2d\":[x1,y1,x2,y2],\"label\":\"...\"}, or " +
                     "{\"point_2d\":[x,y],\"label\":\"...\"} for a small single part. Many tiny identical parts (like screws) " +
                     "get one box around the area that holds them. [] if none.\n" +
-                    "Then: one or two short sentences as Fixy."
+                    "Then: one or two short sentences as Fixy, answering exactly what was asked."
             GroundingStyle.Contract ->
                 "Find: \"$find\"\n" +
                     "First line: JSON only, {\"bbox_2d\":[x1,y1,x2,y2],\"label\":\"...\"} or {\"bbox_2d\":null}\n" +
@@ -66,10 +92,18 @@ object FixyPrompts {
         "Give this repair chat a short title of 2 to 4 words, like \"Fridge not cooling\" or " +
             "\"Car oil check\". Reply with the title only."
 
-    fun system(notes: String?): String = buildString {
+    /**
+     * The start of every rebuilt prompt: persona, this session's [notes], the [pastRepairs] block (guide/Recall.kt)
+     * with its rule, and the session's [greeting] as Fixy's first message, so a reply like "yes, it's fine now"
+     * makes sense.
+     */
+    fun system(notes: String?, pastRepairs: String? = null, greeting: String? = null): String = buildString {
         append("<|im_start|>system\n").append(SYSTEM)
+        if (pastRepairs != null) append('\n').append(PAST_REPAIRS_RULE)
         if (notes != null) append("\n<session>\n").append(notes).append("\n</session>")
+        if (pastRepairs != null) append("\n<past_repairs>\n").append(pastRepairs).append("\n</past_repairs>")
         append("<|im_end|>\n")
+        if (greeting != null) append("<|im_start|>assistant\n").append(greeting).append("<|im_end|>\n")
     }
 
     /** A past turn replayed as text only (its picture is not re-sent). */

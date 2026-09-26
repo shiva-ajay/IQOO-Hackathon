@@ -17,6 +17,8 @@ data class KbEntry(
     val brand: String = "generic",
     @SerialName("error_code") val errorCode: String? = null,
     @SerialName("code_aliases") val codeAliases: List<String> = emptyList(),
+    /** A generic entry's way in by error code: each brand's own codes for this fault. */
+    @SerialName("brand_codes") val brandCodes: List<BrandCode> = emptyList(),
     val title: String,
     val meaning: String = "",
     val symptoms: List<String> = emptyList(),
@@ -27,6 +29,20 @@ data class KbEntry(
     val steps: List<KbStep> = emptyList(),
     val source: String = "",
 )
+
+/** [codes] as shown on the display ("5C", "OE"); [spoken] how people say them ("five c", "oh e"). */
+@Serializable
+data class BrandCode(
+    val brand: String,
+    val codes: List<String>,
+    val spoken: List<String> = emptyList(),
+)
+
+/** Every way in by code: (brand, forms). An entry's own `error_code` counts under its own brand. */
+fun KbEntry.codeForms(): List<Pair<String, List<String>>> {
+    val own = listOfNotNull(errorCode) + codeAliases
+    return (if (own.isEmpty()) emptyList() else listOf(brand to own)) + brandCodes.map { it.brand to it.codes + it.spoken }
+}
 
 @Serializable
 data class KbStep(

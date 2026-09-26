@@ -11,6 +11,7 @@ import com.fixlens.guide.FixyPrompts
 import com.fixlens.guide.Command
 import com.fixlens.guide.Commands
 import com.fixlens.guide.Guide
+import com.fixlens.guide.Intent
 import com.fixlens.guide.GuideState
 import com.fixlens.guide.GuideView
 import com.fixlens.guide.entry
@@ -18,6 +19,7 @@ import com.fixlens.kb.KbRepository
 import com.fixlens.kb.KnowledgeBase
 import com.fixlens.kb.Retriever
 import com.fixlens.guide.MemoryRules
+import com.fixlens.guide.Recall
 import com.fixlens.session.RepairSession
 import com.fixlens.session.SessionRepository
 import com.fixlens.session.TitleSource
@@ -30,7 +32,9 @@ import com.fixlens.vision.GroundingParser
 import com.fixlens.vision.GroundingParser.Grounding
 import com.fixlens.vision.ModelBox
 import com.fixlens.vision.VlmEngine
+import com.fixlens.voice.SpeechChunker
 import com.fixlens.voice.SpeechInput
+import com.fixlens.voice.SpeechOutput
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -61,11 +65,18 @@ data class UiState(
     // Open session
     val session: RepairSession? = null,
     val phase: Phase = Phase.Loading,
-    val micOn: Boolean = true,
+    /** The talk button is held (push-to-talk): only then is audio kept. */
+    val talking: Boolean = false,
+    /** Released, waiting for the final transcript. */
+    val transcribing: Boolean = false,
+    /** The keyboard is open for a typed question; the mic is closed meanwhile. */
+    val typing: Boolean = false,
     /** The user's words: live while speaking, final once the pause is detected. */
     val question: String = "",
     val questionFinal: Boolean = false,
     val answer: String = "",
+    /** Fixy's voice is playing (a filler, an answer or a guide line). */
+    val speaking: Boolean = false,
     val timing: String = "",
     /** Parts pointed at so far in this answer (they stream in one by one before the spoken reply). */
     val partsFound: Int = 0,
@@ -113,8 +124,16 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
         sttDir = File(filesDir, "stt"),
         onPartial = ::onPartial,
         onFinal = ::onQuestion,
+        onNothingHeard = ::onNothingHeard,
         onLevel = { _micLevel.value = it },
     )
+    /** Fixy's voice (Piper). Optional: without its model Fixy answers in text only. */
+    private val voice = SpeechOutput(
+        dir = File(filesDir, "tts/piper"),
+        onSpeaking = { on -> _state.update { it.copy(speaking = on) } },
+    )
+    /** The session whose greeting has been spoken, so it isn't said twice. */
+    @Volatile private var greetedId: String? = null
 
     /** Incremented per question; output from an older (cancelled) turn is ignored. */
     private val turn = AtomicInteger(0)
@@ -130,6 +149,11 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
     private var guideState: GuideState = GuideState.Idle
     /** Points at the current step's part, then runs its auto-check. */
     private var guideJob: Job? = null
+    /**
+     * The earlier repair the greeting asked after (guide/Recall.kt), seen by the model only until the user answers
+     * the greeting; null otherwise, so an old car repair never colors a new session about a laptop.
+     */
+    private var pastRepairs: String? = null
 
     init {
         refreshSessions()
@@ -140,6 +164,9 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
                 fail("Speech model not found on this phone.")
                 return@launch
             }
+            // The voice loads before the 3 GB VLM, so the greeting can be spoken while the VLM is still loading.
+            _state.update { it.copy(loadingStep = "Loading Fixy's voice") }
+            if (voice.load()) launch(Dispatchers.Main) { _state.value.session?.let(::greet) }
             _state.update { it.copy(loadingStep = "Loading Fixy's vision model") }
             if (!vlm.load(modelDir = File(filesDir, "models/qwen3-vl-4b"), tmpDir = File(app.cacheDir, "mnn"))) {
                 fail("Vision model not found or failed to load.")
@@ -154,7 +181,11 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
 
     fun sessionDir(id: String): File = repo.dir(id)
 
-    fun newSession() = open(repo.create())
+    /** A new session opens with Fixy's greeting, which may ask after the latest earlier repair. */
+    fun newSession() {
+        val greeting = Recall.greeting(Recall.candidates(_state.value.sessions, currentId = ""))
+        open(repo.create().copy(greeting = greeting.text, followUpOf = greeting.followUpOf))
+    }
 
     fun openSession(id: String) {
         viewModelScope.launch {
@@ -167,6 +198,9 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
         clearMarker()
         endGuide()
         val last = session.turns.lastOrNull()
+        pastRepairs = session.followUpOf?.takeIf { session.turns.isEmpty() }
+            ?.let { id -> Recall.pastRepairs(_state.value.sessions.filter { it.id == id }) }
+        Log.i(TAG, "Open ${session.id}: greeting \"${session.greeting}\", past repairs:\n${pastRepairs ?: "(none)"}")
         _state.update {
             it.copy(
                 screen = Screen.Session,
@@ -174,13 +208,27 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
                 phase = if (it.engineReady) Phase.Listening else it.phase,
                 question = last?.question.orEmpty(),
                 questionFinal = true,
-                answer = last?.answer.orEmpty(),
+                answer = last?.answer ?: session.greeting.orEmpty(),
                 timing = if (last != null) "Earlier" else "",
                 hint = null,
                 frozen = null,
+                talking = false,
+                transcribing = false,
             )
         }
+        voice.stop()
+        greet(session)
         onSessionScreenReady()
+    }
+
+    /** Says the greeting of a session that has no turns yet, once per opening (if the voice is ready). */
+    private fun greet(session: RepairSession) {
+        val greeting = session.greeting ?: return
+        val s = _state.value
+        if (!voice.ready || session.turns.isNotEmpty() || greetedId == session.id) return
+        if (s.screen != Screen.Session || s.session?.id != session.id || s.question.isNotEmpty()) return
+        greetedId = session.id
+        voice.speak(greeting, voice.epoch())
     }
 
     /** Starts listening and warms the model's memory once both the screen and the engine are ready. */
@@ -188,12 +236,13 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
         val s = _state.value
         if (s.screen != Screen.Session || !s.engineReady) return
         val session = s.session ?: return
-        if (s.micOn) speech.start()
-        viewModelScope.launch { runCatching { context.prewarm(session) }.onFailure { Log.e(TAG, "Prewarm failed", it) } }
+        if (!s.typing) speech.start()
+        viewModelScope.launch { runCatching { context.prewarm(session, pastRepairs) }.onFailure { Log.e(TAG, "Prewarm failed", it) } }
     }
 
     fun closeSession() {
         cancelTurn()
+        greetedId = null
         speech.stop()
         frameGrabber.clear()
         clearMarker()
@@ -201,7 +250,7 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
         _state.update {
             it.copy(
                 screen = Screen.Sessions, session = null, question = "", answer = "", timing = "", questionFinal = false,
-                hint = null, frozen = null,
+                hint = null, frozen = null, typing = false, talking = false, transcribing = false,
             )
         }
         refreshSessions()
@@ -230,11 +279,50 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
 
     // ---- Conversation ----
 
-    fun toggleMic() {
-        val on = !_state.value.micOn
-        _state.update { it.copy(micOn = on) }
+    /** Push-to-talk: the mic button went down. A new question barges in on one still being answered. */
+    fun startTalking() {
+        val s = _state.value
+        if (!s.engineReady || s.screen != Screen.Session || s.typing) return
+        // Barge-in: the mic cuts Fixy off, also after the answer is generated and only the voice is still going.
+        voice.stop()
+        if (s.phase == Phase.Thinking || s.phase == Phase.Answering) cancelTurn()
+        speech.press()
+        _state.update {
+            it.copy(
+                talking = true, transcribing = false, phase = Phase.Listening,
+                question = "", questionFinal = false, answer = "", timing = "", hint = null,
+            )
+        }
+    }
+
+    /** Push-to-talk: the mic button came up; the take is transcribed now. */
+    fun stopTalking() {
+        if (!_state.value.talking) return
+        speech.release()
+        _state.update { it.copy(talking = false, transcribing = true) }
+    }
+
+    /** Opens or closes the keyboard input. The mic is closed while typing, so speech can't cut in. */
+    fun setTyping(open: Boolean) {
+        if (_state.value.typing == open) return
+        // A take in progress is dropped, and its half-heard words aren't left on the card.
+        _state.update {
+            it.copy(
+                typing = open, talking = false, transcribing = false,
+                question = if (open && !it.questionFinal) "" else it.question,
+            )
+        }
         if (!_state.value.engineReady || _state.value.screen != Screen.Session) return
-        if (on) speech.start() else speech.stop()
+        if (open) speech.stop() else speech.start()
+    }
+
+    /** A typed question: goes through the same turn as a spoken one, then returns to voice. */
+    fun askTyped(text: String) {
+        val question = text.trim()
+        val s = _state.value
+        if (question.isEmpty() || !s.engineReady || s.screen != Screen.Session) return
+        setTyping(false)
+        ask(question)
     }
 
     /**
@@ -264,16 +352,45 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
         Log.i(TAG, "Debug: testBox=${_state.value.debugTestBox} freeze=${_state.value.debugFreeze} grounding=$groundingStyle coords=$coordScale")
     }
 
-    private fun onPartial(text: String) {
-        if (_state.value.screen != Screen.Session) return
-        // The user started talking: drop the previous answer, and barge in on one still running.
-        if (_state.value.phase == Phase.Thinking || _state.value.phase == Phase.Answering) cancelTurn()
-        _state.update {
-            it.copy(phase = Phase.Listening, question = text, questionFinal = false, answer = "", timing = "")
+    /** Debug hook: Fixy says [text] (cut and spoken like an answer; the log shows each piece's timing). */
+    fun debugSay(text: String) {
+        viewModelScope.launch {
+            delay(DEBUG_CAMERA_SETTLE_MS) // the intent pauses/resumes the activity
+            say(text)
         }
     }
 
-    private fun onQuestion(text: String) = ask(text)
+    /** Debug hook: voice speed. */
+    fun debugVoice(speed: Float) = voice.configure(speed)
+
+    /** Live caption while the button is held (STT thread). */
+    private fun onPartial(text: String) {
+        val s = _state.value
+        if (s.screen != Screen.Session || s.typing || !s.talking) return
+        _state.update { it.copy(question = text, questionFinal = false) }
+    }
+
+    /** The final transcript of a take (STT thread). */
+    private fun onQuestion(text: String) {
+        val s = _state.value
+        if (s.screen != Screen.Session || s.typing) return
+        _state.update { it.copy(talking = false, transcribing = false) }
+        ask(text)
+    }
+
+    /** A take with no speech in it (a tap, or only background noise): nothing is asked. */
+    private fun onNothingHeard() {
+        _state.update {
+            it.copy(
+                talking = false, transcribing = false, hint = HOLD_HINT,
+                question = if (it.questionFinal) it.question else "",
+            )
+        }
+        viewModelScope.launch {
+            delay(HINT_MS)
+            _state.update { if (it.hint == HOLD_HINT) it.copy(hint = null) else it }
+        }
+    }
 
     /**
      * One question turn: grab the keyframe, stream the reply through [GroundingParser], seed the tracker the
@@ -284,12 +401,22 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
         val session = _state.value.session ?: return
         // A KB match starts a guided repair, and "done", "back"… drive it: the words come from the KB, not the VLM.
         if (target == null && image == null && handleGuide(question)) return
+        // Small talk and "what do you see?" are answered as such: no pointing, and small talk needs no picture.
+        val intent = if (target != null || image != null) Intent.Repair else Intent.of(question)
         // A follow-up question during a guided step points at that step's part.
         val pointTarget = target ?: Guide.instruction(guideState)?.target
+        val instruction = when (intent) {
+            Intent.Chat -> FixyPrompts.CHAT_TURN
+            Intent.Look -> FixyPrompts.LOOK_TURN
+            Intent.Repair -> FixyPrompts.grounding(pointTarget, groundingStyle)
+        }
         cancelTurn()
         clearMarker()
         reGrounds = 0
         val id = turn.incrementAndGet()
+        // Fixy says "Let me look." at once, covering the seconds before the VLM's first words (not for "hi").
+        val spoken = voice.epoch()
+        if (intent != Intent.Chat) voice.filler(spoken)
         val start = System.currentTimeMillis()
         _state.update {
             it.copy(
@@ -300,25 +427,28 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
 
         viewModelScope.launch {
             val file = File(repo.dir(session.id).apply { mkdirs() }, "kf_${System.currentTimeMillis()}.jpg")
-            val keyframe = if (image != null) {
-                withContext(Dispatchers.IO) { FrameGrabber.keyframeFromFile(image, file) }
-            } else {
-                frameGrabber.captureKeyframe(file)
+            val keyframe = when {
+                image != null -> withContext(Dispatchers.IO) { FrameGrabber.keyframeFromFile(image, file) }
+                intent == Intent.Chat -> null
+                else -> frameGrabber.captureKeyframe(file)
             }
             val keyframeMs = System.currentTimeMillis() - start
             var firstPartMs = -1L
             var allPartsMs = -1L
             var firstTokenMs = -1L
             var tracked = 0
+            val chunker = SpeechChunker()
             val parser = GroundingParser(
                 onGrounding = { g ->
                     allPartsMs = System.currentTimeMillis() - start
-                    onGrounding(g, keyframe, pointTarget, id)
+                    if (intent == Intent.Repair) onGrounding(g, keyframe, pointTarget, id)
                 },
                 onText = text@{ chunk ->
                     if (turn.get() != id) return@text
                     if (firstTokenMs < 0) firstTokenMs = System.currentTimeMillis() - start
                     _state.update { it.copy(phase = Phase.Answering, answer = it.answer + chunk) }
+                    // Each clause goes to the voice as soon as it's complete, while the rest is still generating.
+                    chunker.feed(chunk).forEach { voice.say(it, spoken) }
                 },
                 // Each part goes to the tracker as soon as it's parsed, so markers appear one by one.
                 onTarget = { raw ->
@@ -328,15 +458,16 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
                 },
             )
             val result = runCatching {
-                context.ask(session, keyframe?.file?.absolutePath, question, FixyPrompts.grounding(pointTarget, groundingStyle)) {
+                context.ask(session, pastRepairs, keyframe?.file?.absolutePath, question, instruction) {
                     parser.feed(it)
                 }
             }.onFailure { Log.e(TAG, "VLM failed", it) }.getOrNull()
             parser.finish()
+            chunker.flush()?.let { voice.say(it, spoken) }
             val total = System.currentTimeMillis() - start
             Log.i(
                 TAG,
-                "Turn $id \"$question\": keyframe $keyframeMs ms, first part $firstPartMs ms, all parts $allPartsMs ms " +
+                "Turn $id $intent \"$question\": keyframe $keyframeMs ms, first part $firstPartMs ms, all parts $allPartsMs ms " +
                     "(${summary(parser.grounding)}), first word $firstTokenMs ms, total $total ms, ${result?.stats}",
             )
 
@@ -345,9 +476,8 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
             if (result == null || result.cancelled || finalAnswer.isEmpty()) {
                 keyframe?.file?.delete()
                 if (turn.get() == id) {
-                    _state.update {
-                        it.copy(phase = Phase.Listening, answer = "Sorry, I couldn't look at that. Please try again.")
-                    }
+                    _state.update { it.copy(phase = Phase.Listening, answer = SORRY) }
+                    voice.speak(SORRY, spoken)
                 }
                 return@launch
             }
@@ -365,8 +495,19 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     private fun saveTurn(sessionId: String, question: String, answer: String, keyframe: String?, ms: Long) {
+        // The first reply to the greeting's "is it working fine now?" is about that earlier repair, not this one.
+        val open = _state.value.session?.takeIf { it.id == sessionId }
+        val followUpOf = open?.followUpOf?.takeIf { open.turns.isEmpty() }
+        followUpOf?.let { id ->
+            MemoryRules.followUpOutcome(question)?.let { outcome ->
+                Log.i(TAG, "Follow-up: \"$question\" marks $id as $outcome")
+                updateSession(id, touch = false) { it.copy(memory = it.memory.copy(outcome = outcome)) }
+            }
+        }
+        val earlier = followUpOf?.let { id -> _state.value.sessions.firstOrNull { it.id == id }?.memory }
         updateSession(sessionId) { s ->
-            val memory = MemoryRules.update(s.memory, question, answer)
+            val memory = if (followUpOf != null) MemoryRules.afterFollowUp(s.memory, question, earlier)
+            else MemoryRules.update(s.memory, question, answer)
             val keywordTitle = MemoryRules.keywordTitle(memory)
             val retitle = s.titleSource <= TitleSource.Keyword && keywordTitle != null && keywordTitle != s.title
             s.copy(
@@ -376,7 +517,17 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
                 titleSource = if (retitle) TitleSource.Keyword else s.titleSource,
             )
         }?.let { saved ->
-            if (saved.titleSource <= TitleSource.Keyword && saved.turns.size in TITLE_AT_TURNS) requestTitle(saved)
+            // The greeting has been answered: the earlier repair leaves the model's view, rebuilt now while it's idle
+            // and before the title request reads the conversation.
+            val dropPast = followUpOf != null && pastRepairs != null
+            if (dropPast) pastRepairs = null
+            // A reply about the earlier repair says nothing about this session's topic, so it doesn't count.
+            val topicTurns = saved.turns.size - if (MemoryRules.openedWithFollowUp(saved)) 1 else 0
+            val title = saved.titleSource <= TitleSource.Keyword && topicTurns in TITLE_AT_TURNS
+            viewModelScope.launch {
+                if (dropPast) runCatching { context.prewarm(saved, null) }.onFailure { Log.e(TAG, "Prewarm failed", it) }
+                if (title) requestTitle(saved)
+            }
         }
     }
 
@@ -458,7 +609,7 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
                         "${System.currentTimeMillis() - start} ms (${result?.stats ?: "skipped, VLM busy"})",
                 )
                 if (parts.isEmpty() || turn.get() != id) return@launch
-                tracker.seed(FlowTracker.Seed(parts, keyframe.timestampNs) { turn.get() == id })
+                tracker.seed(FlowTracker.Seed(parts, keyframe.timestampNs, quiet = true) { turn.get() == id })
             }
         }
     }
@@ -497,8 +648,12 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
                         endGuide()
                         clearMarker()
                         _state.update { it.copy(question = text, questionFinal = true, answer = GUIDE_STOPPED, timing = "") }
+                        say(GUIDE_STOPPED)
                     }
-                    reminder != null -> _state.update { it.copy(question = text, questionFinal = true, hint = reminder) }
+                    reminder != null -> {
+                        _state.update { it.copy(question = text, questionFinal = true, hint = reminder) }
+                        say(reminder)
+                    }
                     else -> showGuide(text, next)
                 }
                 return true
@@ -508,10 +663,12 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
                 return true
             }
         }
-        val match = retriever?.find(text) as? Retriever.Match.Found ?: return false
+        // "Not cooling" is an AC or a fridge: search the appliance the user named, or the session's.
+        val (appliance, brand) = MemoryRules.kbContext(text, _state.value.session?.memory)
+        val match = retriever?.find(text, appliance, brand) as? Retriever.Match.Found ?: return false
         // Asking about the repair already in progress is a follow-up, not a restart.
         if (match.entry.id == entry?.id && guideState !is GuideState.Done) return false
-        Log.i(TAG, "KB match ${match.entry.id} (stage ${match.stage}: ${match.why}), kb ${kb?.version}")
+        Log.i(TAG, "KB match ${match.entry.id} (stage ${match.stage}: ${match.why}; appliance $appliance, brand $brand), kb ${kb?.version}")
         showGuide(text, Guide.start(match.entry))
         return true
     }
@@ -530,6 +687,8 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
             )
         }
         Log.i(TAG, "Guide ${state.entry()?.id} (kb ${kb?.version}): ${ins.progress} \"${ins.say}\" target=${ins.target} verify=${ins.verify}")
+        // The KB's words, spoken verbatim; the step's part is pointed at meanwhile.
+        voice.speak(ins.say, voice.epoch())
         _state.value.session?.let { saveTurn(it.id, question, ins.say, null, 0) }
         if (ins.target == null && ins.verify == null) return
         guideJob = viewModelScope.launch {
@@ -580,7 +739,8 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
             if (guideState != state) return
             val s = _state.value
             val session = s.session ?: return
-            if (s.phase != Phase.Listening || !s.questionFinal) return@repeat // the user is talking: try later
+            // The user is talking, or Fixy is: try later (and don't move on mid-sentence).
+            if (s.phase != Phase.Listening || !s.questionFinal || s.speaking) return@repeat
             val keyframe = frameGrabber.captureKeyframe(File(getApplication<Application>().cacheDir, "verify.jpg"))
                 ?: return@repeat
             val out = StringBuilder()
@@ -616,17 +776,19 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
 
     /**
      * Applies [transform] to a session (the open one, or the stored copy) and saves it. Runs on the main
-     * thread, so updates never interleave. Returns the updated session.
+     * thread, so updates never interleave. Returns the updated session. [touch] = false keeps its "last updated"
+     * time, for a note that isn't new activity (a later session saying how this repair turned out).
      */
-    private fun updateSession(id: String, transform: (RepairSession) -> RepairSession): RepairSession? {
+    private fun updateSession(id: String, touch: Boolean = true, transform: (RepairSession) -> RepairSession): RepairSession? {
+        fun apply(s: RepairSession) = transform(s).let { if (touch) it.copy(updated = System.currentTimeMillis()) else it }
         val open = _state.value.session?.takeIf { it.id == id }
         val updated = if (open != null) {
-            transform(open).copy(updated = System.currentTimeMillis()).also { s -> _state.update { it.copy(session = s) } }
+            apply(open).also { s -> _state.update { it.copy(session = s) } }
         } else {
             null
         }
         viewModelScope.launch {
-            val saved = updated ?: repo.load(id)?.let { transform(it).copy(updated = System.currentTimeMillis()) } ?: return@launch
+            val saved = updated ?: repo.load(id)?.let(::apply) ?: return@launch
             repo.save(saved)
             if (_state.value.screen == Screen.Sessions) refreshSessions()
         }
@@ -637,6 +799,13 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
     private fun cancelTurn() {
         turn.incrementAndGet()
         vlm.cancel()
+        voice.stop()
+    }
+
+    /** Says a fixed line now, cutting off whatever Fixy was saying. */
+    private fun say(text: String) {
+        voice.stop()
+        voice.speak(text, voice.epoch())
     }
 
     private fun fail(message: String) {
@@ -646,6 +815,7 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
 
     override fun onCleared() {
         speech.stop()
+        voice.release()
         super.onCleared()
     }
 
@@ -664,7 +834,10 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
         const val VERIFY_EVERY_MS = 6000L
         const val MAX_VERIFY_CHECKS = 10
         const val GUIDE_STOPPED = "Okay, we'll stop the guide here."
+        const val SORRY = "Sorry, I couldn't look at that. Please try again."
         /** Shown as the "question" when the auto-check moves on by itself. */
         const val SEEN_DONE = "✓ Looks done"
+        const val HOLD_HINT = "Hold the mic while you talk"
+        const val HINT_MS = 2500L
     }
 }
