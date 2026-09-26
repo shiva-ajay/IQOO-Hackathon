@@ -47,14 +47,19 @@ class ConversationContext(private val vlm: VlmEngine) {
         Log.i(TAG, "Prewarmed ${session.id} with ${replay.size} turns (${result.stats})")
     }
 
+    /**
+     * Appends a question turn (picture + [question] + optional [instruction], e.g. the grounding request) and
+     * streams the reply. Only [question] is replayed on a later rebuild; the instruction isn't.
+     */
     suspend fun ask(
         session: RepairSession,
         imagePath: String?,
         question: String,
+        instruction: String? = null,
         onText: (String) -> Unit,
     ): VlmEngine.Result = lock.withLock {
         val rebuild = liveSessionId != session.id || kvTokens > COMPACT_AT_TOKENS
-        val content = (imagePath?.let(FixyPrompts::image) ?: "") + question
+        val content = (imagePath?.let(FixyPrompts::image) ?: "") + question + (instruction?.let { "\n\n$it" } ?: "")
         val prompt = if (rebuild) {
             buildString {
                 append(FixyPrompts.system(MemoryRules.render(session.memory)))
@@ -96,6 +101,31 @@ class ConversationContext(private val vlm: VlmEngine) {
         if (result.cancelled) null else FixyPrompts.cleanTitle(out.toString())
     }
 
+    /**
+     * Re-ground side request: where is [label] in the picture at [imagePath] now? It sees the live conversation
+     * and is rolled back afterwards. Returns null without waiting when the VLM is busy (a question always
+     * wins) or [session] isn't the one in the cache.
+     */
+    suspend fun locate(session: RepairSession, imagePath: String, label: String, onText: (String) -> Unit): VlmEngine.Result? {
+        if (!lock.tryLock()) return null
+        try {
+            if (liveSessionId != session.id) return null
+            val result = runGuarded {
+                vlm.generate(
+                    (if (answerOpen) FixyPrompts.CLOSE_ANSWER else "") +
+                        FixyPrompts.userTurn(FixyPrompts.image(imagePath) + FixyPrompts.locate(label)),
+                    VlmEngine.Keep.Never,
+                    maxTokens = LOCATE_MAX_TOKENS,
+                    onText = onText,
+                )
+            }
+            kvTokens = result.kvTokens
+            return result
+        } finally {
+            lock.unlock()
+        }
+    }
+
     /** Forget the cache, e.g. when the session it holds is deleted. */
     suspend fun invalidate(sessionId: String? = null) = lock.withLock {
         if (sessionId == null || sessionId == liveSessionId) {
@@ -116,5 +146,7 @@ class ConversationContext(private val vlm: VlmEngine) {
         /** Past turns replayed as text on a rebuild; the session notes carry the rest. */
         const val REPLAY_TURNS = 2
         const val TITLE_MAX_TOKENS = 12
+        /** Enough for one box line; the caller stops earlier once the box is parsed. */
+        const val LOCATE_MAX_TOKENS = 48
     }
 }

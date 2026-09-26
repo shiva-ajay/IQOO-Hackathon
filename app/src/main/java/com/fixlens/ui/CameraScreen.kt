@@ -1,9 +1,13 @@
 package com.fixlens.ui
 
+import android.util.Log
 import android.util.Size
+import android.view.View
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
+import androidx.camera.core.UseCaseGroup
+import androidx.camera.core.resolutionselector.AspectRatioStrategy
 import androidx.camera.core.resolutionselector.ResolutionSelector
 import androidx.camera.core.resolutionselector.ResolutionStrategy
 import androidx.camera.lifecycle.ProcessCameraProvider
@@ -74,6 +78,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fixlens.app.FixLensViewModel
 import com.fixlens.app.Phase
+import com.fixlens.app.TAG
 import com.fixlens.app.UiState
 import com.fixlens.session.Turn
 import com.fixlens.ui.fx.OrbState
@@ -92,15 +97,24 @@ fun CameraScreen(viewModel: FixLensViewModel, onBack: () -> Unit) {
         else turns
     }
 
+    val marker = viewModel.marker.collectAsStateWithLifecycle()
+    val analysisSize by viewModel.analysisSize.collectAsStateWithLifecycle()
+
     Box(Modifier.fillMaxSize().background(Ink)) {
         CameraPreview(viewModel)
+        MarkerOverlay(marker, analysisSize, state.debugTestBox, state.frozen)
         Scrims()
 
         val listening = state.engineReady && state.phase == Phase.Listening && state.micOn
         val level by viewModel.micLevel.collectAsStateWithLifecycle()
         VoiceGlow(level = level, active = listening, modifier = Modifier.fillMaxSize())
 
-        TopBar(title = state.session?.title.orEmpty(), onBack = onBack, modifier = Modifier.align(Alignment.TopCenter))
+        Column(Modifier.align(Alignment.TopCenter), horizontalAlignment = Alignment.CenterHorizontally) {
+            TopBar(title = state.session?.title.orEmpty(), onBack = onBack)
+            AnimatedVisibility(visible = state.hint != null, enter = fadeIn(tween(200)), exit = fadeOut(tween(150))) {
+                HintChip(state.hint.orEmpty())
+            }
+        }
 
         Column(
             Modifier
@@ -202,6 +216,21 @@ private fun TopBar(title: String, onBack: () -> Unit, modifier: Modifier = Modif
             Text("On-device", color = Paper, style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Medium))
         }
     }
+}
+
+@Composable
+private fun HintChip(text: String) {
+    Text(
+        text,
+        color = Paper,
+        style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Medium),
+        modifier = Modifier
+            .padding(top = 4.dp)
+            .clip(RoundedCornerShape(50))
+            .background(Ink.copy(alpha = 0.75f))
+            .border(1.dp, Amber.copy(alpha = 0.6f), RoundedCornerShape(50))
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+    )
 }
 
 @Composable
@@ -412,34 +441,64 @@ private fun MicGlyph(color: Color, muted: Boolean, modifier: Modifier = Modifier
     }
 }
 
+/**
+ * Preview + YUV analysis bound as one [UseCaseGroup] with the preview's ViewPort, so the analysis crop rect is
+ * exactly what's on screen (the VLM sees what the user sees; analysis → view is a plain scale). Both 16:9.
+ * See docs/marker-tracking.md §1.
+ */
 @Composable
 private fun CameraPreview(viewModel: FixLensViewModel) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
-    val analysisExecutor = remember { Executors.newSingleThreadExecutor() }
+    val analysisExecutor = remember { Executors.newSingleThreadExecutor { r -> Thread(r, "fixlens-analysis") } }
     val previewView = remember { PreviewView(context).apply { scaleType = PreviewView.ScaleType.FILL_CENTER } }
 
     DisposableEffect(lifecycleOwner) {
         val providerFuture = ProcessCameraProvider.getInstance(context)
-        providerFuture.addListener({
-            val provider = providerFuture.get()
-            val preview = Preview.Builder().build().also { it.surfaceProvider = previewView.surfaceProvider }
+        var disposed = false
+        fun bind() {
+            val viewPort = previewView.viewPort
+            if (disposed || viewPort == null) return
+            val ratio = AspectRatioStrategy.RATIO_16_9_FALLBACK_AUTO_STRATEGY
+            val preview = Preview.Builder()
+                .setResolutionSelector(ResolutionSelector.Builder().setAspectRatioStrategy(ratio).build())
+                .build()
+                .also { it.surfaceProvider = previewView.surfaceProvider }
             val analysis = ImageAnalysis.Builder()
                 .setResolutionSelector(
                     ResolutionSelector.Builder()
+                        .setAspectRatioStrategy(ratio)
                         .setResolutionStrategy(
-                            ResolutionStrategy(Size(640, 480), ResolutionStrategy.FALLBACK_RULE_CLOSEST_HIGHER_THEN_LOWER),
+                            ResolutionStrategy(Size(1280, 720), ResolutionStrategy.FALLBACK_RULE_CLOSEST_HIGHER_THEN_LOWER),
                         )
                         .build(),
                 )
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                .setOutputImageFormat(ImageAnalysis.OUTPUT_IMAGE_FORMAT_RGBA_8888)
+                .setOutputImageFormat(ImageAnalysis.OUTPUT_IMAGE_FORMAT_YUV_420_888)
                 .build()
                 .also { it.setAnalyzer(analysisExecutor, viewModel.frameGrabber) }
+            val group = UseCaseGroup.Builder().setViewPort(viewPort).addUseCase(preview).addUseCase(analysis).build()
+            val provider = providerFuture.get()
             provider.unbindAll()
-            provider.bindToLifecycle(lifecycleOwner, CameraSelector.DEFAULT_BACK_CAMERA, preview, analysis)
+            provider.bindToLifecycle(lifecycleOwner, CameraSelector.DEFAULT_BACK_CAMERA, group)
+            Log.i(TAG, "Camera bound: view ${previewView.width}x${previewView.height}, viewport ${viewPort.aspectRatio}")
+        }
+        providerFuture.addListener({
+            // The ViewPort needs the view's final size, so bind after its first layout.
+            if (previewView.isLaidOut && previewView.width > 0) {
+                bind()
+            } else {
+                previewView.addOnLayoutChangeListener(object : View.OnLayoutChangeListener {
+                    override fun onLayoutChange(v: View, l: Int, t: Int, r: Int, b: Int, ol: Int, ot: Int, or: Int, ob: Int) {
+                        if (v.width == 0) return
+                        v.removeOnLayoutChangeListener(this)
+                        bind()
+                    }
+                })
+            }
         }, ContextCompat.getMainExecutor(context))
         onDispose {
+            disposed = true
             runCatching { providerFuture.get().unbindAll() }
             analysisExecutor.shutdown()
         }

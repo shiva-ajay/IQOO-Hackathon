@@ -6,19 +6,29 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.fixlens.camera.FrameGrabber
 import com.fixlens.guide.ConversationContext
+import com.fixlens.guide.FixyPrompts
 import com.fixlens.guide.MemoryRules
 import com.fixlens.session.RepairSession
 import com.fixlens.session.SessionRepository
 import com.fixlens.session.TitleSource
 import com.fixlens.session.Turn
+import com.fixlens.tracking.FlowTracker
+import com.fixlens.tracking.MarkerState
+import com.fixlens.vision.BoxMapper
+import com.fixlens.vision.CoordScale
+import com.fixlens.vision.GroundingParser
+import com.fixlens.vision.GroundingParser.Grounding
+import com.fixlens.vision.ModelBox
 import com.fixlens.vision.VlmEngine
 import com.fixlens.voice.SpeechInput
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -47,6 +57,24 @@ data class UiState(
     val questionFinal: Boolean = false,
     val answer: String = "",
     val timing: String = "",
+    /** "Point the camera at the …" when Fixy was asked to point but gave no usable box. */
+    val hint: String? = null,
+    // Debug overlays, switched over adb (see MainActivity.onNewIntent).
+    val debugTestBox: Boolean = false,
+    val debugFreeze: Boolean = false,
+    val frozen: FrozenKeyframe? = null,
+)
+
+/** Debug: a question's keyframe and the raw VLM box, drawn over the preview to verify the mapping and scale. */
+data class FrozenKeyframe(
+    val path: String,
+    val width: Int,
+    val height: Int,
+    /** 0 for a file keyframe (not from the camera). */
+    val analysisWidth: Int,
+    val analysisHeight: Int,
+    val raw: ModelBox?,
+    val note: String,
 )
 
 class FixLensViewModel(app: Application) : AndroidViewModel(app) {
@@ -58,7 +86,11 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
     private val _micLevel = MutableStateFlow(0f)
     val micLevel: StateFlow<Float> = _micLevel
 
-    val frameGrabber = FrameGrabber()
+    private val tracker = FlowTracker(onReGround = ::onReGroundRequest)
+    val frameGrabber = FrameGrabber(onFrame = tracker::onFrame)
+    /** The marker in analysis space, ~30 updates a second (kept out of [state] like [micLevel]). */
+    val marker: StateFlow<MarkerState?> = tracker.state
+    val analysisSize = frameGrabber.analysisSize
     private val vlm = VlmEngine()
     private val context = ConversationContext(vlm)
     private val filesDir = app.getExternalFilesDir(null)!!
@@ -72,6 +104,12 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
 
     /** Incremented per question; output from an older (cancelled) turn is ignored. */
     private val turn = AtomicInteger(0)
+
+    private var coordScale = COORD_SCALE
+    private var groundingStyle = FixyPrompts.GroundingStyle.Contract
+    private var reGroundJob: Job? = null
+    /** Re-grounds used since the last question (capped, so a hopeless target doesn't keep the VLM busy). */
+    private var reGrounds = 0
 
     init {
         refreshSessions()
@@ -105,6 +143,7 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
 
     private fun open(session: RepairSession) {
         frameGrabber.clear()
+        clearMarker()
         val last = session.turns.lastOrNull()
         _state.update {
             it.copy(
@@ -115,6 +154,8 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
                 questionFinal = true,
                 answer = last?.answer.orEmpty(),
                 timing = if (last != null) "Earlier" else "",
+                hint = null,
+                frozen = null,
             )
         }
         onSessionScreenReady()
@@ -133,8 +174,12 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
         cancelTurn()
         speech.stop()
         frameGrabber.clear()
+        clearMarker()
         _state.update {
-            it.copy(screen = Screen.Sessions, session = null, question = "", answer = "", timing = "", questionFinal = false)
+            it.copy(
+                screen = Screen.Sessions, session = null, question = "", answer = "", timing = "", questionFinal = false,
+                hint = null, frozen = null,
+            )
         }
         refreshSessions()
     }
@@ -169,12 +214,31 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
         if (on) speech.start() else speech.stop()
     }
 
-    /** Debug hook (see MainActivity.onNewIntent): a typed question, as if spoken. */
-    fun debugAsk(text: String) {
+    /**
+     * Debug hook (see MainActivity.onNewIntent): a typed question, as if spoken. `point: <phrase>` forces a
+     * grounding target; [imagePath] replaces the camera frame with an image file (nothing is tracked then).
+     */
+    fun debugAsk(text: String, imagePath: String? = null) {
         viewModelScope.launch {
             delay(DEBUG_CAMERA_SETTLE_MS) // the intent pauses/resumes the activity; let the camera expose again
-            if (_state.value.screen == Screen.Session && _state.value.engineReady) onQuestion(text)
+            if (_state.value.screen != Screen.Session || !_state.value.engineReady) return@launch
+            val target = if (text.startsWith("point:", ignoreCase = true)) text.substringAfter(':').trim() else null
+            ask(if (target != null) "Where is the $target?" else text, target, imagePath?.let(::File))
         }
+    }
+
+    /** Debug hook: overlays and grounding settings (null leaves a setting as it is). */
+    fun debugSettings(testBox: Boolean?, freeze: Boolean?, grounding: String?, coords: String?) {
+        grounding?.let { g -> groundingStyle = FixyPrompts.GroundingStyle.entries.firstOrNull { it.name.equals(g, true) } ?: groundingStyle }
+        coords?.let { coordScale = if (it.startsWith("px", true)) CoordScale.ABSOLUTE_PIXELS else CoordScale.NORMALIZED_1000 }
+        _state.update {
+            it.copy(
+                debugTestBox = testBox ?: it.debugTestBox,
+                debugFreeze = freeze ?: it.debugFreeze,
+                frozen = if (freeze == false) null else it.frozen,
+            )
+        }
+        Log.i(TAG, "Debug: testBox=${_state.value.debugTestBox} freeze=${_state.value.debugFreeze} grounding=$groundingStyle coords=$coordScale")
     }
 
     private fun onPartial(text: String) {
@@ -186,33 +250,62 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    private fun onQuestion(text: String) {
+    private fun onQuestion(text: String) = ask(text)
+
+    /**
+     * One question turn: grab the keyframe, stream the reply through [GroundingParser], seed the tracker the
+     * moment the box line is parsed (before the text finishes), and stream the rest into the answer card.
+     * [target] is the phrase to point at (debug `point:` now, KB steps in M4); [image] stands in for the camera.
+     */
+    private fun ask(question: String, target: String? = null, image: File? = null) {
         val session = _state.value.session ?: return
         cancelTurn()
+        clearMarker()
+        reGrounds = 0
         val id = turn.incrementAndGet()
-        val keyframe = frameGrabber.saveKeyframe(
-            File(repo.dir(session.id).apply { mkdirs() }, "kf_${System.currentTimeMillis()}.jpg"),
-        )
-        _state.update { it.copy(question = text, questionFinal = true, answer = "", timing = "", phase = Phase.Thinking) }
+        val start = System.currentTimeMillis()
+        _state.update {
+            it.copy(question = question, questionFinal = true, answer = "", timing = "", phase = Phase.Thinking, hint = null, frozen = null)
+        }
 
         viewModelScope.launch {
-            val start = System.currentTimeMillis()
+            val file = File(repo.dir(session.id).apply { mkdirs() }, "kf_${System.currentTimeMillis()}.jpg")
+            val keyframe = if (image != null) {
+                withContext(Dispatchers.IO) { FrameGrabber.keyframeFromFile(image, file) }
+            } else {
+                frameGrabber.captureKeyframe(file)
+            }
+            val keyframeMs = System.currentTimeMillis() - start
+            var boxMs = -1L
             var firstTokenMs = -1L
-            val answer = StringBuilder()
-            val result = runCatching {
-                context.ask(session, keyframe?.absolutePath, text) { chunk ->
-                    answer.append(chunk)
-                    if (turn.get() != id) return@ask
+            val parser = GroundingParser(
+                onGrounding = { g ->
+                    boxMs = System.currentTimeMillis() - start
+                    onGrounding(g, keyframe, target, id)
+                },
+                onText = text@{ chunk ->
+                    if (turn.get() != id) return@text
                     if (firstTokenMs < 0) firstTokenMs = System.currentTimeMillis() - start
                     _state.update { it.copy(phase = Phase.Answering, answer = it.answer + chunk) }
+                },
+            )
+            val result = runCatching {
+                context.ask(session, keyframe?.file?.absolutePath, question, FixyPrompts.grounding(target, groundingStyle)) {
+                    parser.feed(it)
                 }
             }.onFailure { Log.e(TAG, "VLM failed", it) }.getOrNull()
+            parser.finish()
             val total = System.currentTimeMillis() - start
-            Log.i(TAG, "Turn $id \"$text\": first token $firstTokenMs ms, total $total ms, ${result?.stats}")
+            Log.i(
+                TAG,
+                "Turn $id \"$question\": keyframe $keyframeMs ms, box line $boxMs ms (${parser.grounding}), " +
+                    "first word $firstTokenMs ms, total $total ms, ${result?.stats}",
+            )
 
-            val finalAnswer = answer.toString().trim()
+            // The saved answer (history, titles, replays) never contains the box line.
+            val finalAnswer = parser.text.trim()
             if (result == null || result.cancelled || finalAnswer.isEmpty()) {
-                keyframe?.delete()
+                keyframe?.file?.delete()
                 if (turn.get() == id) {
                     _state.update {
                         it.copy(phase = Phase.Listening, answer = "Sorry, I couldn't look at that. Please try again.")
@@ -221,7 +314,7 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
                 return@launch
             }
             // The model finished this turn, so it is in the model's memory: store it even if the screen moved on.
-            saveTurn(session.id, text, finalAnswer, keyframe?.name, total)
+            saveTurn(session.id, question, finalAnswer, keyframe?.file?.name, total)
             if (turn.get() != id) return@launch
             _state.update {
                 it.copy(
@@ -247,6 +340,86 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
         }?.let { saved ->
             if (saved.titleSource <= TitleSource.Keyword && saved.turns.size in TITLE_AT_TURNS) requestTitle(saved)
         }
+    }
+
+    /** Runs on the VLM thread as soon as the box line is parsed: map the box and hand it to the tracker. */
+    private fun onGrounding(g: Grounding, keyframe: FrameGrabber.Keyframe?, target: String?, id: Int) {
+        if (turn.get() != id) return
+        val raw = (g as? Grounding.Box)?.box
+        val box = if (raw != null && keyframe != null) BoxMapper.modelToKeyframe(raw, coordScale, keyframe.width, keyframe.height) else null
+        Log.i(TAG, "Grounding: $g -> keyframe box $box (${keyframe?.width}x${keyframe?.height}, $coordScale)")
+        if (keyframe != null && _state.value.debugFreeze) {
+            _state.update {
+                it.copy(
+                    frozen = FrozenKeyframe(
+                        keyframe.file.absolutePath, keyframe.width, keyframe.height,
+                        keyframe.analysisWidth, keyframe.analysisHeight, raw, g.toString(),
+                    ),
+                )
+            }
+        }
+        if (box == null || keyframe == null) {
+            if (target != null) _state.update { it.copy(hint = "Point the camera at the $target") }
+            return
+        }
+        if (keyframe.timestampNs == 0L) return // a debug image file: nothing to track
+        val label = (raw?.label ?: target ?: "here").take(MAX_LABEL)
+        tracker.seed(
+            FlowTracker.Seed(
+                BoxMapper.keyframeToAnalysis(box, keyframe.width, keyframe.height, keyframe.analysisWidth, keyframe.analysisHeight),
+                keyframe.timestampNs,
+                label,
+            ) { turn.get() == id },
+        )
+    }
+
+    /**
+     * The tracker lost the part for over a second (analysis thread). Silently asks the VLM where [label] is
+     * now, as a side request that is rolled back from the KV cache. Only while Fixy is idle and the user
+     * isn't talking, one at a time, and at most [MAX_REGROUNDS] per question.
+     */
+    private fun onReGroundRequest(label: String) {
+        viewModelScope.launch {
+            val s = _state.value
+            val session = s.session ?: return@launch
+            if (s.screen != Screen.Session || s.phase != Phase.Listening || !s.questionFinal) return@launch
+            if (reGroundJob?.isActive == true || reGrounds >= MAX_REGROUNDS) return@launch
+            reGrounds++
+            val id = turn.get()
+            val attempt = reGrounds
+            reGroundJob = launch {
+                val start = System.currentTimeMillis()
+                val keyframe = frameGrabber.captureKeyframe(File(getApplication<Application>().cacheDir, "reground.jpg"))
+                    ?: return@launch
+                // Stop generating once the box line is in; the rest is never used.
+                val parser = GroundingParser(onGrounding = { vlm.cancel() }, onText = {})
+                val result = runCatching {
+                    context.locate(session, keyframe.file.absolutePath, label) { parser.feed(it) }
+                }.onFailure { Log.e(TAG, "Re-ground failed", it) }.getOrNull()
+                parser.finish()
+                val raw = (parser.grounding as? Grounding.Box)?.box
+                val box = raw?.let { BoxMapper.modelToKeyframe(it, coordScale, keyframe.width, keyframe.height) }
+                Log.i(
+                    TAG,
+                    "Re-ground $attempt/$MAX_REGROUNDS \"$label\": ${parser.grounding} -> $box in " +
+                        "${System.currentTimeMillis() - start} ms (${result?.stats ?: "skipped, VLM busy"})",
+                )
+                if (box == null || turn.get() != id) return@launch
+                tracker.seed(
+                    FlowTracker.Seed(
+                        BoxMapper.keyframeToAnalysis(box, keyframe.width, keyframe.height, keyframe.analysisWidth, keyframe.analysisHeight),
+                        keyframe.timestampNs,
+                        label,
+                    ) { turn.get() == id },
+                )
+            }
+        }
+    }
+
+    private fun clearMarker() {
+        tracker.clear()
+        reGroundJob?.cancel()
+        reGroundJob = null
     }
 
     /** Asks the model to name the session, in the background; a newer question simply cancels it. */
@@ -298,5 +471,9 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
         /** Name the session after the first answer; try again at turn 3 if the model's first try was unusable. */
         val TITLE_AT_TURNS = setOf(1, 3)
         const val DEBUG_CAMERA_SETTLE_MS = 1500L
+        /** How the VLM's box numbers are read. Verified on the phone, see docs/marker-tracking.md §2. */
+        val COORD_SCALE = CoordScale.NORMALIZED_1000
+        const val MAX_REGROUNDS = 5
+        const val MAX_LABEL = 40
     }
 }

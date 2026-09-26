@@ -95,7 +95,8 @@ class VlmEngine {
     private external fun nativeRelease(handle: Long)
 
     companion object {
-        const val MAX_NEW_TOKENS = 120
+        /** Box line (~30 tokens) + two short sentences. */
+        const val MAX_NEW_TOKENS = 150
         /** The whole conversation budget (MNN defaults to 2048). ~147 KB of KV per token for the 4B model. */
         const val MAX_CONTEXT_TOKENS = 4096
 

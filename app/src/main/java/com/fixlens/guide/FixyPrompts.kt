@@ -10,7 +10,33 @@ object FixyPrompts {
             "Max 2 short sentences. Always put safety first. " +
             "Your name is Fixy. Never call yourself an AI model, Qwen, or anything else. " +
             "Each question comes with the latest camera picture; earlier pictures may show a different view, " +
-            "so answer about the latest picture unless the user asks about an earlier one."
+            "so answer about the latest picture unless the user asks about an earlier one. " +
+            "When asked to point at something, output the box line first, then your spoken reply."
+
+    /** Until the KB gives a target phrase (M4), Fixy points at whatever the question is about. */
+    const val DEFAULT_TARGET = "the part I should look at for this question"
+
+    /** How the box is asked for. [Contract] is CLAUDE.md §9; [Native] is Qwen3-VL's own grounding phrasing. */
+    enum class GroundingStyle { Contract, Native }
+
+    /** Appended to every question: box line first, then the spoken reply. */
+    fun grounding(target: String?, style: GroundingStyle): String {
+        val find = target ?: DEFAULT_TARGET
+        return when (style) {
+            GroundingStyle.Contract ->
+                "Find: \"$find\"\n" +
+                    "First line: JSON only, {\"bbox_2d\":[x1,y1,x2,y2],\"label\":\"...\"} or {\"bbox_2d\":null}\n" +
+                    "Then: one or two short sentences as Fixy."
+            GroundingStyle.Native ->
+                "Locate $find in the image and output its bbox coordinates in JSON on the first line, " +
+                    "or {\"bbox_2d\":null} if nothing applies. Then answer in one or two short sentences as Fixy."
+        }
+    }
+
+    /** Re-ground side request: only the box line for a part Fixy already pointed at. */
+    fun locate(label: String): String =
+        "Where is the $label now? Output only one line of JSON: " +
+            "{\"bbox_2d\":[x1,y1,x2,y2],\"label\":\"$label\"} or {\"bbox_2d\":null}"
 
     const val TITLE_REQUEST =
         "Give this repair chat a short title of 2 to 4 words, like \"Fridge not cooling\" or " +

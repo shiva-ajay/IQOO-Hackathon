@@ -86,15 +86,19 @@ class MainActivity : ComponentActivity() {
 
     /**
      * Debug builds only: type a question instead of speaking it, for testing over adb:
-     * `adb shell am start -n com.fixlens/.app.MainActivity --es ask "what is this?"` (also `--ez new true`, `--ez mic false`).
+     * `adb shell am start -n com.fixlens/.app.MainActivity --es ask "what is this?"` (also `--ez new true`).
+     * Marker testing (docs/marker-tracking.md): `--es ask "point: <phrase>"` forces what to point at,
+     * `--es image /sdcard/.../x.jpg` uses a file instead of the camera, `--ez testbox true` and `--ez freeze true`
+     * draw the mapping checks, `--es grounding contract|native` and `--es coords norm|px` switch prompt and scale.
      */
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         if (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE == 0) return
         val vm = ViewModelProvider(this)[FixLensViewModel::class.java]
         if (intent.getBooleanExtra("new", false)) vm.newSession()
-        if (intent.hasExtra("mic") && intent.getBooleanExtra("mic", true) != vm.state.value.micOn) vm.toggleMic()
-        intent.getStringExtra("ask")?.let(vm::debugAsk)
+        fun flag(name: String) = if (intent.hasExtra(name)) intent.getBooleanExtra(name, false) else null
+        vm.debugSettings(flag("testbox"), flag("freeze"), intent.getStringExtra("grounding"), intent.getStringExtra("coords"))
+        intent.getStringExtra("ask")?.let { vm.debugAsk(it, intent.getStringExtra("image")) }
     }
 
     private fun allGranted() = REQUIRED_PERMISSIONS.all { checkSelfPermission(it) == PackageManager.PERMISSION_GRANTED }
