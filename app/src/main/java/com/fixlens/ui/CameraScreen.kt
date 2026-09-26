@@ -355,7 +355,7 @@ private fun ConversationCard(state: UiState) {
 }
 
 private fun statusLabel(state: UiState): String = when (state.phase) {
-    Phase.Thinking -> "Looking"
+    Phase.Thinking -> if (state.partsFound > 0) "Found ${state.partsFound}" else "Looking"
     Phase.Answering -> "Answering"
     else -> when {
         !state.micOn -> "Paused"

@@ -32,7 +32,16 @@ SHORT_RULE = ('Every reply starts with one line of JSON for the part named in Fi
               '{"bbox_2d":[x1,y1,x2,y2],"label":"..."}, or {"bbox_2d":null} if it is not visible. '
               'Then one or two short sentences.')
 
+DEFAULT_PARTS = 'every exact part to act on for this question (a cap, a button, a cover), never the whole device'
+
 def grounding(target, style):
+    if style == 'parts':  # FixyPrompts.GroundingStyle.Parts
+        find = f'"{target}"' if target != DEFAULT_TARGET else DEFAULT_PARTS
+        return (f'Find: {find}\n'
+                'First: a JSON list, one entry per part: {"bbox_2d":[x1,y1,x2,y2],"label":"..."}, or '
+                '{"point_2d":[x,y],"label":"..."} for a small single part. Many tiny identical parts (like screws) '
+                'get one box around the area that holds them. [] if none.\n'
+                'Then: one or two short sentences as Fixy.')
     if style == 'short':
         return f'Find: "{target}"'
     if style == 'contract':
@@ -99,8 +108,8 @@ def parse_box(out):
         v = v[0]
     if isinstance(v, dict):
         b = v.get('bbox_2d', v.get('bbox'))
-        if b is None and 'point_2d' in v:
-            p = v['point_2d']; b = [p[0], p[1], p[0], p[1]]
+        if b is None and isinstance(v.get('point_2d'), list):
+            p = v['point_2d']; b = [p[0] - 15, p[1] - 15, p[0] + 15, p[1] + 15]
         if b is None: return 'NoBox', None, None
         if isinstance(b, list) and len(b) == 4: return 'Box', [float(x) for x in b], v.get('label')
     return 'Invalid', None, None
@@ -115,6 +124,55 @@ def center_in(a, b, slack=0.0):
     cx, cy = (a[0] + a[2]) / 2, (a[1] + a[3]) / 2
     w, h = b[2] - b[0], b[3] - b[1]
     return b[0] - slack * w <= cx <= b[2] + slack * w and b[1] - slack * h <= cy <= b[3] + slack * h
+
+def build_and_push(out):
+    """Builds the harness against the libMNN the app ships and pushes both to the phone."""
+    lib = os.path.join(ROOT, 'app/src/main/cpp/libs/arm64-v8a')
+    cxx = f'{NDK}/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android29-clang++'
+    exe = os.path.join(out, 'ground_test')
+    subprocess.check_call([cxx, '-std=c++17', '-O2', os.path.join(os.path.dirname(__file__), 'ground_test.cpp'), '-o', exe,
+                           f'-I{MNN}/include', f'-I{MNN}/transformers/llm/engine/include', f'-L{lib}', '-lMNN', '-llog',
+                           '-static-libstdc++'])
+    subprocess.check_call(['adb', 'shell', f'mkdir -p {PHONE}/img'])
+    subprocess.check_call(['adb', 'push', exe, os.path.join(lib, 'libMNN.so'), PHONE + '/'], stdout=subprocess.DEVNULL)
+
+def push_keyframe(src_path, name, out, long_side=None):
+    """Resizes an image like FrameGrabber.keyframeFromFile and pushes it; returns (orig size, keyframe size)."""
+    global LONG_SIDE
+    ls = long_side or LONG_SIDE
+    im = Image.open(src_path).convert('RGB')
+    s = ls / max(im.size)
+    align = lambda v: max(32, int(v / 32 + 0.5) * 32)
+    kw, kh = align(im.size[0] * s), align(im.size[1] * s)
+    local = os.path.join(out, 'kf_' + name)
+    im.resize((kw, kh), Image.BILINEAR).save(local, quality=90)
+    subprocess.check_call(['adb', 'push', local, f'{PHONE}/img/{name}'], stdout=subprocess.DEVNULL)
+    return im.size, (kw, kh)
+
+def run_on_phone(spec, n, max_tokens, extra_json='{}', joined=False):
+    """n = number of result lines expected (one per step)."""
+    """Runs the cases file on the phone (detached, survives USB drops) and returns the per-case results."""
+    subprocess.check_call(['adb', 'push', spec, PHONE + '/cases.txt'], stdout=subprocess.DEVNULL)
+    subprocess.run(['adb', 'shell', 'am force-stop com.fixlens'])
+    extra = extra_json.replace('"', '\\"')
+    run = (f'cd {PHONE} && rm -f out.jsonl && (LD_LIBRARY_PATH={PHONE} timeout 1800 ./ground_test {CONFIG} {PHONE}/cases.txt '
+           f'{max_tokens} "{extra}" {"joined" if joined else "split"} > out.jsonl 2> err.txt; echo DONE >> out.jsonl)')
+    subprocess.run(['adb', 'shell', f"nohup sh -c '{run}' > /dev/null 2>&1 &"])
+    out = ''
+    for _ in range(600):
+        time.sleep(4)
+        p = subprocess.run(['adb', 'shell', f'cat {PHONE}/out.jsonl'], capture_output=True, text=True)
+        if p.returncode != 0:
+            subprocess.run(['adb', 'wait-for-device'])
+            continue
+        out = p.stdout
+        if 'DONE' in out:
+            break
+    results = [json.loads(l) for l in out.splitlines() if l.startswith('{"case"')]
+    if len(results) != n:
+        err = subprocess.run(['adb', 'shell', f'cat {PHONE}/err.txt'], capture_output=True, text=True).stdout
+        print(out[-2000:], err[-2000:]); sys.exit(1)
+    return results
 
 def main():
     ap = argparse.ArgumentParser()
@@ -135,16 +193,7 @@ def main():
         src_dir = args.out + '/'
         all_cases = make_synthetic(args.out)
 
-    # Build the harness against the same libMNN the app ships.
-    lib = os.path.join(ROOT, 'app/src/main/cpp/libs/arm64-v8a')
-    cxx = f'{NDK}/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android29-clang++'
-    exe = os.path.join(args.out, 'ground_test')
-    subprocess.check_call([cxx, '-std=c++17', '-O2', os.path.join(os.path.dirname(__file__), 'ground_test.cpp'), '-o', exe,
-                           f'-I{MNN}/include', f'-I{MNN}/transformers/llm/engine/include', f'-L{lib}', '-lMNN', '-llog',
-                           '-static-libstdc++'])
-    subprocess.check_call(['adb', 'shell', f'mkdir -p {PHONE}/img'])
-    subprocess.check_call(['adb', 'push', exe, os.path.join(lib, 'libMNN.so'), PHONE + '/'], stdout=subprocess.DEVNULL)
-
+    build_and_push(args.out)
     cases = [c for i, c in enumerate(all_cases) if not args.only or i in args.only]
     sizes = {}
     for img in sorted({c[0] for c in cases}):
@@ -168,29 +217,9 @@ def main():
     spec = os.path.join(args.out, 'cases.txt')
     open(spec, 'w').write('\n=====\n'.join([system] + turns))
     subprocess.check_call(['adb', 'push', spec, PHONE + '/cases.txt'], stdout=subprocess.DEVNULL)
-    subprocess.run(['adb', 'shell', 'am force-stop com.fixlens'])
     print(f'Running {len(cases)} cases: set={args.set} prompt={args.prompt} style={args.style} mode={args.mode} '
           f'extra={args.extra} {"joined" if args.joined else "split"}', flush=True)
-    extra = args.extra.replace('"', '\\"')
-    # Detached on the phone, so a USB drop doesn't kill the run; poll for the DONE marker.
-    run = (f'cd {PHONE} && rm -f out.jsonl && (LD_LIBRARY_PATH={PHONE} timeout 1200 ./ground_test {CONFIG} {PHONE}/cases.txt '
-           f'{args.max_tokens} "{extra}" {"joined" if args.joined else "split"} > out.jsonl 2> err.txt; echo DONE >> out.jsonl)')
-    subprocess.run(['adb', 'shell', f'nohup sh -c \'{run}\' > /dev/null 2>&1 &'])
-    out = ''
-    for _ in range(400):
-        time.sleep(4)
-        p = subprocess.run(['adb', 'shell', f'cat {PHONE}/out.jsonl'], capture_output=True, text=True)
-        if p.returncode != 0:
-            subprocess.run(['adb', 'wait-for-device'])
-            continue
-        out = p.stdout
-        if 'DONE' in out:
-            break
-    results = [json.loads(l) for l in out.splitlines() if l.startswith('{"case"')]
-    if len(results) != len(cases):
-        err = subprocess.run(['adb', 'shell', f'cat {PHONE}/err.txt'], capture_output=True, text=True).stdout
-        print(out[-2000:], err[-2000:]); sys.exit(1)
-
+    results = run_on_phone(spec, len(cases), args.max_tokens, args.extra, args.joined)
     rows, hits = [], {'norm': 0, 'px': 0}
     for (img, target, question, gt), r in zip(cases, results):
         (ow, oh), (kw, kh) = sizes[img]

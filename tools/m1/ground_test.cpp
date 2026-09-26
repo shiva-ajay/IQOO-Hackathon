@@ -76,17 +76,38 @@ int main(int argc, char** argv) {
     if (argc > 4 && std::string(argv[4]).size() > 2) llm->set_config(argv[4]);
     llm->load();
     const std::string& system = parts[0];
+    // A case may hold several steps separated by "\n-----\n": they run in order on the same KV cache (like a
+    // chat turn followed by a side request), each reported on its own line with "step".
+    std::vector<std::pair<size_t, std::string>> steps;  // (case, prompt)
     for (size_t c = 1; c < parts.size(); ++c) {
-        llm->reset();
+        std::string body = parts[c], ssep = "\n-----\n";
+        size_t p0 = 0;
+        while (true) {
+            size_t n = body.find(ssep, p0);
+            steps.emplace_back(c, body.substr(p0, n == std::string::npos ? std::string::npos : n - p0));
+            if (n == std::string::npos) break;
+            p0 = n + ssep.size();
+        }
+    }
+    size_t lastCase = 0;
+    int stepNo = 0;
+    for (auto& [c, stepPrompt] : steps) {
+        bool firstStep = c != lastCase;
+        stepNo = firstStep ? 0 : stepNo + 1;
+        lastCase = c;
         std::ostringstream sink;
-        if (!joined && !system.empty()) llm->response(system, &sink, nullptr, 0);  // prefill only, like the app's prewarm
-        std::string turn = joined ? system + parts[c] : parts[c];
+        if (firstStep) {
+            llm->reset();
+            if (!joined && !system.empty()) llm->response(system, &sink, nullptr, 0);  // prefill only, like the app's prewarm
+        }
+        // Later steps close the previous answer first (generation stops on <|im_end|> without feeding it back).
+        std::string turn = firstStep ? (joined ? system + stepPrompt : stepPrompt) : "<|im_end|>\n" + stepPrompt;
         std::ostringstream os;
         auto t0 = Clock::now();
         auto ms = [&] { return std::chrono::duration<double, std::milli>(Clock::now() - t0).count(); };
         int64_t visionBefore = llm->getContext()->vision_us;
         llm->response(turn, &os, nullptr, 0);
-        double prefillDone = ms(), tFirst = -1, tBox = -1;
+        double prefillDone = ms(), tFirst = -1, tBox = -1, tEl1 = -1;
         auto* ctx = llm->getContext();
         while (!llm->stoped() && ctx->gen_seq_len < maxTokens) {
             llm->generate(1);
@@ -94,10 +115,11 @@ int main(int argc, char** argv) {
             std::string out = os.str();
             if (tFirst < 0 && out.find_first_not_of(" \n\t") != std::string::npos) tFirst = ms();
             if (tBox < 0 && boxLineEnd(out) >= 0) tBox = ms();
+            if (tEl1 < 0 && out.find('}') != std::string::npos) tEl1 = ms();  // first list element complete
         }
-        printf("{\"case\":%zu,\"out\":\"%s\",\"prefill_ms\":%.0f,\"first_ms\":%.0f,\"box_ms\":%.0f,\"total_ms\":%.0f,"
-               "\"prompt_tok\":%d,\"gen_tok\":%d,\"vision_s\":%.2f,\"decode_s\":%.2f}\n",
-               c, jsonEscape(os.str()).c_str(), prefillDone, tFirst, tBox, ms(), ctx->prompt_len, ctx->gen_seq_len,
+        printf("{\"case\":%zu,\"step\":%d,\"out\":\"%s\",\"prefill_ms\":%.0f,\"first_ms\":%.0f,\"box_ms\":%.0f,\"el1_ms\":%.0f,"
+               "\"total_ms\":%.0f,\"prompt_tok\":%d,\"gen_tok\":%d,\"vision_s\":%.2f,\"decode_s\":%.2f}\n",
+               c, stepNo, jsonEscape(os.str()).c_str(), prefillDone, tFirst, tBox, tEl1, ms(), ctx->prompt_len, ctx->gen_seq_len,
                (ctx->vision_us - visionBefore) / 1e6, ctx->decode_us / 1e6);
     }
     Llm::destroy(llm.release());

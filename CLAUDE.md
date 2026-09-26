@@ -367,6 +367,9 @@ Notes:
   0..1000. Tracker (OpenCV 4.14 LK + RANSAC homography, 218×480 gray): **p50 1.6–3.6 ms, p95 3.9–8.6 ms**;
   fast-forward 140–180 frames in 66–90 ms; end of speech → box line **4.4–5.6 s**; re-ground 5–6 s.
   Debug over adb: `--es ask "point: <phrase>"`, `--es image <file>`, `--ez testbox true`, `--ez freeze true`.
+- **Multi-part pointing (2026-09-27):** one answer can mark several parts (a JSON list, streamed part by part, tracked as
+  one group). Good for a few distinct medium parts; tiny repeated parts (screws) get one box around their area and the
+  count goes in the spoken step (the 4B model invents screw grids). Details and numbers: docs/marker-tracking.md §6.
 
 ---
 

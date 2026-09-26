@@ -168,8 +168,8 @@ class FrameGrabber(private val onFrame: (FrameRingBuffer) -> Unit) : ImageAnalys
         const val ANALYSIS_LONG_SIDE = 480
         /** Long side of the keyframe sent to the VLM. */
         const val KEYFRAME_LONG_SIDE = 448
-        /** ~6 s at 30 fps: covers the time from keyframe to box line, including a re-ground. */
-        const val RING_FRAMES = 180
+        /** ~10 s at 30 fps: keyframe → first part takes 4.5–6 s, and a list of parts streams in after that. */
+        const val RING_FRAMES = 300
         private const val KEYFRAME_TIMEOUT_MS = 1000L
         private const val JPEG_QUALITY = 90
         private const val STATS_EVERY = 30

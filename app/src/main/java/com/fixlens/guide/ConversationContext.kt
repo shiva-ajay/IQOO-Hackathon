@@ -102,18 +102,18 @@ class ConversationContext(private val vlm: VlmEngine) {
     }
 
     /**
-     * Re-ground side request: where is [label] in the picture at [imagePath] now? It sees the live conversation
+     * Re-ground side request: where are the parts named [labels] in the picture at [imagePath] now? It sees the live conversation
      * and is rolled back afterwards. Returns null without waiting when the VLM is busy (a question always
      * wins) or [session] isn't the one in the cache.
      */
-    suspend fun locate(session: RepairSession, imagePath: String, label: String, onText: (String) -> Unit): VlmEngine.Result? {
+    suspend fun locate(session: RepairSession, imagePath: String, labels: List<String>, onText: (String) -> Unit): VlmEngine.Result? {
         if (!lock.tryLock()) return null
         try {
             if (liveSessionId != session.id) return null
             val result = runGuarded {
                 vlm.generate(
                     (if (answerOpen) FixyPrompts.CLOSE_ANSWER else "") +
-                        FixyPrompts.userTurn(FixyPrompts.image(imagePath) + FixyPrompts.locate(label)),
+                        FixyPrompts.userTurn(FixyPrompts.image(imagePath) + FixyPrompts.locate(labels)),
                     VlmEngine.Keep.Never,
                     maxTokens = LOCATE_MAX_TOKENS,
                     onText = onText,
@@ -146,7 +146,7 @@ class ConversationContext(private val vlm: VlmEngine) {
         /** Past turns replayed as text on a rebuild; the session notes carry the rest. */
         const val REPLAY_TURNS = 2
         const val TITLE_MAX_TOKENS = 12
-        /** Enough for one box line; the caller stops earlier once the box is parsed. */
-        const val LOCATE_MAX_TOKENS = 48
+        /** Enough for a list of ~16 points; the caller stops as soon as the JSON is complete. */
+        const val LOCATE_MAX_TOKENS = 300
     }
 }

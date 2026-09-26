@@ -16,13 +16,27 @@ object FixyPrompts {
     /** Until the KB gives a target phrase (M4), Fixy points at whatever the question is about. */
     const val DEFAULT_TARGET = "the part I should look at for this question"
 
-    /** How the box is asked for. [Contract] is CLAUDE.md §9; [Native] is Qwen3-VL's own grounding phrasing. */
-    enum class GroundingStyle { Contract, Native }
+    /** Parts mode, no KB target: the exact things to touch, never the whole device. */
+    const val DEFAULT_PARTS = "every exact part to act on for this question (a cap, a button, a cover), never the whole device"
 
-    /** Appended to every question: box line first, then the spoken reply. */
+    /**
+     * How the pointing is asked for. [Parts] (default): a JSON list, a box per part (a point for a small single
+     * part). Many tiny identical parts like screws get one box around their area: the VLM can't place each screw
+     * reliably (docs/marker-tracking.md §6), so the count goes in the spoken step instead. [Contract] is CLAUDE.md §9's single box; [Native] is
+     * Qwen3-VL's own single-box phrasing.
+     */
+    enum class GroundingStyle { Parts, Contract, Native }
+
+    /** Appended to every question: the pointing JSON first, then the spoken reply. */
     fun grounding(target: String?, style: GroundingStyle): String {
         val find = target ?: DEFAULT_TARGET
         return when (style) {
+            GroundingStyle.Parts ->
+                "Find: ${target?.let { "\"$it\"" } ?: DEFAULT_PARTS}\n" +
+                    "First: a JSON list, one entry per part: {\"bbox_2d\":[x1,y1,x2,y2],\"label\":\"...\"}, or " +
+                    "{\"point_2d\":[x,y],\"label\":\"...\"} for a small single part. Many tiny identical parts (like screws) " +
+                    "get one box around the area that holds them. [] if none.\n" +
+                    "Then: one or two short sentences as Fixy."
             GroundingStyle.Contract ->
                 "Find: \"$find\"\n" +
                     "First line: JSON only, {\"bbox_2d\":[x1,y1,x2,y2],\"label\":\"...\"} or {\"bbox_2d\":null}\n" +
@@ -33,10 +47,11 @@ object FixyPrompts {
         }
     }
 
-    /** Re-ground side request: only the box line for a part Fixy already pointed at. */
-    fun locate(label: String): String =
-        "Where is the $label now? Output only one line of JSON: " +
-            "{\"bbox_2d\":[x1,y1,x2,y2],\"label\":\"$label\"} or {\"bbox_2d\":null}"
+    /** Re-ground side request: only the JSON for the parts Fixy already pointed at. */
+    fun locate(labels: List<String>): String =
+        "Find again: ${labels.joinToString(", ")}. Output only a JSON list, one entry per part: " +
+            "{\"point_2d\":[x,y],\"label\":\"...\"} for small parts, {\"bbox_2d\":[x1,y1,x2,y2],\"label\":\"...\"} " +
+            "for bigger ones, or [] if they're not visible."
 
     const val TITLE_REQUEST =
         "Give this repair chat a short title of 2 to 4 words, like \"Fridge not cooling\" or " +

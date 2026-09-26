@@ -129,3 +129,35 @@ The box line costs ~2 s of decoding before the first word (~25 tokens; Qwen writ
 - **Lost during fast-forward:** if the phone moved a lot while Fixy was thinking, the seed is lost at once and a
   re-ground follows immediately.
 - **Textureless targets** (< 6 corners even ×2.5 widened): the marker is shown but not tracked.
+
+## 6. Multi-part pointing (2026-09-27)
+
+One answer can point at several parts. The VLM writes a JSON list (`FixyPrompts.GroundingStyle.Parts`, the default):
+a box per part, or a point for a small single part. `GroundingParser` streams each part out the moment its braces
+close, so markers appear one by one while the model is still writing. It also accepts fenced lists, `{"points":[…]}`
+wrappers, and lists written without the opening `[`. `FlowTracker` tracks all parts as **one group**: one set of
+corners over the area they span and one motion model applied to every target, so the cost per frame is the same
+as for a single part. Parts that stream in later join the group, with corners of their own found around where
+they are now. The overlay draws a box per part (a numbered ring per point), one hole per part in the dimmed mask,
+and one chip per kind of part ("Screw ×8"). Re-grounding asks for all parts again.
+
+Measured with `tools/m1/run_multi_test.py` / `run_zoom_test.py` / `run_prompt_check.py` (448-px keyframes):
+
+| Case | Result |
+|---|---|
+| One part with a target phrase, Parts prompt (11 photos) | **8/11**, same as the single-box prompt; format 11/11 |
+| Several medium parts (engine-bay caps) | oil cap correct every time; coolant / washer caps hit or miss (2/3, then 1/3) |
+| Memory door on a ThinkPad underside ("how do I get to the memory?") | one box, exactly on the door |
+| 13 laptop screws, Fixy prompt | **2–3/13**: the model invents a tidy symmetric grid instead of looking |
+| 13 laptop screws, Qwen's plain "Point to every screw" with no persona | 8/13 best case; a 2× zoomed crop does **not** help (1/4, 2/4) |
+
+**Decision (user, 2026-09-27):** tiny repeated parts like screws are not pointed at one by one. The prompt asks
+for one box around the area that holds them, and the spoken step (KB) says how many. Multi-part pointing is for
+a few distinct, medium-sized parts. Target phrases (KB steps, M4) are what make grounding dependable; free-form
+questions stay hit-and-miss.
+
+Cost: ~25 decode tokens per box, ~17 per point (Qwen writes digits one token each), so ~1.4–2 s per part on the
+CPU. The first marker appears after ~5 s (cool phone); the spoken reply starts after the list.
+
+**Thermal:** after ~1 h of back-to-back VLM runs the phone reached 41 °C and prefill slowed from ~4 s to ~7 s
+(first marker 15–20 s). Let it cool before a demo, and avoid long benchmark runs right before one.

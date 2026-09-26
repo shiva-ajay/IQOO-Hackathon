@@ -95,8 +95,8 @@ class VlmEngine {
     private external fun nativeRelease(handle: Long)
 
     companion object {
-        /** Box line (~30 tokens) + two short sentences. */
-        const val MAX_NEW_TOKENS = 150
+        /** Pointing JSON (~25 tokens per box, ~17 per point: 13 screws ≈ 220) + two short sentences. */
+        const val MAX_NEW_TOKENS = 320
         /** The whole conversation budget (MNN defaults to 2048). ~147 KB of KV per token for the 4B model. */
         const val MAX_CONTEXT_TOKENS = 4096
 

@@ -23,15 +23,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
-import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.TextMeasurer
 import androidx.compose.ui.text.TextStyle
@@ -55,8 +55,9 @@ private val DebugCyan = Color(0xFF3DD6F5)
 private val DebugMagenta = Color(0xFFFF4FD8)
 
 /**
- * Fixy's pointer over the camera preview: a pulsing rounded box on the tracked part, the rest of the view
- * dimmed, and a chip with the part's name. It holds while tracking wavers and fades once lost.
+ * Fixy's pointers over the camera preview: a pulsing rounded box on each tracked part (a numbered ring on each
+ * small part like a screw), the rest of the view dimmed, and a chip per kind of part. It holds while tracking
+ * wavers and fades once lost.
  *
  * [marker] is read only while drawing, so the ~30 updates a second redraw the canvas without recomposing.
  * Boxes arrive in analysis space and are mapped here (analysis → view is FILL_CENTER, docs/marker-tracking.md).
@@ -109,45 +110,71 @@ private fun MarkerCanvas(
         animationSpec = infiniteRepeatable(tween(PULSE_MS, easing = LinearEasing), RepeatMode.Restart),
         label = "pulsePhase",
     )
-    Canvas(modifier.fillMaxSize()) {
+    // Offscreen, so the holes cut out of the dim layer (one per part) can overlap without cancelling out.
+    Canvas(modifier.fillMaxSize().graphicsLayer { compositingStrategy = CompositingStrategy.Offscreen }) {
         val m = marker.value ?: return@Canvas
+        if (m.targets.isEmpty()) return@Canvas
         val toView = BoxMapper.fillCenter(m.frameWidth, m.frameHeight, size.width, size.height)
-        val pad = 6.dp.toPx()
-        val tracked = toView.map(m.box).let { Rect(it.left - pad, it.top - pad, it.right + pad, it.bottom + pad) }
-        // Lock-on: the box closes in from 1.4x and fades up when a new box arrives.
+        // Lock-on: markers close in from 1.4x and fade up when a new answer arrives.
         val lock = lockOn.value
-        val rect = tracked.scaleAround(1f + 0.4f * (1f - lock))
+        val grow = 1f + 0.4f * (1f - lock)
         val a = alpha * (0.35f + 0.65f * lock)
         val holding = m.status == MarkerState.Status.Holding
-        val radius = CornerRadius(minOf(16.dp.toPx(), rect.minDimension / 3f))
-
-        // Dim everything outside the part.
-        val mask = Path().apply {
-            fillType = PathFillType.EvenOdd
-            addRect(Rect(Offset.Zero, size))
-            addRoundRect(RoundRect(rect, radius))
+        val dash = if (holding) PathEffect.dashPathEffect(floatArrayOf(14.dp.toPx(), 8.dp.toPx())) else null
+        val pad = 6.dp.toPx()
+        val ringRadius = POINT_RING.toPx() * grow
+        val shapes = m.targets.map { t ->
+            val v = toView.map(t.box)
+            if (t.isPoint) Rect(Offset(v.centerX, v.centerY), ringRadius)
+            else Rect(v.left - pad, v.top - pad, v.right + pad, v.bottom + pad).scaleAround(grow)
         }
-        drawPath(mask, Ink.copy(alpha = 0.42f * a))
 
-        // A soft ring breathing outwards.
-        val ring = rect.inflate(10.dp.toPx() * pulse)
-        drawRoundRect(
-            color = Amber.copy(alpha = 0.55f * (1f - pulse) * a),
-            topLeft = ring.topLeft, size = ring.size,
-            cornerRadius = CornerRadius(radius.x + 10.dp.toPx() * pulse),
-            style = Stroke(2.dp.toPx()),
-        )
-        // The marker itself; dashed while holding a wobbly track.
-        drawRoundRect(
-            color = Amber.copy(alpha = a * (if (holding) 0.75f else 1f)),
-            topLeft = rect.topLeft, size = rect.size, cornerRadius = radius,
-            style = Stroke(
-                width = 3.dp.toPx(),
-                pathEffect = if (holding) PathEffect.dashPathEffect(floatArrayOf(14.dp.toPx(), 8.dp.toPx())) else null,
-            ),
-        )
-        drawLabel(textMeasurer, m.label.replaceFirstChar { it.uppercase() }, rect, a)
+        // Dim everything outside the parts.
+        drawRect(Ink.copy(alpha = 0.42f * a))
+        m.targets.forEachIndexed { i, t ->
+            val r = shapes[i]
+            if (t.isPoint) drawCircle(Color.Black, r.width / 2f + 6.dp.toPx(), r.center, blendMode = BlendMode.DstOut)
+            else drawRoundRect(Color.Black, r.topLeft, r.size, cornerRadius(r), blendMode = BlendMode.DstOut)
+        }
+
+        val numbered = m.targets.count { it.isPoint } > 1
+        var pointNo = 0
+        m.targets.forEachIndexed { i, t ->
+            val r = shapes[i]
+            val breathe = 10.dp.toPx() * pulse
+            val ringColor = Amber.copy(alpha = 0.55f * (1f - pulse) * a)
+            val color = Amber.copy(alpha = a * (if (holding) 0.75f else 1f))
+            if (t.isPoint) {
+                // A screw-sized ring with a dot, numbered when there are several.
+                drawCircle(ringColor, r.width / 2f + breathe, r.center, style = Stroke(2.dp.toPx()))
+                drawCircle(color, r.width / 2f, r.center, style = Stroke(3.dp.toPx(), pathEffect = dash))
+                drawCircle(color, 3.dp.toPx(), r.center)
+                pointNo++
+                if (numbered) drawBadge(textMeasurer, pointNo.toString(), Offset(r.right, r.top), a)
+            } else {
+                val ring = r.inflate(breathe)
+                drawRoundRect(ringColor, ring.topLeft, ring.size, CornerRadius(cornerRadius(r).x + breathe), style = Stroke(2.dp.toPx()))
+                drawRoundRect(color, r.topLeft, r.size, cornerRadius(r), style = Stroke(3.dp.toPx(), pathEffect = dash))
+            }
+        }
+
+        // One chip per kind of part: "Screw ×8" above the topmost of them, or the part's name above it.
+        m.targets.indices.groupBy { m.targets[it].label }.entries.take(MAX_CHIPS).forEach { (label, idx) ->
+            val top = idx.minBy { shapes[it].top }
+            val name = label.replaceFirstChar { it.uppercase() }
+            drawLabel(textMeasurer, if (idx.size > 1) "$name ×${idx.size}" else name, shapes[top], a)
+        }
     }
+}
+
+private fun DrawScope.cornerRadius(r: Rect) = CornerRadius(minOf(16.dp.toPx(), r.minDimension / 3f))
+
+/** A small numbered dot at the top-right of a point marker. */
+private fun DrawScope.drawBadge(textMeasurer: TextMeasurer, text: String, at: Offset, alpha: Float) {
+    val layout = textMeasurer.measure(text, TextStyle(fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Ink))
+    val r = maxOf(layout.size.width, layout.size.height) / 2f + 3.dp.toPx()
+    drawCircle(Amber.copy(alpha = alpha), r, at)
+    drawText(layout, topLeft = Offset(at.x - layout.size.width / 2f, at.y - layout.size.height / 2f), alpha = alpha)
 }
 
 /** The part's name in a small chip above the box (below it when there's no room above). */
@@ -212,18 +239,21 @@ private fun DrawScope.drawFrozen(f: FrozenKeyframe, image: ImageBitmap?, textMea
             alpha = if (fromCamera) 0.5f else 1f,
         )
     }
-    val raw = f.raw ?: run {
+    if (f.raw.isEmpty()) {
         debugText(textMeasurer, "no box: ${f.note}", Offset(area.left + 12f, area.top + 12f), Amber)
         return
     }
-    for ((scale, color) in listOf(CoordScale.NORMALIZED_1000 to Amber, CoordScale.ABSOLUTE_PIXELS to DebugCyan)) {
-        val kb = BoxMapper.modelToKeyframe(raw, scale, f.width, f.height) ?: continue
-        val v = toView(kb)
-        drawRect(color, Offset(v.left, v.top), Size(v.width, v.height), style = Stroke(3.dp.toPx()))
+    for (raw in f.raw) {
+        for ((scale, color) in listOf(CoordScale.NORMALIZED_1000 to Amber, CoordScale.ABSOLUTE_PIXELS to DebugCyan)) {
+            val kb = BoxMapper.modelToKeyframe(raw, scale, f.width, f.height) ?: continue
+            val v = toView(kb)
+            drawRect(color, Offset(v.left, v.top), Size(v.width, v.height), style = Stroke(3.dp.toPx()))
+        }
     }
+    val first = f.raw.first()
     debugText(
         textMeasurer,
-        "raw [${raw.x1.toInt()},${raw.y1.toInt()},${raw.x2.toInt()},${raw.y2.toInt()}] kf ${f.width}x${f.height}  amber=0..1000 cyan=px",
+        "${f.note}; first [${first.x1.toInt()},${first.y1.toInt()},${first.x2.toInt()},${first.y2.toInt()}] kf ${f.width}x${f.height}  amber=0..1000 cyan=px",
         Offset(area.left + 12f, area.top + 12f),
         Paper,
     )
@@ -252,3 +282,7 @@ private fun Rect.scaleAround(f: Float): Rect {
 private const val FADE_OUT_MS = 350
 private const val LOCK_ON_MS = 420
 private const val PULSE_MS = 1400
+/** Radius of the ring drawn on a point target (a screw). */
+private val POINT_RING = 16.dp
+/** Label chips drawn at most (one per kind of part). */
+private const val MAX_CHIPS = 4

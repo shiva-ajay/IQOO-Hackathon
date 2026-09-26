@@ -2,18 +2,20 @@ package com.fixlens.tracking
 
 import com.fixlens.vision.PxBox
 
-/** Where the marker is, in analysis space (see docs/marker-tracking.md §1). Published by [FlowTracker] every frame. */
+/** Where the markers are, in analysis space (see docs/marker-tracking.md §1). Published by [FlowTracker] every frame. */
 data class MarkerState(
     /** Changes on every new seed (a new answer or a re-ground), so the UI can replay its lock-on animation. */
     val seedId: Int,
-    val box: PxBox,
+    /** Every part pointed at (one box, or e.g. every screw of a cover), in the order the VLM gave them. */
+    val targets: List<Target>,
     val frameWidth: Int,
     val frameHeight: Int,
-    val label: String,
     val confidence: Float,
     val status: Status,
     val timestampNs: Long,
 ) {
+    data class Target(val box: PxBox, val label: String, val isPoint: Boolean)
+
     enum class Status {
         /** Locked on and following the part. */
         Tracking,

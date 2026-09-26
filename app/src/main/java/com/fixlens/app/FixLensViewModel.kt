@@ -57,6 +57,8 @@ data class UiState(
     val questionFinal: Boolean = false,
     val answer: String = "",
     val timing: String = "",
+    /** Parts pointed at so far in this answer (they stream in one by one before the spoken reply). */
+    val partsFound: Int = 0,
     /** "Point the camera at the …" when Fixy was asked to point but gave no usable box. */
     val hint: String? = null,
     // Debug overlays, switched over adb (see MainActivity.onNewIntent).
@@ -73,7 +75,7 @@ data class FrozenKeyframe(
     /** 0 for a file keyframe (not from the camera). */
     val analysisWidth: Int,
     val analysisHeight: Int,
-    val raw: ModelBox?,
+    val raw: List<ModelBox>,
     val note: String,
 )
 
@@ -106,7 +108,7 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
     private val turn = AtomicInteger(0)
 
     private var coordScale = COORD_SCALE
-    private var groundingStyle = FixyPrompts.GroundingStyle.Contract
+    private var groundingStyle = FixyPrompts.GroundingStyle.Parts
     private var reGroundJob: Job? = null
     /** Re-grounds used since the last question (capped, so a hopeless target doesn't keep the VLM busy). */
     private var reGrounds = 0
@@ -265,7 +267,10 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
         val id = turn.incrementAndGet()
         val start = System.currentTimeMillis()
         _state.update {
-            it.copy(question = question, questionFinal = true, answer = "", timing = "", phase = Phase.Thinking, hint = null, frozen = null)
+            it.copy(
+                question = question, questionFinal = true, answer = "", timing = "", phase = Phase.Thinking,
+                hint = null, frozen = null, partsFound = 0,
+            )
         }
 
         viewModelScope.launch {
@@ -276,17 +281,25 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
                 frameGrabber.captureKeyframe(file)
             }
             val keyframeMs = System.currentTimeMillis() - start
-            var boxMs = -1L
+            var firstPartMs = -1L
+            var allPartsMs = -1L
             var firstTokenMs = -1L
+            var tracked = 0
             val parser = GroundingParser(
                 onGrounding = { g ->
-                    boxMs = System.currentTimeMillis() - start
+                    allPartsMs = System.currentTimeMillis() - start
                     onGrounding(g, keyframe, target, id)
                 },
                 onText = text@{ chunk ->
                     if (turn.get() != id) return@text
                     if (firstTokenMs < 0) firstTokenMs = System.currentTimeMillis() - start
                     _state.update { it.copy(phase = Phase.Answering, answer = it.answer + chunk) }
+                },
+                // Each part goes to the tracker as soon as it's parsed, so markers appear one by one.
+                onTarget = { raw ->
+                    if (firstPartMs < 0) firstPartMs = System.currentTimeMillis() - start
+                    if (trackPart(raw, keyframe, target, id, first = tracked == 0)) tracked++
+                    if (turn.get() == id) _state.update { it.copy(partsFound = it.partsFound + 1) }
                 },
             )
             val result = runCatching {
@@ -298,8 +311,8 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
             val total = System.currentTimeMillis() - start
             Log.i(
                 TAG,
-                "Turn $id \"$question\": keyframe $keyframeMs ms, box line $boxMs ms (${parser.grounding}), " +
-                    "first word $firstTokenMs ms, total $total ms, ${result?.stats}",
+                "Turn $id \"$question\": keyframe $keyframeMs ms, first part $firstPartMs ms, all parts $allPartsMs ms " +
+                    "(${summary(parser.grounding)}), first word $firstTokenMs ms, total $total ms, ${result?.stats}",
             )
 
             // The saved answer (history, titles, replays) never contains the box line.
@@ -342,43 +355,58 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    /** Runs on the VLM thread as soon as the box line is parsed: map the box and hand it to the tracker. */
+    /** Model box → tracker target in analysis space; null if the box is unusable. */
+    private fun toTarget(raw: ModelBox, keyframe: FrameGrabber.Keyframe, fallbackLabel: String?): FlowTracker.Target? {
+        val box = BoxMapper.modelToKeyframe(raw, coordScale, keyframe.width, keyframe.height) ?: return null
+        return FlowTracker.Target(
+            BoxMapper.keyframeToAnalysis(box, keyframe.width, keyframe.height, keyframe.analysisWidth, keyframe.analysisHeight),
+            (raw.label ?: fallbackLabel ?: "here").take(MAX_LABEL),
+            raw.isPoint,
+        )
+    }
+
+    /**
+     * VLM thread, the moment one part is parsed: the first part of a turn starts a new marker group, the rest
+     * join it. Returns whether it went to the tracker.
+     */
+    private fun trackPart(raw: ModelBox, keyframe: FrameGrabber.Keyframe?, target: String?, id: Int, first: Boolean): Boolean {
+        if (turn.get() != id || keyframe == null || keyframe.timestampNs == 0L) return false // file images aren't tracked
+        val part = toTarget(raw, keyframe, target) ?: return false
+        val seed = FlowTracker.Seed(listOf(part), keyframe.timestampNs) { turn.get() == id }
+        if (first) tracker.seed(seed) else tracker.add(seed)
+        return true
+    }
+
+    /** VLM thread, once the pointing JSON is complete: log it, feed the debug overlay, hint if nothing was found. */
     private fun onGrounding(g: Grounding, keyframe: FrameGrabber.Keyframe?, target: String?, id: Int) {
         if (turn.get() != id) return
-        val raw = (g as? Grounding.Box)?.box
-        val box = if (raw != null && keyframe != null) BoxMapper.modelToKeyframe(raw, coordScale, keyframe.width, keyframe.height) else null
-        Log.i(TAG, "Grounding: $g -> keyframe box $box (${keyframe?.width}x${keyframe?.height}, $coordScale)")
+        val raws = (g as? Grounding.Targets)?.boxes.orEmpty()
+        Log.i(TAG, "Grounding: ${summary(g)} ${raws.joinToString { "${it.label}@[${it.x1.toInt()},${it.y1.toInt()},${it.x2.toInt()},${it.y2.toInt()}]" }} (${keyframe?.width}x${keyframe?.height}, $coordScale)")
         if (keyframe != null && _state.value.debugFreeze) {
             _state.update {
                 it.copy(
                     frozen = FrozenKeyframe(
                         keyframe.file.absolutePath, keyframe.width, keyframe.height,
-                        keyframe.analysisWidth, keyframe.analysisHeight, raw, g.toString(),
+                        keyframe.analysisWidth, keyframe.analysisHeight, raws, summary(g),
                     ),
                 )
             }
         }
-        if (box == null || keyframe == null) {
-            if (target != null) _state.update { it.copy(hint = "Point the camera at the $target") }
-            return
-        }
-        if (keyframe.timestampNs == 0L) return // a debug image file: nothing to track
-        val label = (raw?.label ?: target ?: "here").take(MAX_LABEL)
-        tracker.seed(
-            FlowTracker.Seed(
-                BoxMapper.keyframeToAnalysis(box, keyframe.width, keyframe.height, keyframe.analysisWidth, keyframe.analysisHeight),
-                keyframe.timestampNs,
-                label,
-            ) { turn.get() == id },
-        )
+        if (raws.isEmpty() && target != null) _state.update { it.copy(hint = "Point the camera at the $target") }
+    }
+
+    private fun summary(g: Grounding?) = when (g) {
+        is Grounding.Targets -> "${g.boxes.size} part(s)"
+        null -> "no JSON"
+        else -> g.toString()
     }
 
     /**
-     * The tracker lost the part for over a second (analysis thread). Silently asks the VLM where [label] is
+     * The tracker lost the parts for over a second (analysis thread). Silently asks the VLM where they are
      * now, as a side request that is rolled back from the KV cache. Only while Fixy is idle and the user
      * isn't talking, one at a time, and at most [MAX_REGROUNDS] per question.
      */
-    private fun onReGroundRequest(label: String) {
+    private fun onReGroundRequest(labels: List<String>) {
         viewModelScope.launch {
             val s = _state.value
             val session = s.session ?: return@launch
@@ -391,27 +419,21 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
                 val start = System.currentTimeMillis()
                 val keyframe = frameGrabber.captureKeyframe(File(getApplication<Application>().cacheDir, "reground.jpg"))
                     ?: return@launch
-                // Stop generating once the box line is in; the rest is never used.
+                // Stop generating once the JSON is in; the rest is never used.
                 val parser = GroundingParser(onGrounding = { vlm.cancel() }, onText = {})
                 val result = runCatching {
-                    context.locate(session, keyframe.file.absolutePath, label) { parser.feed(it) }
+                    context.locate(session, keyframe.file.absolutePath, labels) { parser.feed(it) }
                 }.onFailure { Log.e(TAG, "Re-ground failed", it) }.getOrNull()
                 parser.finish()
-                val raw = (parser.grounding as? Grounding.Box)?.box
-                val box = raw?.let { BoxMapper.modelToKeyframe(it, coordScale, keyframe.width, keyframe.height) }
+                val parts = (parser.grounding as? Grounding.Targets)?.boxes.orEmpty()
+                    .mapNotNull { toTarget(it, keyframe, labels.firstOrNull()) }
                 Log.i(
                     TAG,
-                    "Re-ground $attempt/$MAX_REGROUNDS \"$label\": ${parser.grounding} -> $box in " +
+                    "Re-ground $attempt/$MAX_REGROUNDS $labels: ${summary(parser.grounding)}, ${parts.size} usable in " +
                         "${System.currentTimeMillis() - start} ms (${result?.stats ?: "skipped, VLM busy"})",
                 )
-                if (box == null || turn.get() != id) return@launch
-                tracker.seed(
-                    FlowTracker.Seed(
-                        BoxMapper.keyframeToAnalysis(box, keyframe.width, keyframe.height, keyframe.analysisWidth, keyframe.analysisHeight),
-                        keyframe.timestampNs,
-                        label,
-                    ) { turn.get() == id },
-                )
+                if (parts.isEmpty() || turn.get() != id) return@launch
+                tracker.seed(FlowTracker.Seed(parts, keyframe.timestampNs) { turn.get() == id })
             }
         }
     }

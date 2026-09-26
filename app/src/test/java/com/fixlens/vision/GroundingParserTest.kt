@@ -12,11 +12,13 @@ class GroundingParserTest {
     private class Run(chunks: List<String>, finish: Boolean = true) {
         val groundings = mutableListOf<Grounding>()
         val texts = mutableListOf<String>()
+        val streamed = mutableListOf<ModelBox>()
         /** How many text chunks had been emitted when the grounding fired (-1 if it never did). */
         var textChunksBeforeGrounding = -1
         val parser = GroundingParser(
             onGrounding = { groundings += it; textChunksBeforeGrounding = texts.size },
             onText = { texts += it },
+            onTarget = { streamed += it },
         )
 
         init {
@@ -25,7 +27,8 @@ class GroundingParserTest {
         }
 
         val text get() = texts.joinToString("")
-        val box get() = (groundings.single() as Grounding.Box).box
+        val boxes get() = (groundings.single() as Grounding.Targets).boxes
+        val box get() = boxes.single()
     }
 
     private fun charByChar(s: String) = s.map { it.toString() }
@@ -147,5 +150,82 @@ class GroundingParserTest {
     @Test fun `words starting with fix are kept`() {
         val r = Run(listOf("{\"bbox_2d\":null}\nFixing it is easy."))
         assertEquals("Fixing it is easy.", r.text)
+    }
+
+    @Test fun `list parts stream out before the list closes`() {
+        val r = Run(
+            listOf(
+                "[{\"point_2d\":[100,200],\"label\":\"screw\"},",
+                " {\"point_2d\":[300,",
+                "400],\"label\":\"screw\"}",
+            ),
+            finish = false,
+        )
+        assertEquals(2, r.streamed.size)
+        assertTrue(r.groundings.isEmpty()) // the list isn't closed yet
+        r.parser.feed(", {\"bbox_2d\":[10,10,50,50],\"label\":\"cover\"}]\nUndo these screws first.")
+        r.parser.finish()
+        assertEquals(3, r.boxes.size)
+        assertEquals(ModelBox(100f, 200f, 100f, 200f, "screw", isPoint = true), r.boxes[0])
+        assertEquals(ModelBox(10f, 10f, 50f, 50f, "cover"), r.boxes[2])
+        assertEquals(r.boxes, r.streamed)
+        assertEquals("Undo these screws first.", r.text)
+    }
+
+    @Test fun `a list cut off by the token limit keeps its complete parts`() {
+        val r = Run(listOf("[{\"point_2d\":[1,2]},{\"point_2d\":[3,4]},{\"point_2d\":[5,"))
+        assertEquals(2, r.boxes.size)
+        assertEquals("", r.text)
+    }
+
+    @Test fun `a fenced list whose closing fence arrives later never shows in the text`() {
+        val reply = "```json\n[\n  {\"point_2d\": [512, 300], \"label\": \"screw\"}\n]\n``" + "`\nRemove the screw."
+        val r = Run(charByChar(reply))
+        assertEquals(1, r.boxes.size)
+        assertEquals("Remove the screw.", r.text)
+    }
+
+    @Test fun `unreadable list entries are skipped`() {
+        val r = Run(listOf("[{\"foo\":1},{\"bbox_2d\":[1,2,30,40]}]\nHere."))
+        assertEquals(listOf(ModelBox(1f, 2f, 30f, 40f)), r.boxes)
+        val bad = Run(listOf("[{\"foo\":1}]\nHere."))
+        assertEquals(listOf<Grounding>(Grounding.Invalid), bad.groundings)
+        assertEquals("Here.", bad.text)
+    }
+
+    @Test fun `runaway lists are capped`() {
+        val many = (1..40).joinToString(",", "[", "]") { "{\"point_2d\":[$it,$it]}" }
+        val r = Run(listOf(many + "\nok"))
+        assertEquals(GroundingParser.MAX_TARGETS, r.boxes.size)
+    }
+
+    @Test fun `a bare box array still works`() {
+        val r = Run(listOf("[10, 20, 300, 400]\nThere."))
+        assertEquals(ModelBox(10f, 20f, 300f, 400f), r.box)
+    }
+
+    @Test fun `an unbracketed list is read as a list`() {
+        val r = Run(charByChar("{\"point_2d\":[206,445],\"label\":\"screw\"},{\"point_2d\":[300,635],\"label\":\"screw\"}]\nThose are the screws."))
+        assertEquals(2, r.boxes.size)
+        assertEquals(2, r.streamed.size)
+        assertEquals("Those are the screws.", r.text)
+    }
+
+    @Test fun `an unbracketed list without the closing bracket ends at the text`() {
+        val r = Run(listOf("{\"point_2d\":[1,2]},\n{\"point_2d\":[3,4]}\nUnscrew them."))
+        assertEquals(2, r.boxes.size)
+        assertEquals("Unscrew them.", r.text)
+    }
+
+    @Test fun `the first part streams before we know whether a list follows`() {
+        val r = Run(listOf("{\"point_2d\":[1,2]}"), finish = false)
+        assertEquals(1, r.streamed.size)
+        assertTrue(r.groundings.isEmpty())
+    }
+
+    @Test fun `a wrapper object with a points list`() {
+        val r = Run(listOf("{\"points\": [{\"point_2d\": [270, 630], \"label\": \"screw\"}, {\"point_2d\": [670, 630], \"label\": \"screw\"}]}\n"))
+        assertEquals(2, r.boxes.size)
+        assertEquals("screw", r.boxes[1].label)
     }
 }

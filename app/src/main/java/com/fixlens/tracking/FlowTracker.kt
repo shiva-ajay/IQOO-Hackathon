@@ -28,12 +28,13 @@ import kotlin.math.max
 import kotlin.math.min
 
 /**
- * Keeps the marker on the part between VLM answers ("fast eyes", CLAUDE.md §10). Runs on the analysis thread,
- * in analysis space.
+ * Keeps the markers on their parts between VLM answers ("fast eyes", CLAUDE.md §10). Runs on the analysis
+ * thread, in analysis space. One answer can point at several parts (every screw of a cover); they're tracked
+ * as a group: one set of corners over the area they span, one motion model, applied to every target.
  *
- * - **Seed:** corners (`goodFeaturesToTrack`) inside the box on the keyframe's buffered frame. A patch
- *   with few corners (a small dipstick handle) is widened and tracked as a whole, and the box keeps its
- *   place inside it.
+ * - **Seed:** corners (`goodFeaturesToTrack`) inside the targets' area on the keyframe's buffered frame. A
+ *   patch with few corners (a small dipstick handle) is widened and tracked as a whole, and each box keeps
+ *   its place inside it. Targets that stream in later ([add]) join the group with corners of their own.
  * - **Fast-forward:** LK optical flow from the keyframe through the buffered frames up to "now", so the
  *   VLM's 2–4 s delay doesn't leave the marker behind.
  * - **Per frame:** forward-backward LK, then a RANSAC homography from each point's seed position to its
@@ -45,13 +46,17 @@ import kotlin.math.min
  *
  * [seed] and [clear] may be called from any thread; they take effect on the next frame.
  */
-class FlowTracker(private val onReGround: (label: String) -> Unit) {
+class FlowTracker(private val onReGround: (labels: List<String>) -> Unit) {
 
-    /** A new box to follow: [box] in analysis space on the frame stamped [keyframeTimestampNs]. */
-    class Seed(val box: PxBox, val keyframeTimestampNs: Long, val label: String, val isCurrent: () -> Boolean)
+    /** One part to point at: [box] in analysis space. A point target is a small box, drawn as a ring. */
+    data class Target(val box: PxBox, val label: String, val isPoint: Boolean = false)
+
+    /** Targets to follow, all on the frame stamped [keyframeTimestampNs]. */
+    class Seed(val targets: List<Target>, val keyframeTimestampNs: Long, val isCurrent: () -> Boolean)
 
     private sealed interface Command {
         class Start(val seed: Seed) : Command
+        class Add(val seed: Seed) : Command
         data object Stop : Command
     }
 
@@ -61,8 +66,14 @@ class FlowTracker(private val onReGround: (label: String) -> Unit) {
     private val _state = MutableStateFlow<MarkerState?>(null)
     val state: StateFlow<MarkerState?> = _state
 
+    /** Replaces whatever is tracked with [seed]'s targets. */
     fun seed(seed: Seed) {
         commands.add(Command.Start(seed))
+    }
+
+    /** Adds targets from the same keyframe to the current group (they arrive one by one as the VLM streams). */
+    fun add(seed: Seed) {
+        commands.add(Command.Add(seed))
     }
 
     /** Removes the marker now and stops tracking (and drops a seed that hasn't started yet). */
@@ -74,7 +85,16 @@ class FlowTracker(private val onReGround: (label: String) -> Unit) {
 
     // ---- Everything below runs on the analysis thread. ----
 
-    private class Track(val seedId: Int, val label: String, val boxRef: PxBox, val expand: Float) {
+    private class TrackedTarget(val ref: PxBox, val label: String, val isPoint: Boolean) {
+        var raw: PxBox = ref
+        var smooth: PxBox = ref
+    }
+
+    private class Track(val seedId: Int, val keyframeTs: Long, val expand: Float) {
+        val targets = ArrayList<TrackedTarget>()
+        /** The area the targets span, on the seed frame and now. */
+        var refUnion = PxBox(0f, 0f, 0f, 0f)
+        var rawUnion = PxBox(0f, 0f, 0f, 0f)
         /** Each point's position on the seed frame (ref) and on the frame stamped [curTs] (cur), as x,y pairs. */
         var ref = FloatArray(0)
         var cur = FloatArray(0)
@@ -83,8 +103,6 @@ class FlowTracker(private val onReGround: (label: String) -> Unit) {
         var initialCount = 0
         /** Seed frame → current frame, row-major 3x3. */
         var model = doubleArrayOf(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0)
-        var raw: PxBox = boxRef
-        var smooth: PxBox = boxRef
         var confidence = 1f
         var status = Status.Tracking
         var failSinceNs = -1L
@@ -128,6 +146,7 @@ class FlowTracker(private val onReGround: (label: String) -> Unit) {
             when (val cmd = commands.poll() ?: break) {
                 // A seed from a turn that has since been cancelled is dropped.
                 is Command.Start -> if (cmd.seed.isCurrent()) { start(cmd.seed, ring); seeded = true }
+                is Command.Add -> if (cmd.seed.isCurrent()) { add(cmd.seed, ring); seeded = true }
                 Command.Stop -> { track = null; seeded = false }
             }
         }
@@ -136,7 +155,9 @@ class FlowTracker(private val onReGround: (label: String) -> Unit) {
         maybeReGround(t, ring)
         if (epoch.get() == myEpoch) {
             _state.value = MarkerState(
-                t.seedId, t.smooth, ring.width, ring.height, t.label, t.confidence, t.status, ring.timestamp(0),
+                t.seedId,
+                t.targets.map { MarkerState.Target(it.smooth, it.label, it.isPoint) },
+                ring.width, ring.height, t.confidence, t.status, ring.timestamp(0),
             )
         }
         // Seed frames include the fast-forward, which is logged on its own.
@@ -153,10 +174,13 @@ class FlowTracker(private val onReGround: (label: String) -> Unit) {
         val behind = age
         val w = ring.width.toFloat()
         val h = ring.height.toFloat()
-        val box = seed.box.clampTo(w, h)
         val frame = ring.frame(age)
-        val (points, expand) = detect(frame, box)
-        val t = Track(++seedCounter, seed.label, box, expand)
+        val targets = seed.targets.map { TrackedTarget(it.box.clampTo(w, h), it.label, it.isPoint) }
+        val (points, expand) = detect(frame, union(targets.map { it.ref }))
+        val t = Track(++seedCounter, seed.keyframeTimestampNs, expand)
+        t.targets += targets
+        t.refUnion = union(targets.map { it.ref })
+        t.rawUnion = t.refUnion
         t.curTs = ring.timestamp(age)
         t.cur = points
         t.ref = points.copyOf()
@@ -175,10 +199,10 @@ class FlowTracker(private val onReGround: (label: String) -> Unit) {
             steps++
         }
         fastForwarding = false
-        t.smooth = t.raw
+        t.targets.forEach { it.smooth = it.raw }
         Log.i(
             TAG,
-            "Tracker seed #${t.seedId} \"${t.label}\": ${t.initialCount} corners (patch x$expand), " +
+            "Tracker seed #${t.seedId} ${labels(t)}: ${t.initialCount} corners (patch x$expand), " +
                 "fast-forward $behind frames in $steps steps, " +
                 "${(System.nanoTime() - t0) / 1_000_000} ms, now ${t.n} pts, conf %.2f, ${t.status}".format(t.confidence),
         )
@@ -205,10 +229,12 @@ class FlowTracker(private val onReGround: (label: String) -> Unit) {
             t.failSinceNs = -1L
             t.status = Status.Tracking
             if (t.confidence >= LOW_CONFIDENCE) t.lowSinceNs = -1L else if (t.lowSinceNs < 0) t.lowSinceNs = nextTs
-            val quad = transformBox(t.model, t.boxRef)
-            t.raw = quad
-            t.smooth = if (fastForwarding) quad else ema(t.smooth, quad)
-            if (t.n < t.initialCount * REDETECT_BELOW) redetect(t, ring.frame(nextAge))
+            for (target in t.targets) {
+                target.raw = transformBox(t.model, target.ref)
+                target.smooth = if (fastForwarding) target.raw else ema(target.smooth, target.raw)
+            }
+            t.rawUnion = transformBox(t.model, t.refUnion)
+            if (t.n < t.initialCount * REDETECT_BELOW) redetect(t, ring.frame(nextAge), t.rawUnion)
         } else {
             t.confidence = 0f
             if (t.failSinceNs < 0) t.failSinceNs = nextTs
@@ -300,9 +326,9 @@ class FlowTracker(private val onReGround: (label: String) -> Unit) {
         return BooleanArray(k) { b[it].toInt() != 0 }
     }
 
-    /** Rejects models that fold, flip or jump the box: convex quad, plausible size change, no teleporting. */
+    /** Rejects models that fold, flip or jump the targets: convex quad, plausible size change, no teleporting. */
     private fun sane(hd: DoubleArray, t: Track): Boolean {
-        val c = boxCorners(t.boxRef)
+        val c = boxCorners(t.refUnion)
         val q = DoubleArray(8)
         for (i in 0 until 4) {
             val x = c[2 * i]
@@ -324,14 +350,15 @@ class FlowTracker(private val onReGround: (label: String) -> Unit) {
             sign = s
         }
         val area = abs(shoelace(q))
-        val refArea = t.boxRef.width.toDouble() * t.boxRef.height
+        val refArea = t.refUnion.width.toDouble() * t.refUnion.height
         if (refArea <= 0 || area / refArea !in MIN_SCALE_AREA..MAX_SCALE_AREA) return false
-        val prevArea = t.raw.width.toDouble() * t.raw.height
+        val prev = t.rawUnion
+        val prevArea = prev.width.toDouble() * prev.height
         if (prevArea > 0 && area / prevArea !in (1 / MAX_STEP_AREA)..MAX_STEP_AREA) return false
         val cx = (q[0] + q[2] + q[4] + q[6]) / 4
         val cy = (q[1] + q[3] + q[5] + q[7]) / 4
-        val jump = max(abs(cx - t.raw.centerX), abs(cy - t.raw.centerY))
-        return jump <= MAX_STEP_JUMP * max(t.raw.width, t.raw.height) + MAX_STEP_JUMP_PX
+        val jump = max(abs(cx - prev.centerX), abs(cy - prev.centerY))
+        return jump <= MAX_STEP_JUMP * max(prev.width, prev.height) + MAX_STEP_JUMP_PX
     }
 
     private fun transformBox(hd: DoubleArray, box: PxBox): PxBox {
@@ -348,10 +375,10 @@ class FlowTracker(private val onReGround: (label: String) -> Unit) {
         return PxBox(l, tp, r, b)
     }
 
-    /** Adds fresh corners inside the current box, away from the points we still have. */
-    private fun redetect(t: Track, frame: Mat) {
+    /** Adds fresh corners inside [region] (current frame), away from the points we still have. */
+    private fun redetect(t: Track, frame: Mat, region: PxBox) {
         val inv = invert(t.model) ?: return
-        val (fresh, _) = detect(frame, t.raw.clampTo(frame.cols().toFloat(), frame.rows().toFloat()), fixedExpand = t.expand)
+        val (fresh, _) = detect(frame, region.clampTo(frame.cols().toFloat(), frame.rows().toFloat()), fixedExpand = t.expand)
         val ref = t.ref.toMutableList()
         val cur = t.cur.toMutableList()
         var added = 0
@@ -420,8 +447,37 @@ class FlowTracker(private val onReGround: (label: String) -> Unit) {
             return
         }
         Log.i(TAG, "Tracker #${t.seedId}: low confidence for ${(now - t.lowSinceNs) / 1_000_000} ms, asking for a re-ground")
-        onReGround(t.label)
+        onReGround(t.targets.map { it.label }.distinct())
     }
+
+    /**
+     * Streams a target into the current group. It comes from the same keyframe as the group's seed, so its box
+     * is already in seed-frame coordinates; corners around where it is now are added (mapped back through the
+     * model). A target for a different keyframe, or with no group yet, starts a new group.
+     */
+    private fun add(seed: Seed, ring: FrameRingBuffer) {
+        val t = track
+        if (t == null || t.keyframeTs != seed.keyframeTimestampNs) {
+            start(seed, ring)
+            return
+        }
+        val w = ring.width.toFloat()
+        val h = ring.height.toFloat()
+        val anchorAge = ring.ageOf(t.curTs, toleranceNs = 1_000_000L)
+        for (s in seed.targets) {
+            val target = TrackedTarget(s.box.clampTo(w, h), s.label, s.isPoint)
+            target.raw = transformBox(t.model, target.ref)
+            target.smooth = target.raw
+            t.targets += target
+            if (anchorAge >= 0) redetect(t, ring.frame(anchorAge), target.raw)
+        }
+        t.refUnion = union(t.targets.map { it.ref })
+        t.rawUnion = transformBox(t.model, t.refUnion)
+        if (t.static && t.n >= MIN_TRACK_POINTS) t.static = false
+        Log.i(TAG, "Tracker #${t.seedId}: +${seed.targets.size} target(s), now ${t.targets.size}, ${t.n} pts")
+    }
+
+    private fun labels(t: Track) = t.targets.groupingBy { it.label }.eachCount().entries.joinToString { (l, n) -> if (n > 1) "$n×\"$l\"" else "\"$l\"" }
 
     private fun recordTiming(ns: Long) {
         if (track == null) return
@@ -469,6 +525,10 @@ class FlowTracker(private val onReGround: (label: String) -> Unit) {
         const val REGROUND_EVERY_NS = 3_000_000_000L
         const val BLIND_STD = 12.0
         const val TIMING_WINDOW = 60
+
+        fun union(boxes: List<PxBox>) = PxBox(
+            boxes.minOf { it.left }, boxes.minOf { it.top }, boxes.maxOf { it.right }, boxes.maxOf { it.bottom },
+        )
 
         fun boxCorners(b: PxBox) = doubleArrayOf(
             b.left.toDouble(), b.top.toDouble(), b.right.toDouble(), b.top.toDouble(),
