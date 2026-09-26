@@ -1,0 +1,146 @@
+{
+  "kb_version": "2026-09-27.draft1",
+  "entries": [
+    {
+      "id": "car_check_engine_oil",
+      "appliance": "car_engine_bay",
+      "brand": "generic",
+      "error_code": null,
+      "title": "Check and top up engine oil",
+      "meaning": "Let's check the engine oil level, and top it up if it's low.",
+      "symptoms": ["oil warning light", "low oil", "oil light"],
+      "aliases": ["how do I check the oil", "check engine oil", "engine oil level", "dipstick", "add engine oil",
+                  "top up the oil", "pour engine oil", "put oil in the engine", "where does the oil go"],
+      "severity": "diy",
+      "escalate_if": ["oil light stays on while driving", "burning smell", "oil leak under the car", "milky oil"],
+      "safety": [
+        "Park on level ground and switch the engine off.",
+        "Wait at least ten minutes so the engine cools and the oil settles."
+      ],
+      "steps": [
+        {"n": 1, "say": "Open the bonnet and look at the engine.",
+         "target": "the engine under the open bonnet", "verify": null, "caution": null},
+        {"n": 2, "say": "Find the dipstick. It has a yellow ring handle.",
+         "target": "yellow ring handle of the engine oil dipstick", "verify": null, "caution": null},
+        {"n": 3, "say": "Pull the dipstick out and wipe it clean with a cloth.",
+         "target": "yellow ring handle of the engine oil dipstick", "verify": null, "caution": null},
+        {"n": 4, "say": "Push it all the way back in, then pull it out again.",
+         "target": "yellow ring handle of the engine oil dipstick", "verify": null, "caution": null},
+        {"n": 5, "say": "The oil line should be between the two marks near the tip.",
+         "target": null, "verify": null, "caution": null},
+        {"n": 6, "say": "If it's below the low mark, unscrew the oil filler cap with the oil can symbol.",
+         "target": "engine oil filler cap with the oil can symbol",
+         "verify": "the engine oil filler cap is removed and the round filler opening is visible", "caution": null},
+        {"n": 7, "say": "Pour in a little oil at a time, then wait a minute and check the dipstick again.",
+         "target": "round engine oil filler opening", "verify": null,
+         "caution": "Use the oil grade from your owner's manual, and don't overfill."},
+        {"n": 8, "say": "Screw the filler cap back on tightly and put the dipstick all the way in.",
+         "target": "engine oil filler cap", "verify": null, "caution": null}
+      ],
+      "source": "DRAFT, not yet verified: generic owner's-manual procedure. Check against the demo car's manual (docs/kb-collection-plan.md §5)."
+    },
+    {
+      "id": "car_check_coolant",
+      "appliance": "car_engine_bay",
+      "brand": "generic",
+      "error_code": null,
+      "title": "Check the engine coolant",
+      "meaning": "Let's check the coolant level in the see-through tank.",
+      "symptoms": ["temperature warning light", "engine running hot", "coolant low"],
+      "aliases": ["check coolant", "coolant level", "add coolant", "top up coolant", "radiator water",
+                  "where does the coolant go", "coolant tank"],
+      "severity": "caution",
+      "escalate_if": ["coolant keeps dropping", "steam from the engine", "temperature gauge in the red", "coolant leak"],
+      "safety": [
+        "Only check the coolant when the engine is completely cold.",
+        "Never open the coolant cap on a hot engine. Hot coolant can burn you."
+      ],
+      "steps": [
+        {"n": 1, "say": "Find the see-through coolant tank with MIN and MAX marks.",
+         "target": "translucent coolant reservoir with MIN and MAX marks", "verify": null, "caution": null},
+        {"n": 2, "say": "Look at the side of the tank. The coolant should be between MIN and MAX.",
+         "target": "translucent coolant reservoir with MIN and MAX marks", "verify": null, "caution": null},
+        {"n": 3, "say": "If it's below MIN and the engine is cold, slowly open the tank cap.",
+         "target": "cap of the coolant reservoir", "verify": "the coolant reservoir cap is off", "caution": null},
+        {"n": 4, "say": "Top up with the coolant from your manual until it reaches MAX.",
+         "target": "open coolant reservoir", "verify": null, "caution": "Don't mix different coolant types."},
+        {"n": 5, "say": "Close the cap tightly.",
+         "target": "cap of the coolant reservoir", "verify": null, "caution": null}
+      ],
+      "source": "DRAFT, not yet verified: generic owner's-manual procedure. Check against the demo car's manual (docs/kb-collection-plan.md §5)."
+    },
+    {
+      "id": "car_top_up_washer_fluid",
+      "appliance": "car_engine_bay",
+      "brand": "generic",
+      "error_code": null,
+      "title": "Top up windscreen washer fluid",
+      "meaning": "Let's fill up the windscreen washer fluid.",
+      "symptoms": ["wipers spray nothing", "washer not spraying"],
+      "aliases": ["washer fluid", "wiper fluid", "windscreen water", "windshield washer", "fill the wiper water",
+                  "top up washer fluid"],
+      "severity": "diy",
+      "escalate_if": ["washer tank is cracked", "pump makes noise but nothing sprays"],
+      "safety": ["Switch the engine off before you reach into the engine bay."],
+      "steps": [
+        {"n": 1, "say": "Find the washer fluid cap. It has a windscreen and water spray symbol.",
+         "target": "cap of the windshield washer fluid reservoir with the wiper symbol", "verify": null, "caution": null},
+        {"n": 2, "say": "Flip or twist the cap open.",
+         "target": "cap of the windshield washer fluid reservoir with the wiper symbol",
+         "verify": "the windshield washer fluid cap is open", "caution": null},
+        {"n": 3, "say": "Pour in washer fluid or clean water until it's nearly full.",
+         "target": "open windshield washer fluid filler neck", "verify": null, "caution": null},
+        {"n": 4, "say": "Close the cap until it clicks.",
+         "target": "cap of the windshield washer fluid reservoir", "verify": null, "caution": null}
+      ],
+      "source": "DRAFT, not yet verified: generic owner's-manual procedure. Check against the demo car's manual (docs/kb-collection-plan.md §5)."
+    },
+    {
+      "id": "car_electrical_wiring",
+      "appliance": "car_engine_bay",
+      "brand": "generic",
+      "error_code": null,
+      "title": "Car electrical wiring",
+      "meaning": "Wiring, battery cables and airbag circuits can hurt you or damage the car.",
+      "symptoms": ["short circuit", "sparks", "electrical problem"],
+      "aliases": ["wiring", "fix the wiring", "rewire", "cut the wire", "connect the wires", "loose wire",
+                  "electrical wires"],
+      "severity": "call_technician",
+      "escalate_if": [],
+      "safety": [],
+      "steps": [],
+      "source": "FixLens policy: no wiring guidance (CLAUDE.md §3)."
+    },
+    {
+      "id": "laptop_open_bottom_cover",
+      "appliance": "laptop",
+      "brand": "generic",
+      "error_code": null,
+      "title": "Open a laptop's bottom cover for cleaning",
+      "meaning": "Let's take the bottom cover off so you can clean the dust out.",
+      "symptoms": ["laptop overheating", "fan is loud", "dusty vents"],
+      "aliases": ["open this laptop", "open the laptop", "clean the laptop", "clean the fan", "remove the bottom cover",
+                  "open the back of the laptop", "laptop screws"],
+      "severity": "caution",
+      "escalate_if": ["swollen battery", "burning smell", "cracked battery", "liquid inside"],
+      "safety": [
+        "Shut the laptop down and unplug the charger.",
+        "Work on a soft cloth, and touch something metal first to discharge static."
+      ],
+      "steps": [
+        {"n": 1, "say": "Close the lid and turn the laptop over.",
+         "target": "the bottom cover of the laptop", "verify": null, "caution": null},
+        {"n": 2, "say": "Remove every small screw around the bottom cover and keep them in a cup.",
+         "target": "the edge area of the bottom cover where its screws are", "verify": null,
+         "caution": "Some screws may be hidden under the rubber feet or labels."},
+        {"n": 3, "say": "Gently pry the cover up from a corner with a plastic card, never a metal tool.",
+         "target": "a corner of the bottom cover", "verify": "the laptop bottom cover is lifted off", "caution": null},
+        {"n": 4, "say": "Blow the dust out of the fan with short puffs of air, holding the fan still.",
+         "target": "the cooling fan", "verify": null, "caution": "Don't touch the battery or the circuit board."},
+        {"n": 5, "say": "Put the cover back and screw every screw back in its hole.",
+         "target": "the bottom cover of the laptop", "verify": null, "caution": null}
+      ],
+      "source": "DRAFT, not yet verified: generic laptop cleaning procedure. Check against the laptop maker's service manual."
+    }
+  ]
+}
