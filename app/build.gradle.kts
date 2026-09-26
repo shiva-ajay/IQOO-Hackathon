@@ -75,4 +75,6 @@ dependencies {
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.view)
     implementation(files("libs/sherpa-onnx.aar"))
+
+    testImplementation(libs.junit)
 }
