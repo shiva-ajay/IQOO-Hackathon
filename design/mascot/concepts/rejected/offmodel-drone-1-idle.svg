@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>Fixy drone concept 1: Ducted-fan drone (idle hover)</title>
+  <defs>
+    <clipPath id="clip-shell"><rect x="170" y="140" width="172" height="152" rx="62"/></clipPath>
+  </defs>
+  <g id="shadow">
+    <ellipse cx="256" cy="452" rx="90" ry="10" fill="#0F1C2E" opacity="0.14"/>
+  </g>
+  <g id="drone" transform="translate(256 210) rotate(0) scale(0.8) translate(-256 -220)">
+    <g id="halo" opacity="0.4">
+      <rect x="170" y="140" width="172" height="152" rx="62" fill="#F6F1E7" stroke="#F6F1E7" stroke-width="20" stroke-linejoin="round"/>
+      <ellipse cx="118" cy="176" rx="64" ry="26" fill="#F6F1E7" stroke="#F6F1E7" stroke-width="20" stroke-linejoin="round"/>
+      <ellipse cx="394" cy="176" rx="64" ry="26" fill="#F6F1E7" stroke="#F6F1E7" stroke-width="20" stroke-linejoin="round"/>
+      <circle cx="256" cy="322" r="30" fill="#F6F1E7" stroke="#F6F1E7" stroke-width="20" stroke-linejoin="round"/>
+    </g>
+    <g id="struts">
+      <rect x="150" y="184" width="212" height="20" rx="6" fill="#B8C0CB" stroke="#0F1C2E" stroke-width="6" stroke-linejoin="round"/>
+    </g>
+    <g id="rotor-left">
+      <ellipse cx="118" cy="176" rx="64" ry="26" fill="#B8C0CB" stroke="#0F1C2E" stroke-width="6" stroke-linejoin="round"/>
+      <ellipse cx="118" cy="173" rx="50" ry="16" fill="#0F1C2E"/>
+      <ellipse id="rotor-left-blur" cx="118" cy="172" rx="46" ry="9" fill="#F6F1E7" opacity="0.55"/>
+      <circle cx="118" cy="198" r="5" fill="#FF9F1C"/>
+    </g>
+    <g id="rotor-right">
+      <ellipse cx="394" cy="176" rx="64" ry="26" fill="#B8C0CB" stroke="#0F1C2E" stroke-width="6" stroke-linejoin="round"/>
+      <ellipse cx="394" cy="173" rx="50" ry="16" fill="#0F1C2E"/>
+      <ellipse id="rotor-right-blur" cx="394" cy="172" rx="46" ry="9" fill="#F6F1E7" opacity="0.55"/>
+      <circle cx="394" cy="198" r="5" fill="#FF9F1C"/>
+    </g>
+    <rect id="gimbal-yoke" x="238" y="282" width="36" height="24" rx="6" fill="#B8C0CB" stroke="#0F1C2E" stroke-width="6" stroke-linejoin="round"/>
+    <g id="camera">
+      <circle cx="256" cy="322" r="30" fill="#0F1C2E" stroke="#0F1C2E" stroke-width="6" stroke-linejoin="round"/>
+      <circle cx="256" cy="322" r="21.6" fill="#B8C0CB"/>
+      <circle cx="256" cy="322" r="15.6" fill="#0F1C2E"/>
+      <circle cx="256" cy="322" r="8.4" fill="#FF9F1C"/>
+      <circle cx="252.4" cy="318.4" r="3" fill="#F6F1E7"/>
+    </g>
+    <g id="body">
+      <rect x="236" y="126" width="40" height="22" rx="7" fill="#B8C0CB" stroke="#0F1C2E" stroke-width="6" stroke-linejoin="round"/>
+      <circle cx="256" cy="134" r="5" fill="#FF9F1C"/>
+      <rect id="shell" x="170" y="140" width="172" height="152" rx="62" fill="#F6F1E7"/>
+      <g clip-path="url(#clip-shell)">
+        <rect x="160" y="266" width="192" height="30" fill="#0F1C2E" opacity="0.07"/>
+        <rect x="160" y="258" width="192" height="14" fill="#FF9F1C"/>
+        <path fill="#0F1C2E" d="M146 258h12l-14 14h-12zM172 258h12l-14 14h-12zM198 258h12l-14 14h-12zM224 258h12l-14 14h-12zM250 258h12l-14 14h-12zM276 258h12l-14 14h-12zM302 258h12l-14 14h-12zM328 258h12l-14 14h-12zM354 258h12l-14 14h-12z"/>
+      </g>
+      <rect x="170" y="140" width="172" height="152" rx="62" fill="none" stroke="#0F1C2E" stroke-width="6" stroke-linejoin="round"/>
+    </g>
+    <g id="visor">
+      <rect x="190" y="166" width="132" height="84" rx="34" fill="#0F1C2E"/>
+      <g id="eye-left">
+        <rect x="217" y="185" width="26" height="38" rx="13" fill="#FF9F1C"/>
+        <rect x="223" y="191" width="7" height="12" rx="3.5" fill="#F6F1E7"/>
+      </g>
+      <g id="eye-right">
+        <rect x="269" y="185" width="26" height="38" rx="13" fill="#FF9F1C"/>
+        <rect x="275" y="191" width="7" height="12" rx="3.5" fill="#F6F1E7"/>
+      </g>
+      <path id="mouth" d="M246 234Q256 241 266 234" fill="none" stroke="#FF9F1C" stroke-width="5" stroke-linecap="round"/>
+    </g>
+  </g>
+</svg>

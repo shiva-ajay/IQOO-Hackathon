@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>Fixy tech concept B: Toolbox bot</title>
+  <desc>A walking amber toolbox: carry-handle with an inspection camera on top, ink screen face with two LED eyes, fold-out wrench and flashlight arms, caster wheels.</desc>
+  <defs>
+    <clipPath id="clip-box"><rect x="118" y="170" width="276" height="228" rx="36"/></clipPath>
+  </defs>
+
+  <g id="shadow">
+    <ellipse cx="256" cy="468" rx="130" ry="12" fill="#0F1C2E" opacity="0.14"/>
+  </g>
+
+  <g id="wheels">
+    <rect x="160" y="392" width="40" height="30" rx="8" fill="#0F1C2E"/>
+    <rect x="312" y="392" width="40" height="30" rx="8" fill="#0F1C2E"/>
+    <circle cx="180" cy="436" r="28" fill="#0F1C2E"/>
+    <circle cx="332" cy="436" r="28" fill="#0F1C2E"/>
+    <circle cx="180" cy="436" r="10" fill="#B8C0CB"/>
+    <circle cx="332" cy="436" r="10" fill="#B8C0CB"/>
+  </g>
+
+  <g id="arm-left">
+    <path d="M122 300L78 256" fill="none" stroke="#0F1C2E" stroke-width="22" stroke-linecap="round"/>
+    <rect x="56" y="206" width="18" height="52" rx="9" fill="#B8C0CB" transform="rotate(-45 65 232)"/>
+    <path id="wrench-hand" transform="translate(52 214) rotate(-45) scale(1.2)" fill="#B8C0CB" d="M-10 -26.2A28 28 0 1 0 10 -26.2V0A10 10 0 0 1 -10 0Z"/>
+  </g>
+  <g id="arm-right">
+    <path d="M390 300L426 318" fill="none" stroke="#0F1C2E" stroke-width="22" stroke-linecap="round"/>
+    <path id="beam" d="M470 306L504 290V354L470 338Z" fill="#FF9F1C" opacity="0.25"/>
+    <g id="flashlight">
+      <rect x="418" y="308" width="38" height="20" rx="8" fill="#0F1C2E"/>
+      <rect x="450" y="300" width="20" height="36" rx="7" fill="#0F1C2E"/>
+      <rect x="464" y="306" width="8" height="24" rx="4" fill="#FF9F1C"/>
+    </g>
+  </g>
+
+  <g id="handle">
+    <path d="M198 174V146Q198 128 216 128H296Q314 128 314 146V174" fill="none" stroke="#0F1C2E" stroke-width="20" stroke-linecap="round"/>
+  </g>
+  <g id="inspection-cam">
+    <rect x="230" y="104" width="52" height="40" rx="12" fill="#0F1C2E"/>
+    <circle cx="256" cy="124" r="15" fill="#B8C0CB"/>
+    <circle cx="256" cy="124" r="10" fill="#0F1C2E"/>
+    <circle cx="256" cy="124" r="5" fill="#FF9F1C"/>
+  </g>
+
+  <g id="box">
+    <rect id="box-shell" x="118" y="170" width="276" height="228" rx="36" fill="#FF9F1C"/>
+    <g clip-path="url(#clip-box)">
+      <rect id="lid" x="110" y="162" width="292" height="48" fill="#0F1C2E" opacity="0.10"/>
+      <g id="hazard-stripe">
+        <rect x="110" y="364" width="292" height="40" fill="#0F1C2E"/>
+        <path fill="#FF9F1C" d="M126 364h20l-26 34h-20zM166 364h20l-26 34h-20zM206 364h20l-26 34h-20zM246 364h20l-26 34h-20zM286 364h20l-26 34h-20zM326 364h20l-26 34h-20zM366 364h20l-26 34h-20zM406 364h20l-26 34h-20z"/>
+      </g>
+    </g>
+    <line id="lid-seam" x1="118" y1="210" x2="394" y2="210" stroke="#0F1C2E" stroke-width="4" opacity="0.5"/>
+    <g id="latches" fill="#B8C0CB">
+      <rect x="146" y="198" width="30" height="24" rx="6"/>
+      <rect x="336" y="198" width="30" height="24" rx="6"/>
+    </g>
+  </g>
+
+  <g id="screen">
+    <rect x="156" y="232" width="200" height="116" rx="28" fill="#0F1C2E"/>
+    <g id="eyes" fill="#FF9F1C">
+      <rect id="eye-left" x="198" y="256" width="32" height="48" rx="16"/>
+      <rect id="eye-right" x="282" y="256" width="32" height="48" rx="16"/>
+    </g>
+    <g id="eye-glints" fill="#F6F1E7">
+      <rect x="206" y="264" width="7" height="13" rx="3.5"/>
+      <rect x="290" y="264" width="7" height="13" rx="3.5"/>
+    </g>
+    <path id="smile" d="M240 320Q256 330 272 320" fill="none" stroke="#FF9F1C" stroke-width="7" stroke-linecap="round"/>
+    <g id="screws" fill="#B8C0CB">
+      <circle cx="140" cy="244" r="5"/><circle cx="372" cy="244" r="5"/>
+      <circle cx="140" cy="338" r="5"/><circle cx="372" cy="338" r="5"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>Fixy drone concept 3: Tool drone (pointing)</title>
+  <defs>
+    <clipPath id="clip-shell"><rect x="156" y="146" width="200" height="138" rx="34"/></clipPath>
+  </defs>
+  <g id="shadow">
+    <ellipse cx="176" cy="452" rx="70" ry="10" fill="#0F1C2E" opacity="0.1"/>
+  </g>
+  <g id="reticle">
+    <g id="target-part">
+      <polygon points="430 404 417 426.5 391 426.5 378 404 391 381.5 417 381.5" fill="#B8C0CB" stroke="#0F1C2E" stroke-width="6" stroke-linejoin="round"/>
+      <circle cx="404" cy="404" r="10" fill="#0F1C2E"/>
+    </g>
+    <g id="brackets" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M346 370V346H370" stroke="#0F1C2E" stroke-width="16"/>
+      <path d="M346 438V462H370" stroke="#0F1C2E" stroke-width="16"/>
+      <path d="M462 370V346H438" stroke="#0F1C2E" stroke-width="16"/>
+      <path d="M462 438V462H438" stroke="#0F1C2E" stroke-width="16"/>
+      <path d="M346 370V346H370" stroke="#FF9F1C" stroke-width="8"/>
+      <path d="M346 438V462H370" stroke="#FF9F1C" stroke-width="8"/>
+      <path d="M462 370V346H438" stroke="#FF9F1C" stroke-width="8"/>
+      <path d="M462 438V462H438" stroke="#FF9F1C" stroke-width="8"/>
+    </g>
+  </g>
+  <g id="light-cone">
+    <path d="M168 247.5L380.6 454.9L443.8 364.6L176 236Z" fill="#FF9F1C" opacity="0.16"/>
+    <path d="M172 241.7L380.6 454.9" stroke="#FF9F1C" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+    <path d="M172 241.7L443.8 364.6" stroke="#FF9F1C" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+    <circle cx="404" cy="404" r="5" fill="#FF9F1C"/>
+  </g>
+  <g id="drone" transform="translate(186 176) rotate(12) scale(0.8) translate(-256 -220)">
+    <g id="halo" opacity="0.4">
+      <rect x="156" y="146" width="200" height="138" rx="34" fill="#F6F1E7" stroke="#F6F1E7" stroke-width="20" stroke-linejoin="round"/>
+      <ellipse cx="104" cy="132" rx="66" ry="22" fill="#F6F1E7" stroke="#F6F1E7" stroke-width="20" stroke-linejoin="round"/>
+      <ellipse cx="408" cy="132" rx="66" ry="22" fill="#F6F1E7" stroke="#F6F1E7" stroke-width="20" stroke-linejoin="round"/>
+      <circle cx="256" cy="306" r="26" fill="#F6F1E7" stroke="#F6F1E7" stroke-width="20" stroke-linejoin="round"/>
+    </g>
+    <g id="booms">
+      <path d="M170 170L110 138M342 170L402 138" stroke="#0F1C2E" stroke-width="26" stroke-linecap="round"/>
+      <path d="M170 170L110 138M342 170L402 138" stroke="#B8C0CB" stroke-width="14" stroke-linecap="round"/>
+    </g>
+    <g id="rotor-left">
+      <ellipse cx="104" cy="132" rx="66" ry="22" fill="#B8C0CB" stroke="#0F1C2E" stroke-width="6" stroke-linejoin="round"/>
+      <ellipse cx="104" cy="129" rx="52" ry="12" fill="#0F1C2E"/>
+      <ellipse id="rotor-left-blur" cx="104" cy="128" rx="48" ry="5" fill="#F6F1E7" opacity="0.55"/>
+      <circle cx="104" cy="150" r="5" fill="#FF9F1C"/>
+    </g>
+    <g id="rotor-right">
+      <ellipse cx="408" cy="132" rx="66" ry="22" fill="#B8C0CB" stroke="#0F1C2E" stroke-width="6" stroke-linejoin="round"/>
+      <ellipse cx="408" cy="129" rx="52" ry="12" fill="#0F1C2E"/>
+      <ellipse id="rotor-right-blur" cx="408" cy="128" rx="48" ry="5" fill="#F6F1E7" opacity="0.55"/>
+      <circle cx="408" cy="150" r="5" fill="#FF9F1C"/>
+    </g>
+    <g id="grabber-arm">
+      <path d="M196 276L168 320L150 344" fill="none" stroke="#0F1C2E" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M196 276L168 320L150 344" fill="none" stroke="#B8C0CB" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="168" cy="320" r="7" fill="#0F1C2E"/>
+      <path id="wrench-jaw" transform="translate(146 352) rotate(200) scale(0.95)" fill="#B8C0CB" stroke="#0F1C2E" stroke-width="6" stroke-linejoin="round" d="M-10 -26.2A28 28 0 1 0 10 -26.2V0A10 10 0 0 1 -10 0Z"/>
+    </g>
+    <g id="camera">
+      <circle cx="256" cy="304" r="26" fill="#0F1C2E" stroke="#0F1C2E" stroke-width="6" stroke-linejoin="round"/>
+      <circle cx="256" cy="304" r="18.7" fill="#B8C0CB"/>
+      <circle cx="256" cy="304" r="13.5" fill="#0F1C2E"/>
+      <circle cx="256" cy="304" r="7.3" fill="#FF9F1C"/>
+      <circle cx="252.9" cy="300.9" r="2.6" fill="#F6F1E7"/>
+    </g>
+    <g id="body">
+      <rect x="210" y="130" width="92" height="22" rx="7" fill="#B8C0CB" stroke="#0F1C2E" stroke-width="6" stroke-linejoin="round"/>
+      <circle cx="228" cy="141" r="4" fill="#0F1C2E"/><circle cx="284" cy="141" r="4" fill="#0F1C2E"/>
+      <rect id="shell" x="156" y="146" width="200" height="138" rx="34" fill="#F6F1E7"/>
+      <g clip-path="url(#clip-shell)">
+        <rect x="150" y="262" width="212" height="26" fill="#0F1C2E" opacity="0.07"/>
+        <rect x="150" y="252" width="212" height="16" fill="#FF9F1C"/>
+        <path fill="#0F1C2E" d="M134 252h12l-16 16h-12zM160 252h12l-16 16h-12zM186 252h12l-16 16h-12zM212 252h12l-16 16h-12zM238 252h12l-16 16h-12zM264 252h12l-16 16h-12zM290 252h12l-16 16h-12zM316 252h12l-16 16h-12zM342 252h12l-16 16h-12zM368 252h12l-16 16h-12z"/>
+      </g>
+      <rect x="156" y="146" width="200" height="138" rx="34" fill="none" stroke="#0F1C2E" stroke-width="6" stroke-linejoin="round"/>
+      <g id="bolts" fill="#B8C0CB" stroke="#0F1C2E" stroke-width="3">
+        <circle cx="174" cy="166" r="6"/><circle cx="338" cy="166" r="6"/><circle cx="174" cy="236" r="6"/><circle cx="338" cy="236" r="6"/>
+      </g>
+    </g>
+    <g id="visor">
+      <rect x="190" y="166" width="132" height="76" rx="24" fill="#0F1C2E"/>
+      <g id="eye-left">
+        <rect x="217" y="182" width="26" height="36" rx="11" fill="#FF9F1C"/>
+        <rect x="223" y="188" width="7" height="12" rx="3.5" fill="#F6F1E7"/>
+      </g>
+      <g id="eye-right">
+        <rect x="269" y="182" width="26" height="36" rx="11" fill="#FF9F1C"/>
+        <rect x="275" y="188" width="7" height="12" rx="3.5" fill="#F6F1E7"/>
+      </g>
+      <path id="mouth" d="M246 226Q256 233 266 226" fill="none" stroke="#FF9F1C" stroke-width="5" stroke-linecap="round"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>FixLens concept 3: Lock-on lens</title>
+  <rect width="512" height="512" fill="#FFFFFF"/>
+  <g id="brackets" fill="none" stroke="#FF9F1C" stroke-width="36" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M76 170V120a44 44 0 0 1 44-44h50"/>
+    <path d="M342 76h50a44 44 0 0 1 44 44v50"/>
+    <path d="M436 342v50a44 44 0 0 1-44 44h-50"/>
+    <path d="M170 436h-50a44 44 0 0 1-44-44v-50"/>
+  </g>
+  <g id="lens-face">
+    <circle cx="256" cy="256" r="120" fill="#0F1C2E"/>
+    <circle cx="292" cy="220" r="34" fill="#FF9F1C"/>
+    <path d="M186 280a74 74 0 0 0 96 52" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="round"/>
+  </g>
+</svg>

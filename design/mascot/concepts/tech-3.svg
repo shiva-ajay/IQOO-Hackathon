@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>Fixy tech concept C: Inspection drone</title>
+  <desc>Hovering inspection drone: twin rotors, paper shell with an ink visor and two LED eyes, a gimballed camera lens underneath, a wrench-jaw grabber and a spotlight.</desc>
+  <defs>
+    <clipPath id="clip-shell"><rect x="132" y="150" width="248" height="178" rx="84"/></clipPath>
+  </defs>
+
+  <g id="shadow">
+    <ellipse cx="256" cy="472" rx="84" ry="10" fill="#0F1C2E" opacity="0.12"/>
+  </g>
+
+  <g id="rotors">
+    <path d="M178 160L112 126M334 160L400 126" fill="none" stroke="#0F1C2E" stroke-width="16" stroke-linecap="round"/>
+    <rect x="100" y="104" width="24" height="30" rx="8" fill="#0F1C2E"/>
+    <rect x="388" y="104" width="24" height="30" rx="8" fill="#0F1C2E"/>
+    <g id="props" fill="#B8C0CB">
+      <ellipse cx="112" cy="100" rx="64" ry="9"/>
+      <ellipse cx="400" cy="100" rx="64" ry="9"/>
+    </g>
+    <circle cx="112" cy="101" r="8" fill="#FF9F1C"/>
+    <circle cx="400" cy="101" r="8" fill="#FF9F1C"/>
+  </g>
+
+  <g id="arm-left">
+    <path d="M168 300L138 350" fill="none" stroke="#0F1C2E" stroke-width="16" stroke-linecap="round"/>
+    <path id="wrench-hand" transform="translate(134 364) rotate(200) scale(1.05)" fill="#B8C0CB" d="M-10 -26.2A28 28 0 1 0 10 -26.2V0A10 10 0 0 1 -10 0Z"/>
+  </g>
+  <g id="arm-right">
+    <path d="M344 300L376 344" fill="none" stroke="#0F1C2E" stroke-width="16" stroke-linecap="round"/>
+    <g id="spotlight">
+      <rect x="360" y="340" width="36" height="30" rx="9" fill="#0F1C2E"/>
+      <rect x="364" y="366" width="28" height="8" rx="4" fill="#FF9F1C"/>
+    </g>
+  </g>
+
+  <g id="gimbal">
+    <rect x="236" y="316" width="40" height="30" rx="8" fill="#0F1C2E"/>
+    <circle cx="256" cy="370" r="38" fill="#0F1C2E"/>
+    <circle cx="256" cy="370" r="27" fill="#B8C0CB"/>
+    <circle cx="256" cy="370" r="20" fill="#0F1C2E"/>
+    <circle cx="256" cy="370" r="10" fill="#FF9F1C"/>
+    <circle cx="250" cy="364" r="4" fill="#F6F1E7"/>
+  </g>
+
+  <g id="shell">
+    <rect x="132" y="150" width="248" height="178" rx="84" fill="#F6F1E7"/>
+    <g clip-path="url(#clip-shell)">
+      <rect id="shell-shade" x="120" y="296" width="272" height="40" fill="#0F1C2E" opacity="0.07"/>
+      <g id="hazard-stripe">
+        <rect x="120" y="290" width="272" height="16" fill="#FF9F1C"/>
+        <path fill="#0F1C2E" d="M140 290h12l-14 16h-12zM172 290h12l-14 16h-12zM204 290h12l-14 16h-12zM236 290h12l-14 16h-12zM268 290h12l-14 16h-12zM300 290h12l-14 16h-12zM332 290h12l-14 16h-12zM364 290h12l-14 16h-12z"/>
+      </g>
+    </g>
+    <rect id="shell-outline" x="132" y="150" width="248" height="178" rx="84" fill="none" stroke="#0F1C2E" stroke-width="6"/>
+    <path id="panel-line" d="M190 164Q256 150 322 164" fill="none" stroke="#0F1C2E" stroke-width="4" stroke-linecap="round" opacity="0.25"/>
+    <g id="screws" fill="#B8C0CB">
+      <circle cx="160" cy="232" r="6"/><circle cx="352" cy="232" r="6"/>
+    </g>
+  </g>
+
+  <g id="visor">
+    <rect x="172" y="184" width="168" height="92" rx="40" fill="#0F1C2E"/>
+    <g id="eyes" fill="#FF9F1C">
+      <rect id="eye-left" x="206" y="204" width="30" height="46" rx="15"/>
+      <rect id="eye-right" x="276" y="204" width="30" height="46" rx="15"/>
+    </g>
+    <g id="eye-glints" fill="#F6F1E7">
+      <rect x="213" y="211" width="7" height="12" rx="3.5"/>
+      <rect x="283" y="211" width="7" height="12" rx="3.5"/>
+    </g>
+    <path id="smile" d="M242 260Q256 268 270 260" fill="none" stroke="#FF9F1C" stroke-width="6" stroke-linecap="round"/>
+  </g>
+</svg>

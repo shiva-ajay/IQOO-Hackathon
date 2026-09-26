@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>FixLens concept 1: Talking lens</title>
+  <rect width="512" height="512" fill="#FFFFFF"/>
+  <g id="bubble-lens">
+    <path id="bubble" fill="#0F1C2E" d="M256 64a176 176 0 1 1-96 323.5L84 440l30-86A176 176 0 0 1 256 64z"/>
+    <circle id="glass" cx="256" cy="240" r="116" fill="#FFFFFF"/>
+    <circle id="iris" cx="256" cy="240" r="70" fill="#FF9F1C"/>
+    <circle id="glint" cx="230" cy="214" r="18" fill="#FFFFFF"/>
+  </g>
+</svg>

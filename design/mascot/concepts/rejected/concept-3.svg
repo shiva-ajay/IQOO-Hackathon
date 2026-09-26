@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>Fixy concept 3: Paper bean with lens visor</title>
+  <ellipse cx="256" cy="462" rx="120" ry="14" fill="#0F1C2E" opacity="0.12"/>
+  <g fill="#0F1C2E">
+    <rect x="248" y="70" width="16" height="50" rx="8"/>
+    <path transform="translate(256 72)" d="M-10 -26.2A28 28 0 1 0 10 -26.2V0A10 10 0 0 1 -10 0Z"/>
+    <ellipse cx="210" cy="446" rx="34" ry="18"/><ellipse cx="302" cy="446" rx="34" ry="18"/>
+    <circle cx="108" cy="330" r="24"/><circle cx="404" cy="330" r="24"/>
+  </g>
+  <path d="M256 116C360 116 398 206 398 300C398 398 338 446 256 446C174 446 114 398 114 300C114 206 152 116 256 116Z" fill="#F6F1E7" stroke="#0F1C2E" stroke-width="14"/>
+  <circle cx="256" cy="262" r="86" fill="#0F1C2E"/>
+  <circle cx="256" cy="262" r="56" fill="#F6F1E7"/>
+  <circle cx="256" cy="262" r="38" fill="#FF9F1C"/>
+  <circle cx="242" cy="248" r="10" fill="#FFFFFF"/>
+  <path d="M234 384a26 26 0 0 0 44 0" fill="none" stroke="#0F1C2E" stroke-width="10" stroke-linecap="round"/>
+</svg>

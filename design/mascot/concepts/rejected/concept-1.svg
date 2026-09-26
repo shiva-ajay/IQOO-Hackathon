@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>Fixy concept 1: Lens buddy</title>
+  <ellipse cx="256" cy="462" rx="120" ry="14" fill="#0F1C2E" opacity="0.12"/>
+  <g fill="#0F1C2E">
+    <ellipse cx="206" cy="440" rx="38" ry="22"/><ellipse cx="306" cy="440" rx="38" ry="22"/>
+    <path d="M130 300L96 360M382 300L416 360" stroke="#0F1C2E" stroke-width="30" stroke-linecap="round"/>
+    <path transform="translate(92 372) rotate(200)" d="M-10 -26.2A28 28 0 1 0 10 -26.2V0A10 10 0 0 1 -10 0Z"/>
+    <path transform="translate(420 372) rotate(160)" d="M-10 -26.2A28 28 0 1 0 10 -26.2V0A10 10 0 0 1 -10 0Z"/>
+    <rect x="246" y="96" width="20" height="50" rx="10"/>
+    <path transform="translate(256 96) scale(1.15)" d="M-10 -26.2A28 28 0 1 0 10 -26.2V0A10 10 0 0 1 -10 0Z"/>
+    <circle cx="256" cy="286" r="150"/>
+  </g>
+  <circle cx="256" cy="262" r="92" fill="#F6F1E7"/>
+  <circle cx="256" cy="262" r="54" fill="#FF9F1C"/>
+  <circle cx="256" cy="262" r="24" fill="#0F1C2E"/>
+  <circle cx="236" cy="242" r="12" fill="#F6F1E7"/>
+  <path d="M232 390a30 30 0 0 0 48 0" fill="none" stroke="#F6F1E7" stroke-width="10" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>Fixy concept 2: Wrench walker</title>
+  <ellipse cx="256" cy="462" rx="100" ry="12" fill="#0F1C2E" opacity="0.12"/>
+  <g fill="#0F1C2E">
+    <path transform="translate(256 400) rotate(180) scale(2.2)" d="M-10 -26.2A28 28 0 1 0 10 -26.2V0A10 10 0 0 1 -10 0Z"/>
+    <rect x="224" y="270" width="64" height="130" rx="20"/>
+    <path d="M226 320L172 356M286 320L340 356" stroke="#0F1C2E" stroke-width="22" stroke-linecap="round"/>
+    <circle cx="166" cy="360" r="16"/><circle cx="346" cy="360" r="16"/>
+    <circle cx="256" cy="186" r="112"/>
+  </g>
+  <circle cx="256" cy="186" r="66" fill="#F6F1E7"/>
+  <circle cx="256" cy="186" r="40" fill="#FF9F1C"/>
+  <circle cx="256" cy="186" r="17" fill="#0F1C2E"/>
+  <circle cx="242" cy="172" r="9" fill="#F6F1E7"/>
+</svg>

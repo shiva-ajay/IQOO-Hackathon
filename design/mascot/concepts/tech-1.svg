@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>Fixy tech concept A: Hard-hat repair bot</title>
+  <desc>Compact repair robot: amber hard-hat head with an inspection-camera headlamp, ink visor with two LED eyes, wrench hand and tool belt.</desc>
+  <defs>
+    <clipPath id="clip-belt"><rect x="186" y="384" width="140" height="22" rx="4"/></clipPath>
+    <clipPath id="clip-head"><rect x="112" y="118" width="288" height="196" rx="58"/></clipPath>
+  </defs>
+
+  <g id="shadow">
+    <ellipse cx="256" cy="468" rx="118" ry="12" fill="#0F1C2E" opacity="0.14"/>
+  </g>
+
+  <g id="legs" fill="#0F1C2E">
+    <rect x="202" y="398" width="34" height="50" rx="12"/>
+    <rect x="276" y="398" width="34" height="50" rx="12"/>
+    <rect id="boot-left" x="186" y="434" width="60" height="30" rx="14"/>
+    <rect id="boot-right" x="266" y="434" width="60" height="30" rx="14"/>
+  </g>
+
+  <g id="arm-left">
+    <path d="M196 350L154 396" fill="none" stroke="#0F1C2E" stroke-width="24" stroke-linecap="round"/>
+    <circle id="hand-left" cx="150" cy="402" r="20" fill="#0F1C2E"/>
+  </g>
+  <g id="arm-right">
+    <path d="M316 350L356 392" fill="none" stroke="#0F1C2E" stroke-width="24" stroke-linecap="round"/>
+    <path id="wrench-hand" transform="translate(366 402) rotate(135) scale(1.25)" fill="#B8C0CB" d="M-10 -26.2A28 28 0 1 0 10 -26.2V0A10 10 0 0 1 -10 0Z"/>
+  </g>
+
+  <g id="torso">
+    <rect x="186" y="318" width="140" height="104" rx="30" fill="#F6F1E7"/>
+    <rect id="torso-shade" x="186" y="318" width="140" height="104" rx="30" fill="#0F1C2E" opacity="0.06"/>
+    <rect id="chest-panel" x="224" y="338" width="64" height="34" rx="10" fill="none" stroke="#0F1C2E" stroke-width="4" opacity="0.35"/>
+    <circle id="status-led" cx="256" cy="355" r="7" fill="#FF9F1C"/>
+    <rect id="torso-outline" x="186" y="318" width="140" height="104" rx="30" fill="none" stroke="#0F1C2E" stroke-width="6"/>
+    <g id="tool-belt" clip-path="url(#clip-belt)">
+      <rect x="186" y="384" width="140" height="22" fill="#FF9F1C"/>
+      <path fill="#0F1C2E" d="M190 384h14l-20 22h-14zM222 384h14l-20 22h-14zM254 384h14l-20 22h-14zM286 384h14l-20 22h-14zM318 384h14l-20 22h-14z"/>
+    </g>
+  </g>
+
+  <rect id="neck" x="234" y="300" width="44" height="26" rx="8" fill="#0F1C2E"/>
+
+  <g id="head">
+    <rect id="ear-left" x="94" y="196" width="26" height="72" rx="12" fill="#0F1C2E"/>
+    <rect id="ear-right" x="392" y="196" width="26" height="72" rx="12" fill="#0F1C2E"/>
+    <rect id="head-shell" x="112" y="118" width="288" height="196" rx="58" fill="#F6F1E7"/>
+    <g clip-path="url(#clip-head)">
+      <rect id="hard-hat" x="100" y="100" width="312" height="70" fill="#FF9F1C"/>
+      <rect id="head-shade" x="100" y="286" width="312" height="40" fill="#0F1C2E" opacity="0.06"/>
+    </g>
+    <rect id="head-outline" x="112" y="118" width="288" height="196" rx="58" fill="none" stroke="#0F1C2E" stroke-width="6"/>
+    <rect id="hat-brim" x="100" y="160" width="312" height="18" rx="9" fill="#FF9F1C"/>
+    <rect id="hat-ridge" x="244" y="118" width="24" height="42" fill="#0F1C2E" opacity="0.12"/>
+    <g id="screws" fill="#B8C0CB">
+      <circle cx="134" cy="296" r="6"/><circle cx="378" cy="296" r="6"/>
+    </g>
+  </g>
+
+  <g id="visor">
+    <rect x="144" y="192" width="224" height="100" rx="38" fill="#0F1C2E"/>
+    <g id="eyes" fill="#FF9F1C">
+      <rect id="eye-left" x="190" y="214" width="34" height="50" rx="17"/>
+      <rect id="eye-right" x="288" y="214" width="34" height="50" rx="17"/>
+    </g>
+    <g id="eye-glints" fill="#F6F1E7">
+      <rect x="198" y="222" width="8" height="14" rx="4"/>
+      <rect x="296" y="222" width="8" height="14" rx="4"/>
+    </g>
+    <path id="smile" d="M238 272Q256 282 274 272" fill="none" stroke="#FF9F1C" stroke-width="7" stroke-linecap="round"/>
+  </g>
+
+  <g id="inspection-cam">
+    <rect x="226" y="110" width="60" height="44" rx="14" fill="#0F1C2E"/>
+    <circle cx="256" cy="132" r="17" fill="#B8C0CB"/>
+    <circle cx="256" cy="132" r="12" fill="#0F1C2E"/>
+    <circle cx="256" cy="132" r="6" fill="#FF9F1C"/>
+    <circle cx="252" cy="128" r="2.5" fill="#F6F1E7"/>
+  </g>
+
+  <g id="antenna">
+    <path d="M352 124L368 88" fill="none" stroke="#0F1C2E" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="370" cy="84" r="10" fill="#FF9F1C"/>
+  </g>
+</svg>

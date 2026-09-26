@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>FixLens concept 2: Wrench lens</title>
+  <rect width="512" height="512" fill="#FFFFFF"/>
+  <g id="wrench" transform="rotate(-45 256 256)">
+    <g fill="#0F1C2E">
+      <circle cx="100" cy="256" r="62"/>
+      <rect x="100" y="226" width="220" height="60" rx="18"/>
+      <circle cx="350" cy="256" r="112"/>
+    </g>
+    <rect id="jaw" x="20" y="232" width="92" height="48" rx="8" fill="#FFFFFF"/>
+    <circle id="lens" cx="350" cy="256" r="70" fill="#FFFFFF"/>
+    <circle id="marker" cx="350" cy="256" r="38" fill="#FF9F1C"/>
+  </g>
+</svg>

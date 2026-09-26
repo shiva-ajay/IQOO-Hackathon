@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>Fixy drone concept 2: Orb drone (pointing)</title>
+  <defs>
+    <clipPath id="clip-shell"><circle cx="256" cy="236" r="108"/></clipPath>
+  </defs>
+  <g id="shadow">
+    <ellipse cx="176" cy="452" rx="70" ry="10" fill="#0F1C2E" opacity="0.1"/>
+  </g>
+  <g id="reticle">
+    <g id="target-part">
+      <polygon points="430 404 417 426.5 391 426.5 378 404 391 381.5 417 381.5" fill="#B8C0CB" stroke="#0F1C2E" stroke-width="6" stroke-linejoin="round"/>
+      <circle cx="404" cy="404" r="10" fill="#0F1C2E"/>
+    </g>
+    <g id="brackets" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M346 370V346H370" stroke="#0F1C2E" stroke-width="16"/>
+      <path d="M346 438V462H370" stroke="#0F1C2E" stroke-width="16"/>
+      <path d="M462 370V346H438" stroke="#0F1C2E" stroke-width="16"/>
+      <path d="M462 438V462H438" stroke="#0F1C2E" stroke-width="16"/>
+      <path d="M346 370V346H370" stroke="#FF9F1C" stroke-width="8"/>
+      <path d="M346 438V462H370" stroke="#FF9F1C" stroke-width="8"/>
+      <path d="M462 370V346H438" stroke="#FF9F1C" stroke-width="8"/>
+      <path d="M462 438V462H438" stroke="#FF9F1C" stroke-width="8"/>
+    </g>
+  </g>
+  <g id="light-cone">
+    <path d="M247 298.6L379.7 454.5L444.5 365.3L255.2 287.2Z" fill="#FF9F1C" opacity="0.26"/>
+  </g>
+  <g id="drone" transform="translate(186 176) rotate(12) scale(0.8) translate(-256 -220)">
+    <g id="halo" opacity="0.4">
+      <circle cx="256" cy="236" r="108" fill="#F6F1E7" stroke="#F6F1E7" stroke-width="20" stroke-linejoin="round"/>
+      <ellipse cx="256" cy="100" rx="120" ry="26" fill="#F6F1E7" stroke="#F6F1E7" stroke-width="20" stroke-linejoin="round"/>
+      <circle cx="366" cy="344" r="24" fill="#F6F1E7" stroke="#F6F1E7" stroke-width="20" stroke-linejoin="round"/>
+    </g>
+    <rect id="mast" x="248" y="100" width="16" height="40" fill="#B8C0CB" stroke="#0F1C2E" stroke-width="6" stroke-linejoin="round"/>
+    <g id="rotor-halo">
+      <ellipse cx="256" cy="100" rx="118" ry="24" fill="none" stroke="#0F1C2E" stroke-width="26"/>
+      <ellipse cx="256" cy="100" rx="118" ry="24" fill="none" stroke="#B8C0CB" stroke-width="14"/>
+      <ellipse id="rotor-halo-blur" cx="256" cy="99" rx="98" ry="12" fill="#F6F1E7" opacity="0.55"/>
+      <circle cx="256" cy="100" r="9" fill="#FF9F1C" stroke="#0F1C2E" stroke-width="6" stroke-linejoin="round"/>
+    </g>
+    <g id="emitter-arm">
+      <path d="M316 300L346 318L362 340" fill="none" stroke="#0F1C2E" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M316 300L346 318L362 340" fill="none" stroke="#B8C0CB" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="346" cy="318" r="7" fill="#0F1C2E"/>
+    </g>
+    <g id="camera">
+      <circle cx="366" cy="346" r="22" fill="#0F1C2E" stroke="#0F1C2E" stroke-width="6" stroke-linejoin="round"/>
+      <circle cx="366" cy="346" r="15.8" fill="#B8C0CB"/>
+      <circle cx="366" cy="346" r="11.4" fill="#0F1C2E"/>
+      <circle cx="366" cy="346" r="6.2" fill="#FF9F1C"/>
+      <circle cx="363.4" cy="343.4" r="2.5" fill="#F6F1E7"/>
+    </g>
+    <g id="body">
+      <circle id="shell" cx="256" cy="236" r="108" fill="#F6F1E7"/>
+      <g clip-path="url(#clip-shell)">
+        <ellipse cx="256" cy="352" rx="130" ry="50" fill="#0F1C2E" opacity="0.07"/>
+        <rect x="140" y="296" width="232" height="16" fill="#FF9F1C"/>
+        <path fill="#0F1C2E" d="M124 296h12l-16 16h-12zM150 296h12l-16 16h-12zM176 296h12l-16 16h-12zM202 296h12l-16 16h-12zM228 296h12l-16 16h-12zM254 296h12l-16 16h-12zM280 296h12l-16 16h-12zM306 296h12l-16 16h-12zM332 296h12l-16 16h-12zM358 296h12l-16 16h-12zM384 296h12l-16 16h-12z"/>
+      </g>
+      <circle cx="256" cy="236" r="108" fill="none" stroke="#0F1C2E" stroke-width="6" stroke-linejoin="round"/>
+    </g>
+    <g id="visor">
+      <rect x="176" y="186" width="160" height="88" rx="40" fill="#0F1C2E"/>
+      <g id="eye-left">
+        <rect x="209" y="204" width="30" height="44" rx="15" fill="#FF9F1C"/>
+        <rect x="215" y="210" width="7" height="12" rx="3.5" fill="#F6F1E7"/>
+      </g>
+      <g id="eye-right">
+        <rect x="273" y="204" width="30" height="44" rx="15" fill="#FF9F1C"/>
+        <rect x="279" y="210" width="7" height="12" rx="3.5" fill="#F6F1E7"/>
+      </g>
+      <path id="mouth" d="M245 258Q256 265 267 258" fill="none" stroke="#FF9F1C" stroke-width="5" stroke-linecap="round"/>
+    </g>
+  </g>
+</svg>

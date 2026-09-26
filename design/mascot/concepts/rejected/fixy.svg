@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>Fixy</title>
+  <desc>Fixy, the FixLens repair buddy: friendly idle pose looking at the viewer.</desc>
+  <defs>
+    <clipPath id="clip-glass"><circle cx="256" cy="272" r="86"/></clipPath>
+    <clipPath id="clip-lid"><circle cx="256" cy="272" r="88"/></clipPath>
+  </defs>
+  <g id="shadow">
+    <ellipse cx="256" cy="464" rx="132" ry="13" fill="#0F1C2E" opacity="0.14"/>
+  </g>
+  <g id="fixy">
+    <g id="feet" fill="#0F1C2E">
+      <ellipse id="foot-left" cx="202" cy="442" rx="40" ry="22"/>
+      <ellipse id="foot-right" cx="310" cy="442" rx="40" ry="22"/>
+    </g>
+    <g id="arm-left">
+      <path id="arm-left-limb" d="M118 322L83.5 366.1" fill="none" stroke="#0F1C2E" stroke-width="28" stroke-linecap="round"/>
+      <path id="arm-left-hand" transform="translate(83.5 366.1) rotate(218)" fill="#0F1C2E" d="M-10 -26.2A28 28 0 1 0 10 -26.2V0A10 10 0 0 1 -10 0Z"/>
+    </g>
+    <g id="arm-right">
+      <path id="arm-right-limb" d="M394 322L428.5 366.1" fill="none" stroke="#0F1C2E" stroke-width="28" stroke-linecap="round"/>
+      <path id="arm-right-hand" transform="translate(428.5 366.1) rotate(142)" fill="#0F1C2E" d="M-10 -26.2A28 28 0 1 0 10 -26.2V0A10 10 0 0 1 -10 0Z"/>
+    </g>
+    <g id="antenna" fill="#0F1C2E">
+      <rect id="antenna-stem" x="245" y="112" width="22" height="50" rx="11"/>
+      <path id="antenna-jaw" transform="translate(256 110) scale(1.1)" d="M-10 -26.2A28 28 0 1 0 10 -26.2V0A10 10 0 0 1 -10 0Z"/>
+    </g>
+    <g id="body">
+      <ellipse id="body-shell" cx="256" cy="292" rx="150" ry="138" fill="#0F1C2E"/>
+    </g>
+    <g id="eye">
+      <circle id="eye-glass" cx="256" cy="272" r="86" fill="#F6F1E7"/>
+      <g id="pupil" clip-path="url(#clip-glass)">
+        <circle id="iris" cx="256" cy="276" r="50" fill="#FF9F1C"/>
+        <circle id="pupil-core" cx="256" cy="276" r="21" fill="#0F1C2E"/>
+        <circle id="catchlight" cx="236" cy="256" r="11" fill="#F6F1E7"/>
+      </g>
+    </g>
+    <g id="eyelid" clip-path="url(#clip-lid)" fill="#0F1C2E">
+      <path id="lid-upper" d="M166 182H346V194Q256 214 166 194Z"/>
+      <path id="lid-lower" d="M166 362H346V380Q256 336 166 380Z"/>
+    </g>
+    <g id="mouth">
+      <path d="M230 392Q256 414 282 392" fill="none" stroke="#F6F1E7" stroke-width="10" stroke-linecap="round"/>
+    </g>
+  </g>
+</svg>

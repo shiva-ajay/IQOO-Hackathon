@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>Fixy drone v3: friendlier tech-3 (idle hover)</title>
+  <defs>
+    <clipPath id="clip-shell"><rect x="142" y="140" width="228" height="196" rx="98"/></clipPath>
+    <radialGradient id="hover-glow"><stop offset="0" stop-color="#FF9F1C" stop-opacity="0.45"/><stop offset="1" stop-color="#FF9F1C" stop-opacity="0"/></radialGradient>
+  </defs>
+  <g id="shadow">
+    <ellipse cx="256" cy="456" rx="86" ry="10" fill="#0F1C2E" opacity="0.14"/>
+  </g>
+  <g id="hover-glow-underneath">
+    <ellipse cx="256" cy="348.2" rx="96" ry="34" fill="url(#hover-glow)"/>
+  </g>
+  <g id="drone" transform="translate(256 214) rotate(0) scale(0.82) translate(-256 -240)">
+    <g id="halo" fill="#F6F1E7" stroke="#F6F1E7" stroke-width="22" stroke-linejoin="round" opacity="0.35">
+      <rect x="142" y="140" width="228" height="196" rx="98"/>
+      <ellipse cx="128" cy="104" rx="66" ry="15"/>
+      <ellipse cx="384" cy="104" rx="66" ry="15"/>
+      <circle cx="256" cy="370" r="24"/>
+    </g>
+    <g id="rotor-arms">
+      <path d="M196 168L128 122" fill="none" stroke="#0F1C2E" stroke-width="28" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M196 168L128 122" fill="none" stroke="#B8C0CB" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M316 168L384 122" fill="none" stroke="#0F1C2E" stroke-width="28" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M316 168L384 122" fill="none" stroke="#B8C0CB" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="113" y="106" width="30" height="26" rx="8" fill="#B8C0CB" stroke="#0F1C2E" stroke-width="7" stroke-linejoin="round"/>
+      <rect x="369" y="106" width="30" height="26" rx="8" fill="#B8C0CB" stroke="#0F1C2E" stroke-width="7" stroke-linejoin="round"/>
+    </g>
+    <g id="rotor-left">
+      <ellipse id="rotor-left-disc" cx="128" cy="104" rx="66" ry="15" fill="#F6F1E7" opacity="0.6"/>
+      <ellipse id="rotor-left-duct" cx="128" cy="104" rx="66" ry="15" fill="none" stroke="#0F1C2E" stroke-width="15"/>
+      <ellipse cx="128" cy="104" rx="66" ry="15" fill="none" stroke="#B8C0CB" stroke-width="7"/>
+      <path id="rotor-left-blade" d="M78 106Q128 95 178 102" fill="none" stroke="#B8C0CB" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+      <circle cx="128" cy="104" r="8" fill="#FF9F1C" stroke="#0F1C2E" stroke-width="6" stroke-linejoin="round"/>
+    </g>
+    <g id="rotor-right">
+      <ellipse id="rotor-right-disc" cx="384" cy="104" rx="66" ry="15" fill="#F6F1E7" opacity="0.6"/>
+      <ellipse id="rotor-right-duct" cx="384" cy="104" rx="66" ry="15" fill="none" stroke="#0F1C2E" stroke-width="15"/>
+      <ellipse cx="384" cy="104" rx="66" ry="15" fill="none" stroke="#B8C0CB" stroke-width="7"/>
+      <path id="rotor-right-blade" d="M334 106Q384 95 434 102" fill="none" stroke="#B8C0CB" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+      <circle cx="384" cy="104" r="8" fill="#FF9F1C" stroke="#0F1C2E" stroke-width="6" stroke-linejoin="round"/>
+    </g>
+    <g id="arm-grabber">
+      <path d="M176 308L160 334" fill="none" stroke="#0F1C2E" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M176 308L160 334" fill="none" stroke="#B8C0CB" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+      <path id="wrench-jaw" transform="translate(152.5 346.3) rotate(211.6) scale(0.9)" fill="#B8C0CB" stroke="#0F1C2E" stroke-width="7.777777777777778" stroke-linejoin="round" d="M-10 -26.2A28 28 0 1 0 10 -26.2V0A10 10 0 0 1 -10 0Z"/>
+    </g>
+    <g id="arm-spotlight">
+      <path d="M336 308L352 334" fill="none" stroke="#0F1C2E" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M336 308L352 334" fill="none" stroke="#B8C0CB" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+      <g id="spotlight" transform="translate(352 334) rotate(90)">
+        <rect x="-16" y="-13" width="30" height="26" rx="8" fill="#B8C0CB" stroke="#0F1C2E" stroke-width="7" stroke-linejoin="round"/>
+        <rect x="10" y="-15" width="12" height="30" rx="5" fill="#0F1C2E" stroke="#0F1C2E" stroke-width="7" stroke-linejoin="round"/>
+        <rect x="16" y="-10" width="7" height="20" rx="3.5" fill="#FF9F1C"/>
+      </g>
+    </g>
+    <g id="camera">
+      <rect id="gimbal-stem" x="244" y="324" width="24" height="24" fill="#B8C0CB" stroke="#0F1C2E" stroke-width="7" stroke-linejoin="round"/>
+      <path id="gimbal-yoke" d="M226 370V342H286V370" fill="none" stroke="#0F1C2E" stroke-width="26" stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="M226 370V342H286V370" fill="none" stroke="#B8C0CB" stroke-width="12" stroke-linejoin="round" stroke-linecap="round"/>
+      <circle cx="256" cy="370" r="24" fill="#0F1C2E" stroke="#0F1C2E" stroke-width="7" stroke-linejoin="round"/>
+      <circle cx="256" cy="370" r="17.3" fill="#B8C0CB"/>
+      <circle cx="256" cy="370" r="12.5" fill="#0F1C2E"/>
+      <circle id="camera-iris" cx="256" cy="370" r="6.7" fill="#FF9F1C"/>
+      <circle cx="252.6" cy="366.6" r="2.5" fill="#F6F1E7"/>
+      <circle cx="226" cy="370" r="6" fill="#B8C0CB" stroke="#0F1C2E" stroke-width="3" stroke-linejoin="round"/><circle cx="286" cy="370" r="6" fill="#B8C0CB" stroke="#0F1C2E" stroke-width="3" stroke-linejoin="round"/>
+    </g>
+    <g id="body">
+      <rect id="shell" x="142" y="140" width="228" height="196" rx="98" fill="#F6F1E7"/>
+      <g clip-path="url(#clip-shell)">
+        <ellipse id="shell-shade" cx="256.0" cy="354" rx="141.35999999999999" ry="70.56" fill="#0F1C2E" opacity="0.08"/>
+        <ellipse id="shell-highlight" cx="201.28" cy="164" rx="36.480000000000004" ry="10" fill="#FFFFFF" opacity="0.7" transform="rotate(-18 201.28 164)"/>
+        <g id="hazard-band">
+          <rect x="132" y="298" width="248" height="16" fill="#FF9F1C"/>
+          <path fill="#0F1C2E" d="M132 298h12l-16 16h-12zM158 298h12l-16 16h-12zM184 298h12l-16 16h-12zM210 298h12l-16 16h-12zM236 298h12l-16 16h-12zM262 298h12l-16 16h-12zM288 298h12l-16 16h-12zM314 298h12l-16 16h-12zM340 298h12l-16 16h-12zM366 298h12l-16 16h-12zM392 298h12l-16 16h-12z"/>
+        </g>
+      </g>
+      <rect id="shell-outline" x="142" y="140" width="228" height="196" rx="98" fill="none" stroke="#0F1C2E" stroke-width="7" stroke-linejoin="round"/>
+    </g>
+    <g id="visor">
+      <rect id="visor-screen" x="164" y="170" width="184" height="116" rx="52" fill="#0F1C2E"/>
+      <path id="visor-glare" d="M186 180H214L194 200H178Z" fill="#F6F1E7" opacity="0.12"/>
+      <g id="eye-left">
+        <rect x="200" y="198" width="38" height="56" rx="19" fill="#FF9F1C"/>
+        <rect x="206" y="204" width="9.1" height="14.6" rx="4.6" fill="#F6F1E7"/>
+        <circle cx="225.8" cy="239.4" r="3.5" fill="#F6F1E7" opacity="0.8"/>
+      </g>
+      <g id="eye-right">
+        <rect x="274" y="198" width="38" height="56" rx="19" fill="#FF9F1C"/>
+        <rect x="280" y="204" width="9.1" height="14.6" rx="4.6" fill="#F6F1E7"/>
+        <circle cx="299.8" cy="239.4" r="3.5" fill="#F6F1E7" opacity="0.8"/>
+      </g>
+      <path id="mouth" d="M241 264Q256 273.0 271 264" fill="none" stroke="#FF9F1C" stroke-width="6" stroke-linecap="round"/>
+    </g>
+  </g>
+</svg>

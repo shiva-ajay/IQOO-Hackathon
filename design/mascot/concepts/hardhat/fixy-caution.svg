@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>Fixy: caution</title>
+  <desc>Calm concern for safety warnings and technician referrals.</desc>
+  <defs>
+    <clipPath id="clip-head"><rect x="112" y="118" width="288" height="196" rx="58"/></clipPath>
+    <clipPath id="clip-belt"><rect x="188" y="388" width="136" height="22"/></clipPath>
+  </defs>
+  <g id="shadow">
+    <ellipse cx="256" cy="468" rx="118" ry="12" fill="#0F1C2E" opacity="0.14"/>
+  </g>
+  <g id="legs">
+    <rect id="leg-left" x="210" y="404" width="26" height="44" fill="#B8C0CB" stroke="#0F1C2E" stroke-width="6" stroke-linejoin="round"/>
+    <rect id="leg-right" x="276" y="404" width="26" height="44" fill="#B8C0CB" stroke="#0F1C2E" stroke-width="6" stroke-linejoin="round"/>
+    <rect id="boot-left" x="186" y="434" width="62" height="32" rx="14" fill="#FF9F1C" stroke="#0F1C2E" stroke-width="6" stroke-linejoin="round"/>
+    <rect id="boot-right" x="264" y="434" width="62" height="32" rx="14" fill="#FF9F1C" stroke="#0F1C2E" stroke-width="6" stroke-linejoin="round"/>
+  </g>
+    <g id="arm-right" transform="translate(314 348) rotate(-18)">
+      <path d="M0 0V62" stroke="#0F1C2E" stroke-width="34" stroke-linecap="round"/>
+      <path d="M0 0V62" stroke="#B8C0CB" stroke-width="22" stroke-linecap="round"/>
+      <path id="wrench" fill="#B8C0CB" stroke="#0F1C2E" stroke-width="6" stroke-linejoin="round" transform="translate(0 62) rotate(26) translate(0 -62) scale(0.85)" d="M-10 -26.2A28 28 0 0 0 -8 26.8V96A8 8 0 0 0 8 96V26.8A28 28 0 0 0 10 -26.2V0A10 10 0 0 1 -10 0Z"/>
+      <circle id="glove" cx="0" cy="62" r="20" fill="#F6F1E7" stroke="#0F1C2E" stroke-width="6" stroke-linejoin="round"/>
+    </g>
+  <g id="body">
+    <rect id="torso" x="188" y="322" width="136" height="104" rx="30" fill="#F6F1E7"/>
+    <rect id="torso-shade" x="188" y="322" width="136" height="104" rx="30" fill="#0F1C2E" opacity="0.06"/>
+    <rect id="chest-panel" x="226" y="342" width="60" height="32" rx="10" fill="none" stroke="#0F1C2E" stroke-width="4" opacity="0.3"/>
+    <circle id="status-led" cx="256" cy="358" r="7" fill="#FF9F1C"/>
+    <g id="tool-belt" clip-path="url(#clip-belt)">
+      <rect x="188" y="388" width="136" height="22" fill="#FF9F1C"/>
+      <path fill="#0F1C2E" d="M192 388h14l-20 22h-14zM224 388h14l-20 22h-14zM256 388h14l-20 22h-14zM288 388h14l-20 22h-14zM320 388h14l-20 22h-14z"/>
+    </g>
+    <rect id="torso-outline" x="188" y="322" width="136" height="104" rx="30" fill="none" stroke="#0F1C2E" stroke-width="6" stroke-linejoin="round"/>
+    <rect id="neck" x="236" y="304" width="40" height="24" rx="6" fill="#B8C0CB" stroke="#0F1C2E" stroke-width="6" stroke-linejoin="round"/>
+  </g>
+  <g id="head">
+      <g id="antenna">
+        <path d="M350 124L368 86" stroke="#0F1C2E" stroke-width="14" stroke-linecap="round"/>
+        <path d="M350 124L368 86" stroke="#B8C0CB" stroke-width="5" stroke-linecap="round"/>
+        <circle id="antenna-tip" cx="370" cy="82" r="11" fill="#FF9F1C" stroke="#0F1C2E" stroke-width="6" stroke-linejoin="round"/>
+      </g>
+    <rect id="ear-left" x="94" y="196" width="28" height="72" rx="12" fill="#B8C0CB" stroke="#0F1C2E" stroke-width="6" stroke-linejoin="round"/>
+    <rect id="ear-right" x="390" y="196" width="28" height="72" rx="12" fill="#B8C0CB" stroke="#0F1C2E" stroke-width="6" stroke-linejoin="round"/>
+    <rect id="head-shell" x="112" y="118" width="288" height="196" rx="58" fill="#F6F1E7"/>
+    <g id="hard-hat" clip-path="url(#clip-head)">
+      <rect x="100" y="100" width="312" height="70" fill="#FF9F1C"/>
+      <rect id="hat-ridge" x="244" y="100" width="24" height="70" fill="#0F1C2E" opacity="0.12"/>
+      <rect id="head-shade" x="100" y="288" width="312" height="40" fill="#0F1C2E" opacity="0.07"/>
+    </g>
+    <rect id="head-outline" x="112" y="118" width="288" height="196" rx="58" fill="none" stroke="#0F1C2E" stroke-width="6" stroke-linejoin="round"/>
+    <rect id="hat-brim" x="98" y="160" width="316" height="20" rx="10" fill="#FF9F1C" stroke="#0F1C2E" stroke-width="6" stroke-linejoin="round"/>
+    <g id="screws" fill="#B8C0CB">
+      <circle cx="136" cy="294" r="6"/>
+      <circle cx="376" cy="294" r="6"/>
+    </g>
+    <g id="visor">
+      <rect id="visor-screen" x="144" y="194" width="224" height="100" rx="38" fill="#0F1C2E"/>
+      <path id="visor-glare" d="M170 206H200L180 226H166Z" fill="#F6F1E7" opacity="0.12"/>
+      <g id="eye-left">
+        <rect x="186" y="229" width="42" height="14" rx="7" fill="#FF9F1C" transform="rotate(-12 207 236)"/>
+      </g>
+      <g id="eye-right">
+        <rect x="284" y="229" width="42" height="14" rx="7" fill="#FF9F1C" transform="rotate(12 305 236)"/>
+      </g>
+      <g id="mouth">
+        <path d="M242 278Q256 270 270 278" fill="none" stroke="#FF9F1C" stroke-width="7" stroke-linecap="round"/>
+      </g>
+    </g>
+      <g id="headlamp">
+        <rect x="226" y="108" width="60" height="44" rx="14" fill="#0F1C2E"/>
+        <circle cx="256" cy="130" r="17" fill="#B8C0CB"/>
+        <circle cx="256" cy="130" r="12" fill="#0F1C2E"/>
+        <circle id="headlamp-lens" cx="256" cy="130" r="6" fill="#FF9F1C"/>
+        <circle cx="252" cy="126" r="2.5" fill="#F6F1E7"/>
+      </g>
+  </g>
+    <g id="arm-left" transform="translate(198 348) rotate(118)">
+      <path d="M0 0V62" stroke="#0F1C2E" stroke-width="34" stroke-linecap="round"/>
+      <path d="M0 0V62" stroke="#B8C0CB" stroke-width="22" stroke-linecap="round"/>
+      <circle id="thumb" cx="-17" cy="54" r="9" fill="#F6F1E7" stroke="#0F1C2E" stroke-width="6" stroke-linejoin="round"/>
+      <circle id="glove" cx="0" cy="62" r="20" fill="#F6F1E7" stroke="#0F1C2E" stroke-width="6" stroke-linejoin="round"/>
+    </g>
+  <g id="fx">
+    <g id="warning-badge">
+      <path d="M444 72L484 140H404Z" fill="#FF9F1C" stroke="#0F1C2E" stroke-width="6" stroke-linejoin="round"/>
+      <rect x="438" y="92" width="12" height="28" rx="6" fill="#0F1C2E"/>
+      <circle cx="444" cy="129" r="6" fill="#0F1C2E"/>
+    </g>
+  </g>
+</svg>
