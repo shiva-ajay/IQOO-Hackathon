@@ -134,7 +134,10 @@ fun CameraScreen(viewModel: FixLensViewModel, onBack: () -> Unit) {
             when {
                 state.error != null -> ErrorCard(state.error.orEmpty())
                 !state.engineReady -> LoadingCard(state.loadingStep)
-                else -> ConversationCard(state)
+                else -> Column {
+                    state.guide?.let { StepBanner(it) }
+                    ConversationCard(state)
+                }
             }
             Spacer(Modifier.height(16.dp))
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
@@ -454,6 +457,8 @@ private fun CameraPreview(viewModel: FixLensViewModel) {
     val previewView = remember { PreviewView(context).apply { scaleType = PreviewView.ScaleType.FILL_CENTER } }
 
     DisposableEffect(lifecycleOwner) {
+        // A repair is minutes of hands-busy work: the screen must not sleep while the camera is up.
+        previewView.keepScreenOn = true
         val providerFuture = ProcessCameraProvider.getInstance(context)
         var disposed = false
         fun bind() {
@@ -499,6 +504,7 @@ private fun CameraPreview(viewModel: FixLensViewModel) {
         }, ContextCompat.getMainExecutor(context))
         onDispose {
             disposed = true
+            previewView.keepScreenOn = false
             runCatching { providerFuture.get().unbindAll() }
             analysisExecutor.shutdown()
         }

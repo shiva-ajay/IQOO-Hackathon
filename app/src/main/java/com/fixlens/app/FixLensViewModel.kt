@@ -1,12 +1,22 @@
 package com.fixlens.app
 
 import android.app.Application
+import android.content.pm.ApplicationInfo
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.fixlens.camera.FrameGrabber
 import com.fixlens.guide.ConversationContext
 import com.fixlens.guide.FixyPrompts
+import com.fixlens.guide.Command
+import com.fixlens.guide.Commands
+import com.fixlens.guide.Guide
+import com.fixlens.guide.GuideState
+import com.fixlens.guide.GuideView
+import com.fixlens.guide.entry
+import com.fixlens.kb.KbRepository
+import com.fixlens.kb.KnowledgeBase
+import com.fixlens.kb.Retriever
 import com.fixlens.guide.MemoryRules
 import com.fixlens.session.RepairSession
 import com.fixlens.session.SessionRepository
@@ -59,6 +69,8 @@ data class UiState(
     val timing: String = "",
     /** Parts pointed at so far in this answer (they stream in one by one before the spoken reply). */
     val partsFound: Int = 0,
+    /** The guided repair in progress (M4), for the step card; null when there's none. */
+    val guide: GuideView? = null,
     /** "Point the camera at the …" when Fixy was asked to point but gave no usable box. */
     val hint: String? = null,
     // Debug overlays, switched over adb (see MainActivity.onNewIntent).
@@ -112,9 +124,16 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
     private var reGroundJob: Job? = null
     /** Re-grounds used since the last question (capped, so a hopeless target doesn't keep the VLM busy). */
     private var reGrounds = 0
+    /** The knowledge base (M4), loaded at start; null until then or if it's missing or invalid. */
+    @Volatile private var kb: KnowledgeBase? = null
+    @Volatile private var retriever: Retriever? = null
+    private var guideState: GuideState = GuideState.Idle
+    /** Points at the current step's part, then runs its auto-check. */
+    private var guideJob: Job? = null
 
     init {
         refreshSessions()
+        viewModelScope.launch(Dispatchers.IO) { loadKb() }
         viewModelScope.launch(Dispatchers.IO) {
             _state.update { it.copy(loadingStep = "Loading speech recognition") }
             if (!speech.load()) {
@@ -146,6 +165,7 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
     private fun open(session: RepairSession) {
         frameGrabber.clear()
         clearMarker()
+        endGuide()
         val last = session.turns.lastOrNull()
         _state.update {
             it.copy(
@@ -177,6 +197,7 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
         speech.stop()
         frameGrabber.clear()
         clearMarker()
+        endGuide()
         _state.update {
             it.copy(
                 screen = Screen.Sessions, session = null, question = "", answer = "", timing = "", questionFinal = false,
@@ -261,6 +282,10 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
      */
     private fun ask(question: String, target: String? = null, image: File? = null) {
         val session = _state.value.session ?: return
+        // A KB match starts a guided repair, and "done", "back"… drive it: the words come from the KB, not the VLM.
+        if (target == null && image == null && handleGuide(question)) return
+        // A follow-up question during a guided step points at that step's part.
+        val pointTarget = target ?: Guide.instruction(guideState)?.target
         cancelTurn()
         clearMarker()
         reGrounds = 0
@@ -288,7 +313,7 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
             val parser = GroundingParser(
                 onGrounding = { g ->
                     allPartsMs = System.currentTimeMillis() - start
-                    onGrounding(g, keyframe, target, id)
+                    onGrounding(g, keyframe, pointTarget, id)
                 },
                 onText = text@{ chunk ->
                     if (turn.get() != id) return@text
@@ -298,12 +323,12 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
                 // Each part goes to the tracker as soon as it's parsed, so markers appear one by one.
                 onTarget = { raw ->
                     if (firstPartMs < 0) firstPartMs = System.currentTimeMillis() - start
-                    if (trackPart(raw, keyframe, target, id, first = tracked == 0)) tracked++
+                    if (trackPart(raw, keyframe, pointTarget, id, first = tracked == 0)) tracked++
                     if (turn.get() == id) _state.update { it.copy(partsFound = it.partsFound + 1) }
                 },
             )
             val result = runCatching {
-                context.ask(session, keyframe?.file?.absolutePath, question, FixyPrompts.grounding(target, groundingStyle)) {
+                context.ask(session, keyframe?.file?.absolutePath, question, FixyPrompts.grounding(pointTarget, groundingStyle)) {
                     parser.feed(it)
                 }
             }.onFailure { Log.e(TAG, "VLM failed", it) }.getOrNull()
@@ -438,6 +463,141 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
+    // ---- Guided repair (M4): a KB entry's safety lines, then its steps, each pointing at the step's part ----
+
+    private fun loadKb() {
+        val app = getApplication<Application>()
+        val loaded = runCatching { KbRepository.load(app) }
+            .onFailure { Log.e(TAG, "KB failed to load", it) }.getOrNull() ?: return
+        val problems = KbRepository.problems(loaded)
+        if (problems.isNotEmpty()) {
+            val message = "KB ${loaded.version} is invalid:\n" + problems.joinToString("\n")
+            // CLAUDE.md §7: fail loudly in debug builds.
+            check(app.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE == 0) { message }
+            Log.e(TAG, message)
+            return
+        }
+        kb = loaded
+        retriever = Retriever(loaded)
+        Log.i(TAG, "KB ${loaded.version}: ${loaded.entries.size} entries")
+    }
+
+    /**
+     * Main thread. A command ("done", "back"…) or a danger sign for the guide in progress, or a question that
+     * matches a KB entry (which starts its guide). Returns false for anything else: a normal question, which
+     * during a guide the VLM answers as a follow-up, pointing at the current step's part.
+     */
+    private fun handleGuide(text: String): Boolean {
+        val entry = guideState.entry()
+        if (entry != null && guideState !is GuideState.Done) {
+            Commands.parse(text)?.let { command ->
+                val (next, reminder) = Guide.onCommand(guideState, command)
+                when {
+                    next == GuideState.Idle -> {
+                        endGuide()
+                        clearMarker()
+                        _state.update { it.copy(question = text, questionFinal = true, answer = GUIDE_STOPPED, timing = "") }
+                    }
+                    reminder != null -> _state.update { it.copy(question = text, questionFinal = true, hint = reminder) }
+                    else -> showGuide(text, next)
+                }
+                return true
+            }
+            Guide.escalation(entry, text)?.let { sign ->
+                showGuide(text, GuideState.Escalate(entry, sign))
+                return true
+            }
+        }
+        val match = retriever?.find(text) as? Retriever.Match.Found ?: return false
+        // Asking about the repair already in progress is a follow-up, not a restart.
+        if (match.entry.id == entry?.id && guideState !is GuideState.Done) return false
+        Log.i(TAG, "KB match ${match.entry.id} (stage ${match.stage}: ${match.why}), kb ${kb?.version}")
+        showGuide(text, Guide.start(match.entry))
+        return true
+    }
+
+    /** Shows a guide state: the KB's words verbatim, then points at the step's part and starts its auto-check. */
+    private fun showGuide(question: String, state: GuideState) {
+        cancelTurn()
+        clearMarker()
+        guideJob?.cancel()
+        guideState = state
+        val ins = Guide.instruction(state) ?: return endGuide()
+        _state.update {
+            it.copy(
+                question = question, questionFinal = true, answer = ins.say, timing = "Repair guide · ${kb?.version}",
+                phase = Phase.Listening, hint = null, frozen = null, partsFound = 0, guide = Guide.view(state),
+            )
+        }
+        Log.i(TAG, "Guide ${state.entry()?.id} (kb ${kb?.version}): ${ins.progress} \"${ins.say}\" target=${ins.target} verify=${ins.verify}")
+        _state.value.session?.let { saveTurn(it.id, question, ins.say, null, 0) }
+        if (ins.target == null && ins.verify == null) return
+        guideJob = viewModelScope.launch {
+            ins.target?.let { pointAtStep(it) }
+            ins.verify?.let { verifyStep(state, it) }
+        }
+    }
+
+    private fun endGuide() {
+        guideJob?.cancel()
+        guideJob = null
+        guideState = GuideState.Idle
+        _state.update { it.copy(guide = null) }
+    }
+
+    /** Points at a guide step's target phrase: a rolled-back side request, streamed into the tracker. */
+    private suspend fun pointAtStep(target: String) {
+        val session = _state.value.session ?: return
+        val id = turn.get()
+        val start = System.currentTimeMillis()
+        val keyframe = frameGrabber.captureKeyframe(File(getApplication<Application>().cacheDir, "step.jpg")) ?: return
+        var tracked = 0
+        val parser = GroundingParser(
+            onGrounding = { vlm.cancel() }, // only the JSON is needed
+            onText = {},
+            onTarget = { raw ->
+                if (trackPart(raw, keyframe, target, id, first = tracked == 0)) tracked++
+                if (turn.get() == id) _state.update { it.copy(partsFound = it.partsFound + 1) }
+            },
+        )
+        val result = runCatching {
+            context.side(session, keyframe.file.absolutePath, FixyPrompts.pointAt(target), POINT_MAX_TOKENS, wait = true) {
+                parser.feed(it)
+            }
+        }.onFailure { Log.e(TAG, "Step pointing failed", it) }.getOrNull()
+        parser.finish()
+        Log.i(TAG, "Step pointing \"$target\": ${summary(parser.grounding)} in ${System.currentTimeMillis() - start} ms (${result?.stats})")
+        if (tracked == 0 && turn.get() == id) _state.update { it.copy(hint = "Point the camera at the $target") }
+    }
+
+    /**
+     * The step's visible sign of completion ("the filler cap is off"): every [VERIFY_EVERY_MS] while the user is
+     * idle, ask the VLM (rolled back, skipped when it's busy); on "yes", go on as if they'd said "done".
+     */
+    private suspend fun verifyStep(state: GuideState, sign: String) {
+        repeat(MAX_VERIFY_CHECKS) {
+            delay(VERIFY_EVERY_MS)
+            if (guideState != state) return
+            val s = _state.value
+            val session = s.session ?: return
+            if (s.phase != Phase.Listening || !s.questionFinal) return@repeat // the user is talking: try later
+            val keyframe = frameGrabber.captureKeyframe(File(getApplication<Application>().cacheDir, "verify.jpg"))
+                ?: return@repeat
+            val out = StringBuilder()
+            val result = runCatching {
+                context.side(session, keyframe.file.absolutePath, FixyPrompts.verify(sign), VERIFY_MAX_TOKENS, wait = false) {
+                    out.append(it)
+                }
+            }.getOrNull()
+            val answer = out.toString().trim()
+            Log.i(TAG, "Verify \"$sign\": \"$answer\" (${result?.stats ?: "skipped, VLM busy"})")
+            if (answer.lowercase().startsWith("yes") && guideState == state) {
+                showGuide(SEEN_DONE, Guide.onCommand(state, Command.Done).first)
+                return
+            }
+        }
+    }
+
     private fun clearMarker() {
         tracker.clear()
         reGroundJob?.cancel()
@@ -497,5 +657,14 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
         val COORD_SCALE = CoordScale.NORMALIZED_1000
         const val MAX_REGROUNDS = 5
         const val MAX_LABEL = 40
+        const val POINT_MAX_TOKENS = 200
+        /** "yes" or "no". */
+        const val VERIFY_MAX_TOKENS = 3
+        /** A step's auto-check runs this often while the user is idle, at most [MAX_VERIFY_CHECKS] times. */
+        const val VERIFY_EVERY_MS = 6000L
+        const val MAX_VERIFY_CHECKS = 10
+        const val GUIDE_STOPPED = "Okay, we'll stop the guide here."
+        /** Shown as the "question" when the auto-check moves on by itself. */
+        const val SEEN_DONE = "✓ Looks done"
     }
 }

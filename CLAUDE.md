@@ -370,6 +370,14 @@ Notes:
 - **Multi-part pointing (2026-09-27):** one answer can mark several parts (a JSON list, streamed part by part, tracked as
   one group). Good for a few distinct medium parts; tiny repeated parts (screws) get one box around their area and the
   count goes in the spoken step (the 4B model invents screw grids). Details and numbers: docs/marker-tracking.md §6.
+- **Guided repair (M4, 2026-09-27; not ticked: KB content is DRAFT and the stage-3 LLM router isn't built):**
+  `kb/` (models, loading + §7 validation, retrieval stages 1-2) and `guide/Guide.kt` (safety lines confirmed with "done",
+  then steps; back/repeat/stop; `escalate_if` and `call_technician` escalate). A KB match starts a guide; each step's
+  `target` is pointed at by a rolled-back side request (`ConversationContext.side`) and tracked; steps with `verify` are
+  auto-checked by the VLM every 6 s while the user is idle. No KB match: the VLM answers and points, with no steps (user
+  decision). Verified on the phone: match, safety gate, step pointing (~5 s), back, escalation, auto-check. Known issue:
+  asked for a part that isn't in view, the VLM often points at something else anyway (keyboard as "engine").
+  `assets/kb/fixlens_kb.json` is a DRAFT (engine oil, coolant, washer fluid, wiring refusal, laptop cover): verify it.
 
 ---
 

@@ -125,7 +125,11 @@ object Guide {
         }
         is GuideState.Done -> Instruction(ALL_DONE, null, null, "Done", null)
         is GuideState.Escalate -> Instruction(
-            say = listOfNotNull(state.entry.meaning.trim().takeIf { it.isNotEmpty() }, TECHNICIAN).joinToString(" "),
+            // A danger sign names itself; a technician-only entry explains why with its meaning.
+            say = listOfNotNull(
+                state.reason?.let { "That's a warning sign: $it." } ?: state.entry.meaning.trim().takeIf { it.isNotEmpty() },
+                TECHNICIAN,
+            ).joinToString(" "),
             target = null, verify = null, progress = "Technician", caution = state.reason,
         )
     }

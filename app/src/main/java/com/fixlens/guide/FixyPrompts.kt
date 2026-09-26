@@ -47,6 +47,15 @@ object FixyPrompts {
         }
     }
 
+    /** Guided step (M4): only the JSON for the step's target phrase from the KB. */
+    fun pointAt(target: String): String =
+        "Find: \"$target\". Output only a JSON list, one entry per part: {\"bbox_2d\":[x1,y1,x2,y2],\"label\":\"...\"}, " +
+            "or {\"point_2d\":[x,y],\"label\":\"...\"} for a small single part. Many tiny identical parts (like screws) " +
+            "get one box around the area that holds them. [] if it's not visible."
+
+    /** Guided step auto-check: is the step's visible sign of completion there? */
+    fun verify(sign: String): String = "Look at the picture. Is this true: \"$sign\"? Answer only yes or no."
+
     /** Re-ground side request: only the JSON for the parts Fixy already pointed at. */
     fun locate(labels: List<String>): String =
         "Find again: ${labels.joinToString(", ")}. Output only a JSON list, one entry per part: " +

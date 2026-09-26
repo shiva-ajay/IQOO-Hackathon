@@ -210,6 +210,13 @@ KB content can be written **during Red Light** (no laptop needed) — do it earl
 **Done when:** full guided flow works: safety gate, "done" advances, wiring question → refusal,
 `call_technician` → escalation, unknown → refusal line.
 
+**Status (2026-09-27):** engine + wiring done and verified on the phone (see CLAUDE.md §15). Remaining:
+- **Verify the DRAFT KB** against the demo car's manual (docs/kb-collection-plan.md §5) and pick the washer brand.
+- Stage 3 (LLM router) isn't built. By user decision, "unknown" gets a normal VLM answer with pointing but no steps,
+  instead of the refusal line; `call_technician` and `escalate_if` still escalate.
+- TTS (M3) isn't built, so the steps are shown but not spoken yet.
+- Pointing at a part that isn't in view often marks something else; consider a yes/no visibility check first (~2.5 s).
+
 ---
 
 ## M5 — Freeze and polish (~3 h)

@@ -4,6 +4,8 @@ import android.util.Log
 import com.fixlens.app.TAG
 import com.fixlens.session.RepairSession
 import com.fixlens.vision.VlmEngine
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
@@ -101,23 +103,40 @@ class ConversationContext(private val vlm: VlmEngine) {
         if (result.cancelled) null else FixyPrompts.cleanTitle(out.toString())
     }
 
+    /** Re-ground side request: where are the parts named [labels] now? See [side]. */
+    suspend fun locate(session: RepairSession, imagePath: String, labels: List<String>, onText: (String) -> Unit): VlmEngine.Result? =
+        side(session, imagePath, FixyPrompts.locate(labels), LOCATE_MAX_TOKENS, wait = false, onText)
+
     /**
-     * Re-ground side request: where are the parts named [labels] in the picture at [imagePath] now? It sees the live conversation
-     * and is rolled back afterwards. Returns null without waiting when the VLM is busy (a question always
-     * wins) or [session] isn't the one in the cache.
+     * A side request about the picture at [imagePath] ([request]: point at a KB step's target, check a step,
+     * re-ground). It sees the live conversation and is rolled back afterwards. With [wait] it queues behind a
+     * running question (the user asked for it); otherwise it returns null at once when the VLM is busy. Also
+     * null when [session] isn't the one in the cache.
      */
-    suspend fun locate(session: RepairSession, imagePath: String, labels: List<String>, onText: (String) -> Unit): VlmEngine.Result? {
-        if (!lock.tryLock()) return null
+    suspend fun side(
+        session: RepairSession,
+        imagePath: String,
+        request: String,
+        maxTokens: Int,
+        wait: Boolean,
+        onText: (String) -> Unit,
+    ): VlmEngine.Result? {
+        if (wait) lock.lock() else if (!lock.tryLock()) return null
         try {
             if (liveSessionId != session.id) return null
-            val result = runGuarded {
-                vlm.generate(
-                    (if (answerOpen) FixyPrompts.CLOSE_ANSWER else "") +
-                        FixyPrompts.userTurn(FixyPrompts.image(imagePath) + FixyPrompts.locate(labels)),
-                    VlmEngine.Keep.Never,
-                    maxTokens = LOCATE_MAX_TOKENS,
-                    onText = onText,
-                )
+            // The native call runs to the end even if our caller is cancelled (a new step, a new question), and it
+            // rolls itself back; wait for it so the cache bookkeeping stays right, instead of treating the
+            // cancellation as an engine failure (which would force a full rebuild).
+            val result = withContext(NonCancellable) {
+                runGuarded {
+                    vlm.generate(
+                        (if (answerOpen) FixyPrompts.CLOSE_ANSWER else "") +
+                            FixyPrompts.userTurn(FixyPrompts.image(imagePath) + request),
+                        VlmEngine.Keep.Never,
+                        maxTokens = maxTokens,
+                        onText = onText,
+                    )
+                }
             }
             kvTokens = result.kvTokens
             return result

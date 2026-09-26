@@ -67,6 +67,11 @@ class GuideTest {
         assertNull(i.target)
     }
 
+    @Test fun `a danger sign escalates naming the sign`() {
+        val i = Guide.instruction(GuideState.Escalate(oil, "burning smell"))!!
+        assertEquals("That's a warning sign: burning smell. ${Guide.TECHNICIAN}", i.say)
+    }
+
     @Test fun `escalate_if signs are recognised in what the user says`() {
         assertEquals("burning smell", Guide.escalation(oil, "there's a burning smell now"))
         assertEquals("oil light stays on while driving", Guide.escalation(oil, "the oil light stays on when I'm driving"))
