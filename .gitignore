@@ -1,0 +1,30 @@
+# Gradle / Android build
+.gradle/
+build/
+/local.properties
+*.apk
+*.aab
+*.ap_
+*.dex
+.externalNativeBuild/
+.cxx/
+captures/
+
+# IDE
+*.iml
+.idea/*
+!.idea/codeStyles/
+!.idea/runConfigurations/
+.DS_Store
+
+# Models and native libs stay out of git (side-loaded / kept in ../fixlens-models)
+*.mnn
+*.mnn.weight
+*.onnx
+app/libs/*.aar
+
+# Other agents / tooling scratch
+.kilo/
+.claude/sessions/
+.claude/state/
+ui_*.xml
