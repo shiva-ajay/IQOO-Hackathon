@@ -6,6 +6,9 @@ MODELS=${1:-$(dirname "$0")/../../fixlens-models}
 ADB=${ADB:-adb}
 DEST=/sdcard/Android/data/com.fixlens/files
 
+# The pre-converted Qwen3-VL graph uses the wrong M-RoPE layout for images; fix it (idempotent). See docs/marker-tracking.md §2.
+"$(dirname "$0")/mnn-patches/qwen3vl_mrope_fix.sh" "$MODELS/qwen3-vl-4b" || [ $? -eq 2 ]
+
 $ADB shell mkdir -p $DEST/models $DEST/stt/moonshine-base-en
 $ADB push "$MODELS/qwen3-vl-4b" $DEST/models/
 for f in preprocess.onnx encode.int8.onnx uncached_decode.int8.onnx cached_decode.int8.onnx tokens.txt; do
