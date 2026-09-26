@@ -326,9 +326,9 @@ Several of these are Grand Finale roadmap items and can be mentioned in the pitc
 
 ## 15. Current status (update this as you go)
 
-- [ ] M0 model check
-- [ ] M1 frame → box on screen
-- [ ] M2 tracker
+- [x] M0 model check (scale 0..1000 confirmed, JSON format 11/11, boxes 8/11 with target phrases; speed NOT met: ~5 s to box line)
+- [x] M1 frame → box on screen
+- [x] M2 tracker
 - [ ] M3 voice
 - [ ] M4 KB + guide
 - [ ] M5 freeze
@@ -357,6 +357,16 @@ Notes:
   (upstream Qwen-VL decode positions ignore the KV offset, which breaks every turn after the first).
 - MNN Chat on the phone: Play build `com.alibaba.mnnllm.android.release` v0.8.4. Local models are loaded from
   `/data/local/tmp/mnn_models/<name>/`.
+- **Qwen3-VL M-RoPE fix (2026-09-26), required for grounding:** taobao-mnn's `llm.mnn` (4B and 2B) uses Qwen2-VL
+  *chunked* M-RoPE; Qwen3-VL needs *interleaved*. Text is unaffected, but image positions are nearly invisible (boxes 0/12
+  on synthetic shapes). `tools/mnn-patches/qwen3vl_mrope_fix.sh <model_dir>` patches the graph (weights untouched; the
+  original is kept as `llm.mnn.chunked`; `tools/push_models.sh` runs it). After it: 12/12 synthetic, 8/11 real photos.
+  Test harness: `tools/m1/run_ground_test.py`. Details: [docs/marker-tracking.md](docs/marker-tracking.md) §2.
+- **Marker + tracking (M1/M2, 2026-09-26):** Preview + YUV analysis (1280×720, 16:9) share one ViewPort (`UseCaseGroup`),
+  so the VLM keyframe is exactly what's on screen and analysis → view is a pure scale (test box verified). Box scale
+  0..1000. Tracker (OpenCV 4.14 LK + RANSAC homography, 218×480 gray): **p50 1.6–3.6 ms, p95 3.9–8.6 ms**;
+  fast-forward 140–180 frames in 66–90 ms; end of speech → box line **4.4–5.6 s**; re-ground 5–6 s.
+  Debug over adb: `--es ask "point: <phrase>"`, `--es image <file>`, `--ez testbox true`, `--ez freeze true`.
 
 ---
 

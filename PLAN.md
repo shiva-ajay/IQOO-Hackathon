@@ -157,6 +157,20 @@ downstream (tracker, voice, KB) stays the same because it only depends on `VlmEn
 
 **Done when:** the marker stays locked while you walk the phone around the printout / engine bay.
 
+**Status (2026-09-26): M1 + M2 done, verified on the iQOO 15** (numbers in docs/marker-tracking.md §4). The hour-4 gate
+passed, so there's no MediaPipe switch. Deviations from the plan above:
+- Grounding needed a **model graph fix** first: the pre-converted Qwen3-VL uses the wrong M-RoPE layout for images
+  (`tools/mnn-patches/qwen3vl_mrope_fix.sh`).
+- Coordinates: Preview + Analysis are bound as one `UseCaseGroup` with the preview's ViewPort (not
+  `CoordinateTransform`), so the keyframe is exactly what the user sees. Analysis is 1280×720 YUV, and the tracker
+  works on the gray Y plane at 218×480.
+- No separate `CameraController`: `ui/CameraScreen.CameraPreview` binds, and `camera/FrameGrabber` is the analyzer.
+- The tracker fits one model from the seed frame (homography, then similarity, then median shift) instead of
+  frame-to-frame homographies, so the box shape doesn't drift. The last good frame stays the LK anchor, so brief
+  occlusions recover by themselves.
+- Next (asked for after testing): precise **multi-part pointing** (every screw, not the whole device), with all markers
+  tracked together; then M4 guided steps (KB targets per step, "done" or a visual auto-check to advance).
+
 ---
 
 ## M3 — Voice in and out + Fixy greeting (~2.5 h)
