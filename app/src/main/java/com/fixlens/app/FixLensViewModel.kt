@@ -15,6 +15,9 @@ import com.fixlens.guide.Intent
 import com.fixlens.guide.GuideState
 import com.fixlens.guide.GuideView
 import com.fixlens.guide.entry
+import com.fixlens.ir.RemoteController
+import com.fixlens.ir.RemoteProfile
+import com.fixlens.ir.RemoteUi
 import com.fixlens.kb.KbRepository
 import com.fixlens.kb.KnowledgeBase
 import com.fixlens.kb.Retriever
@@ -112,7 +115,11 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
     val micLevel: StateFlow<Float> = _micLevel
 
     private val tracker = FlowTracker(onReGround = ::onReGroundRequest)
-    val frameGrabber = FrameGrabber(onFrame = tracker::onFrame)
+    val frameGrabber = FrameGrabber(onFrame = { ring ->
+        tracker.onFrame(ring)
+        // Pairing a TV: the camera notices the screen reacting to a test code (ir/ScreenProbe).
+        remote.screen.onFrame(ring)
+    })
     /** The marker in analysis space, ~30 updates a second (kept out of [state] like [micLevel]). */
     val marker: StateFlow<MarkerState?> = tracker.state
     val analysisSize = frameGrabber.analysisSize
@@ -132,6 +139,20 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
         dir = File(filesDir, "tts/piper"),
         onSpeaking = { on -> _state.update { it.copy(speaking = on) } },
     )
+    /** "Fixy takes the remote": pairing and controlling ACs, TVs, projectors and fans over IR (ir/). */
+    private val remoteHost = object : RemoteController.Host {
+        override fun reply(userText: String?, answer: String) = remoteReply(userText, answer)
+        override fun speak(line: String) = voice.speak(line, voice.epoch())
+        override suspend fun identify() = lookAtDevice()
+        override suspend fun check(sign: String) = lookYesNo(sign)
+        override suspend fun plan(request: String, maxTokens: Int) = lookAndPlan(request, maxTokens)
+        override fun onProfile(profile: RemoteProfile?) {
+            _state.value.session?.let { s -> updateSession(s.id) { it.copy(remote = profile) } }
+        }
+    }
+    private val remote = RemoteController(app, viewModelScope, remoteHost)
+    val remoteUi: StateFlow<RemoteUi> = remote.ui
+
     /** The session whose greeting has been spoken, so it isn't said twice. */
     @Volatile private var greetedId: String? = null
 
@@ -158,6 +179,8 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
     init {
         refreshSessions()
         viewModelScope.launch(Dispatchers.IO) { loadKb() }
+        viewModelScope.launch(Dispatchers.IO) { remote.load() }
+        speech.monitor = remote.beep::feed
         viewModelScope.launch(Dispatchers.IO) {
             _state.update { it.copy(loadingStep = "Loading speech recognition") }
             if (!speech.load()) {
@@ -197,6 +220,7 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
         frameGrabber.clear()
         clearMarker()
         endGuide()
+        remote.attach(session.remote)
         val last = session.turns.lastOrNull()
         pastRepairs = session.followUpOf?.takeIf { session.turns.isEmpty() }
             ?.let { id -> Recall.pastRepairs(_state.value.sessions.filter { it.id == id }) }
@@ -243,6 +267,7 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
     fun closeSession() {
         cancelTurn()
         greetedId = null
+        remote.detach()
         speech.stop()
         frameGrabber.clear()
         clearMarker()
@@ -363,6 +388,107 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
     /** Debug hook: voice speed. */
     fun debugVoice(speed: Float) = voice.configure(speed)
 
+    /**
+     * Debug hooks for the IR remote (MainActivity): [info] logs the IR hardware and catalog, [fake] pretends to
+     * send (a phone without IR), [send] sends one code (`tv/LG/mute`, `ac/LG/cool 24`), [pair] opens pairing
+     * (`tv:LG`), [take] runs "take the remote" as if said.
+     */
+    fun debugRemote(info: Boolean, fake: Boolean?, send: String?, pair: String?, take: String?, press: String? = null) {
+        viewModelScope.launch {
+            delay(DEBUG_CAMERA_SETTLE_MS)
+            fake?.let(remote::setFake)
+            if (info || fake != null) Log.i(TAG, "IR debug: ${remote.describe()}")
+            send?.let(remote::debugSend)
+            pair?.let(remote::debugPair)
+            press?.let(remote::debugPress)
+            take?.let { if (_state.value.screen == Screen.Session) ask(it) }
+        }
+    }
+
+    // ---- Remote (UI actions; see ir/RemoteController) ----
+
+    fun remoteConfirmBrand() = remote.confirmBrand()
+    fun remoteChangeBrand() = remote.changeBrand()
+    fun remotePickBrand(brand: String) = remote.ui.value.picker?.let { remote.pickBrand(brand, it.kind) }
+    fun remotePickerKind(kind: com.fixlens.ir.DeviceKind) = remote.pickerKind(kind)
+    fun remoteClosePicker() = remote.closePicker()
+    fun remoteSendTest() = remote.sendTest()
+    fun remoteAnswer(responded: Boolean) = remote.answer(responded)
+    fun remoteTryCommon() = remote.tryCommonCodes()
+    fun remoteStartScan() = remote.startScan()
+    fun remotePauseScan() = remote.pauseScan()
+    fun remoteOneByOne() = remote.retryOneByOne()
+    fun remoteVolumeKeyUsable(up: Boolean): Boolean = remote.volumeKeyUsable(up)
+    fun remoteCancel() = remote.cancel()
+    fun remoteRelease() = remote.release(null)
+    fun remotePairAgain() = remote.pairAgain()
+    fun remotePad(open: Boolean) = remote.setPad(open)
+    fun remoteCommand(command: com.fixlens.ir.RemoteCommand) = remote.run(command, null)
+
+    /** Volume keys answer "Did it respond?" while pairing (up = yes). True if the key was used. */
+    fun remoteVolumeKey(up: Boolean): Boolean = remote.volumeKey(up)
+
+    /** Fixy's line about the remote in the conversation card, spoken; a user command is saved as a turn. */
+    private fun remoteReply(userText: String?, answer: String) {
+        val s = _state.value
+        if (s.screen != Screen.Session) return
+        if (userText != null) {
+            cancelTurn()
+            clearMarker()
+        }
+        _state.update {
+            it.copy(
+                question = userText ?: it.question, questionFinal = true, answer = answer,
+                timing = "Remote · on-device", phase = Phase.Listening, hint = null,
+            )
+        }
+        voice.speak(answer, voice.epoch())
+        if (userText != null) s.session?.let { saveTurn(it.id, userText, answer, null, 0) }
+    }
+
+    /** One VLM look for the remote: which device and brand is in view (a rolled-back side request). */
+    private suspend fun lookAtDevice(): RemoteController.Identified? {
+        val session = _state.value.session ?: return null
+        val start = System.currentTimeMillis()
+        val keyframe = frameGrabber.captureKeyframe(File(getApplication<Application>().cacheDir, "remote.jpg")) ?: return null
+        val out = StringBuilder()
+        val result = context.side(session, keyframe.file.absolutePath, FixyPrompts.IDENTIFY_DEVICE, IDENTIFY_MAX_TOKENS, wait = true) {
+            out.append(it)
+        }
+        val seen = FixyPrompts.parseDevice(out.toString())
+        Log.i(TAG, "Remote identify: \"${out.toString().trim()}\" → $seen in ${System.currentTimeMillis() - start} ms (${result?.stats})")
+        return seen?.let { RemoteController.Identified(com.fixlens.ir.DeviceKind.of(it.first), it.second) }
+    }
+
+    /** One step of the remote agent: the VLM sees the current frame and the agent's prompt; its raw reply. */
+    private suspend fun lookAndPlan(request: String, maxTokens: Int): String? {
+        val session = _state.value.session ?: return null
+        val keyframe = frameGrabber.captureKeyframe(File(getApplication<Application>().cacheDir, "remote_plan.jpg")) ?: return null
+        val out = StringBuilder()
+        val result = context.side(session, keyframe.file.absolutePath, request, maxTokens, wait = true) {
+            out.append(it)
+        } ?: return null
+        Log.i(TAG, "Remote agent step: ${result.stats}")
+        return out.toString()
+    }
+
+    /** One VLM yes/no look for the remote's checks ("the screen shows a picture"). */
+    private suspend fun lookYesNo(sign: String): Boolean? {
+        val session = _state.value.session ?: return null
+        val keyframe = frameGrabber.captureKeyframe(File(getApplication<Application>().cacheDir, "remote_check.jpg")) ?: return null
+        val out = StringBuilder()
+        val result = context.side(session, keyframe.file.absolutePath, FixyPrompts.verify(sign), VERIFY_MAX_TOKENS, wait = true) {
+            out.append(it)
+        } ?: return null
+        val answer = out.toString().trim().lowercase()
+        Log.i(TAG, "Remote check \"$sign\": \"$answer\" (${result.stats})")
+        return when {
+            answer.startsWith("yes") -> true
+            answer.startsWith("no") -> false
+            else -> null
+        }
+    }
+
     /** Live caption while the button is held (STT thread). */
     private fun onPartial(text: String) {
         val s = _state.value
@@ -399,6 +525,8 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
      */
     private fun ask(question: String, target: String? = null, image: File? = null) {
         val session = _state.value.session ?: return
+        // Remote words first: a pairing answer, a brand, "take the remote", "set it to 24" (no VLM needed).
+        if (target == null && image == null && remote.handle(question)) return
         // A KB match starts a guided repair, and "done", "back"… drive it: the words come from the KB, not the VLM.
         if (target == null && image == null && handleGuide(question)) return
         // Small talk and "what do you see?" are answered as such: no pointing, and small talk needs no picture.
@@ -830,6 +958,8 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
         const val POINT_MAX_TOKENS = 200
         /** "yes" or "no". */
         const val VERIFY_MAX_TOKENS = 3
+        /** `{"device":"ac","brand":"Blue Star"}`. */
+        const val IDENTIFY_MAX_TOKENS = 40
         /** A step's auto-check runs this often while the user is idle, at most [MAX_VERIFY_CHECKS] times. */
         const val VERIFY_EVERY_MS = 6000L
         const val MAX_VERIFY_CHECKS = 10

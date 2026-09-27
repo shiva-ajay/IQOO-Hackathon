@@ -82,6 +82,28 @@ object FixyPrompts {
     /** Guided step auto-check: is the step's visible sign of completion there? */
     fun verify(sign: String): String = "Look at the picture. Is this true: \"$sign\"? Answer only yes or no."
 
+    /** Remote side request: which appliance is in view and the brand printed on it (ir/RemoteController). */
+    const val IDENTIFY_DEVICE =
+        "Look at the picture. Which appliance is the main subject, and what brand name is printed on it? " +
+            "Reply with JSON only: {\"device\":\"ac|tv|projector|fan|other\",\"brand\":\"<the brand as printed>\"}. " +
+            "Use \"brand\":null if no brand name is readable. Never guess a brand."
+
+    /** (device, brand) from the [IDENTIFY_DEVICE] reply; brand null when unreadable. Null if it isn't JSON. */
+    fun parseDevice(raw: String): Pair<String, String?>? {
+        val json = Regex("""\{[^{}]*\}""").find(raw)?.value ?: return null
+        fun field(name: String) = Regex("""\"$name\"\s*:\s*(null|\"([^\"]*)\")""").find(json)?.groupValues?.get(2)
+        val device = field("device")?.trim()?.lowercase() ?: return null
+        val kind = when {
+            device == "ac" || device.contains("air") || device.contains("conditioner") -> "ac"
+            device.contains("tv") || device.contains("television") -> "tv"
+            device.contains("projector") -> "projector"
+            device.contains("fan") -> "fan"
+            else -> "other"
+        }
+        val brand = field("brand")?.trim()?.takeUnless { it.isEmpty() || it.equals("unknown", true) || it.equals("null", true) }
+        return kind to brand
+    }
+
     /** Re-ground side request: only the JSON for the parts Fixy already pointed at. */
     fun locate(labels: List<String>): String =
         "Find again: ${labels.joinToString(", ")}. Output only a JSON list, one entry per part: " +

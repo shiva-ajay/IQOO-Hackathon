@@ -1,5 +1,9 @@
 # FixLens — Knowledge Base Collection Plan
 
+> **Superseded in part (2026-09-27):** the KB is now generic across brands and appliances. How entries are written
+> today: [tools/kb/AUTHORING.md](../tools/kb/AUTHORING.md); why: [kb-dataset-research.md](kb-dataset-research.md).
+> The source lists and licensing notes below are still useful.
+
 Goal: build `app/src/main/assets/kb/fixlens_kb.json`, a **small, verified, spoken-friendly**
 knowledge base that Fixy reads from word for word. Schema and retrieval rules: CLAUDE.md §7.
 Research date: 2026-09-26.

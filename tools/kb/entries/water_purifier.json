@@ -1,0 +1,267 @@
+{
+  "category": "water_purifier",
+  "entries": [
+    {
+      "id": "water_purifier_no_water",
+      "appliance": "water_purifier",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Water purifier giving no water or a slow flow",
+      "meaning": "Let's find out why the purifier isn't giving you enough water.",
+      "symptoms": [
+        "no water from the purifier",
+        "purifier tap not giving water",
+        "very slow flow",
+        "tank not filling",
+        "less water coming",
+        "purified water flow is low",
+        "filter change light on"
+      ],
+      "aliases": [
+        "RO not giving water",
+        "RO not working",
+        "water purifier not working",
+        "purifier stopped working",
+        "RO tank empty",
+        "purifier water very slow",
+        "low flow from RO",
+        "RO filling slowly"
+      ],
+      "severity": "diy",
+      "escalate_if": [
+        "water leaking",
+        "burning smell",
+        "smoke coming out"
+      ],
+      "safety": [
+        "Don't open the purifier's cover or pull out its filters yourself."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Check the purifier is switched on at the wall and its power light is glowing.",
+          "target": "the power indicator light on the front of the water purifier",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Make sure the tap that feeds it has water, and the overhead tank isn't empty.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Check the small valve on the pipe going into the purifier is fully open.",
+          "target": "the small valve with a lever on the thin pipe going into the water purifier",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "Low supply pressure or heavy use makes it slow. Give the tank time to refill.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "If a filter change light is on or blinking, the filters are due. Please book a service.",
+          "target": "the indicator lights on the front panel of the water purifier",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 6,
+          "say": "If there's still little or no water, please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "A. O. Smith Z5 RO OM p.11-12 + Aquaguard Delight NXT OM p.7-8 + Livpure Pep OM p.15-17 + KENT Grand OM p.3, 5-6, 12 + KENT Maxx OM p.5-6; checked 2026-09-27"
+    },
+    {
+      "id": "water_purifier_bad_taste",
+      "appliance": "water_purifier",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Purified water tastes or smells bad",
+      "meaning": "Let's work out why the water tastes or smells odd.",
+      "symptoms": [
+        "water tastes bad",
+        "water smells bad",
+        "strange taste",
+        "bad smell from purified water",
+        "water tastes salty",
+        "water tastes bitter",
+        "funny taste in RO water"
+      ],
+      "aliases": [
+        "RO water taste changed",
+        "purifier water smells",
+        "bad taste from purifier",
+        "water tastes different",
+        "purifier water odour",
+        "medicine taste in water"
+      ],
+      "severity": "diy",
+      "escalate_if": [
+        "still tastes bad",
+        "still smells bad",
+        "water leaking"
+      ],
+      "safety": [
+        "Don't drink the water while it tastes or smells wrong.",
+        "Don't open the purifier or change its filters yourself."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "If the water sat in the tank for over two days, drain it out through the tap.",
+          "target": "the dispensing tap on the front of the water purifier",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Let it refill with fresh water, then taste it again.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "If the filter change light is on, the filters are due. Please book a service.",
+          "target": "the indicator lights on the front panel of the water purifier",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "If it still tastes or smells odd, don't drink it. Please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "Livpure Pep OM p.16-17 + Aquaguard Delight NXT OM p.7-8 + A. O. Smith Z5 RO OM p.11-12 + Pureit Marvella OM FAQ 11 + KENT Grand OM p.3, 6; checked 2026-09-27"
+    },
+    {
+      "id": "water_purifier_leaking",
+      "appliance": "water_purifier",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Water purifier leaking",
+      "meaning": "Let's stop the leak safely first, then see where it's coming from.",
+      "symptoms": [
+        "water leaking from purifier",
+        "purifier dripping",
+        "water on the floor under the purifier",
+        "water coming out of the top of the purifier",
+        "leak from the RO pipe"
+      ],
+      "aliases": [
+        "RO leaking",
+        "purifier leakage",
+        "water purifier leaking",
+        "leak near the purifier",
+        "RO dripping water"
+      ],
+      "severity": "caution",
+      "escalate_if": [
+        "socket is wet",
+        "burning smell",
+        "sparks from plug"
+      ],
+      "safety": [
+        "Close the small valve on the pipe that feeds the purifier.",
+        "Switch the purifier off at the wall and unplug it. If the socket is wet, use the main switch."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Wipe the area dry, then look for a loose pipe or tap joint you can see from outside.",
+          "target": "the pipe connections and the tap on the outside of the water purifier",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Don't open the cover or pull pipes apart to fix it yourself.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Leave it off with the valve closed, and call a technician to fix the leak.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "Aquaguard Delight NXT OM p.7-8 + Livpure Pep OM p.16-17 + Pureit Marvella OM FAQ 10 + Eureka Forbes purifier troubleshooting blog + KENT Grand OM p.3 + CPSC Pub 513 p.5; checked 2026-09-27",
+      "safety_anim": [
+        null,
+        {
+          "kind": "unplug"
+        }
+      ]
+    }
+  ],
+  "test_queries": [
+    {
+      "q": "my RO is not giving water",
+      "expect": "water_purifier_no_water"
+    },
+    {
+      "q": "the water purifier is very slow",
+      "expect": "water_purifier_no_water"
+    },
+    {
+      "q": "the purifier tank is not filling",
+      "expect": "water_purifier_no_water"
+    },
+    {
+      "q": "the filter change light is on",
+      "expect": "water_purifier_no_water"
+    },
+    {
+      "q": "the water tastes bad",
+      "expect": "water_purifier_bad_taste"
+    },
+    {
+      "q": "my purifier water smells",
+      "expect": "water_purifier_bad_taste"
+    },
+    {
+      "q": "the RO water tastes salty",
+      "expect": "water_purifier_bad_taste"
+    },
+    {
+      "q": "water is leaking from the purifier",
+      "expect": "water_purifier_leaking"
+    },
+    {
+      "q": "my RO is dripping water",
+      "expect": "water_purifier_leaking"
+    },
+    {
+      "q": "there's water on the floor under the purifier",
+      "expect": "water_purifier_leaking"
+    },
+    {
+      "q": "what is the TDS of my borewell water",
+      "expect": "NONE"
+    },
+    {
+      "q": "which purifier should I buy for my home",
+      "expect": "NONE"
+    }
+  ]
+}

@@ -1,0 +1,246 @@
+{
+  "category": "microwave",
+  "entries": [
+    {
+      "id": "microwave_not_heating",
+      "appliance": "microwave",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Microwave not starting or not heating",
+      "meaning": "Let's find out why the microwave won't start or heat.",
+      "symptoms": [
+        "microwave not heating",
+        "microwave won't start",
+        "food stays cold",
+        "buttons not working",
+        "display on but not heating",
+        "microwave dead",
+        "nothing happens when I press start"
+      ],
+      "aliases": [
+        "microwave not working",
+        "oven not heating food",
+        "microwave not turning on",
+        "start button not working",
+        "microwave stopped working",
+        "microwave keypad locked",
+        "microwave shows lock"
+      ],
+      "severity": "diy",
+      "escalate_if": [
+        "burning smell",
+        "sparks inside",
+        "smoke coming out",
+        "door damaged",
+        "keeps tripping"
+      ],
+      "safety": [
+        "Never open the microwave's outer casing. There's high voltage inside."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Check the plug is pushed fully into the socket and the socket switch is on.",
+          "target": "the microwave's power plug in the wall socket",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Check the breaker or fuse for that socket hasn't tripped. Test the socket with another appliance.",
+          "target": null,
+          "verify": null,
+          "caution": "If the breaker keeps tripping, call an electrician."
+        },
+        {
+          "n": 3,
+          "say": "Wipe any food off the door edges, then close the door firmly.",
+          "target": "the edge of the microwave door and the front frame where it closes",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "If the display shows a lock sign, child lock is on. Check your manual to unlock it.",
+          "target": "the display on the microwave's control panel",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "Set a cooking time, then press Start.",
+          "target": "the Start button on the microwave's control panel",
+          "verify": null,
+          "caution": "Never run it empty. Always put food inside first."
+        },
+        {
+          "n": 6,
+          "say": "If it still won't start or heat, please call a technician. Don't try to repair it.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "IFB 24PM2B OM p.3, 5, 7, 14 + LG microwave OM (MH63/MH65 series) p.4, 18, 31-32 + Samsung MS23J5133AG OM p.3, 7, 21, 24-26 + Panasonic NN-ST23QM OM p.7, 12, 17, 45; checked 2026-09-27"
+    },
+    {
+      "id": "microwave_sparks",
+      "appliance": "microwave",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Sparks or arcing inside the microwave",
+      "meaning": "Sparks usually mean there's metal inside. Let's stop it and find the cause.",
+      "symptoms": [
+        "sparks inside the microwave",
+        "microwave sparking",
+        "flashes inside the microwave",
+        "crackling and sparks",
+        "arcing in the microwave",
+        "lightning inside the oven"
+      ],
+      "aliases": [
+        "microwave sparks",
+        "sparking while heating",
+        "blue sparks in microwave",
+        "sparks from the plate",
+        "microwave arcing"
+      ],
+      "severity": "caution",
+      "escalate_if": [
+        "still sparking",
+        "burning smell",
+        "smoke coming out",
+        "flames inside"
+      ],
+      "safety": [
+        "Press Stop straight away.",
+        "If you see smoke or flames, keep the door shut and unplug the microwave."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Take out any foil, metal spoon, twist tie or metal container.",
+          "target": "the inside of the microwave oven",
+          "verify": null,
+          "caution": "The dish and food may be hot. Use oven gloves."
+        },
+        {
+          "n": 2,
+          "say": "Don't use plates or cups with a gold or silver rim or a painted pattern.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Check the glass tray and its roller ring are sitting properly in place.",
+          "target": "the round glass turntable tray inside the microwave",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "Never run the microwave empty. There should always be food inside.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "If it still sparks with nothing metal inside, stop using it and call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "Samsung MS23J5133AG OM p.4, 19, 25-26 + Samsung Gulf support page on microwave sparking + LG microwave OM p.5-6, 28, 31-32 + IFB 24PM2B OM p.3-8 + Panasonic NN-ST23QM OM p.5, 7, 12; checked 2026-09-27",
+      "safety_anim": [
+        null,
+        {
+          "kind": "unplug"
+        }
+      ]
+    },
+    {
+      "id": "microwave_internal_danger",
+      "appliance": "microwave",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Microwave smoke, burning smell, damaged door or internal repair",
+      "meaning": "Please stop using it. Keep the door shut, unplug it, and call a technician. Never open the casing.",
+      "symptoms": [
+        "smoke from the microwave",
+        "burning smell from the microwave",
+        "fire in the microwave",
+        "microwave door broken",
+        "door not closing properly",
+        "door glass cracked",
+        "microwave hinge broken",
+        "strange noise from the microwave"
+      ],
+      "aliases": [
+        "open the microwave",
+        "repair microwave inside",
+        "replace microwave fuse",
+        "microwave capacitor",
+        "microwave magnetron",
+        "replace microwave light bulb",
+        "microwave power cord damaged"
+      ],
+      "severity": "call_technician",
+      "escalate_if": [],
+      "safety": [],
+      "steps": [],
+      "source": "Samsung MS23J5133AG OM p.3-5, 7 + LG microwave OM p.4, 6 + IFB 24PM2B OM p.3-5 + Panasonic NN-ST23QM OM p.5, 7; checked 2026-09-27"
+    }
+  ],
+  "test_queries": [
+    {
+      "q": "my microwave is not heating",
+      "expect": "microwave_not_heating"
+    },
+    {
+      "q": "the microwave won't start",
+      "expect": "microwave_not_heating"
+    },
+    {
+      "q": "the buttons on the microwave aren't working",
+      "expect": "microwave_not_heating"
+    },
+    {
+      "q": "there are sparks inside the microwave",
+      "expect": "microwave_sparks"
+    },
+    {
+      "q": "my microwave is sparking",
+      "expect": "microwave_sparks"
+    },
+    {
+      "q": "I see arcing in the microwave",
+      "expect": "microwave_sparks"
+    },
+    {
+      "q": "smoke is coming from the microwave",
+      "expect": "microwave_internal_danger"
+    },
+    {
+      "q": "the microwave door is broken",
+      "expect": "microwave_internal_danger"
+    },
+    {
+      "q": "there's a burning smell from my microwave",
+      "expect": "microwave_internal_danger"
+    },
+    {
+      "q": "how long should I microwave popcorn",
+      "expect": "NONE"
+    },
+    {
+      "q": "can I bake a cake in convection mode",
+      "expect": "NONE"
+    }
+  ]
+}

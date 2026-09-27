@@ -52,6 +52,22 @@ class KbTest {
             .forEach { assertTrue("missing '$it' in:\n$p", p.contains(it)) }
     }
 
+    @Test fun `a turning direction must match the step's words`() {
+        fun problems(say: String, anim: StepAnim) =
+            KbRepository.problems(KnowledgeBase("t", listOf(entry("x").copy(steps = listOf(KbStep(1, say, anim = anim))))))
+        val ccw = StepAnim(AnimKind.Turn, AnimDir.Ccw)
+        val cw = StepAnim(AnimKind.Turn, AnimDir.Cw)
+        assertTrue(problems("Slowly unscrew the round filter anticlockwise.", ccw).isEmpty())
+        assertTrue(problems("Screw the filler cap back on tightly.", cw).isEmpty())
+        assertTrue(problems("Screw the filter back in firmly, clockwise.", cw).isEmpty())
+        assertTrue(problems("Turn the knob anticlockwise.", cw).isNotEmpty())
+        assertTrue(problems("Unscrew the oil filler cap.", cw).isNotEmpty())
+        assertTrue(problems("Screw the filler cap back on.", ccw).isNotEmpty())
+        assertTrue(problems("Open the cap.", ccw).isNotEmpty())
+        assertTrue(problems("Unscrew it.", StepAnim(AnimKind.Turn)).isNotEmpty())
+        assertTrue(problems("The oil should be between the marks.", StepAnim(AnimKind.Level, AnimDir.Up)).isNotEmpty())
+    }
+
     @Test fun `codes normalize the letter O to zero`() {
         assertEquals("0E", Codes.normalize("OE"))
         assertEquals("0E", Codes.normalize("o-e"))
@@ -125,12 +141,16 @@ class KbTest {
     @Serializable
     private data class Query(val q: String, val expect: String, val from: String = "")
 
-    /** tools/kb/test_queries.json, written with the entries: each question, looked up the way the app does. */
+    /**
+     * tools/kb/test_queries.json, written with the entries: each question, looked up the way the app does, in a
+     * session about the query's category (the appliance the question names wins, as in the app).
+     */
     @Test fun `the test queries find their entries`() {
         val queries = Json.decodeFromString<List<Query>>(File("../tools/kb/test_queries.json").readText())
         val r = Retriever(bundled)
         val wrong = queries.mapNotNull { q ->
-            val (appliance, brand) = MemoryRules.kbContext(q.q, null)
+            val (named, brand) = MemoryRules.kbContext(q.q, null)
+            val appliance = named ?: q.from
             val got = (r.find(q.q, appliance, brand) as? Match.Found)?.entry?.id ?: "NONE"
             if (got == q.expect) null else "[${q.from}] \"${q.q}\" -> $got, expected ${q.expect} (appliance $appliance)"
         }

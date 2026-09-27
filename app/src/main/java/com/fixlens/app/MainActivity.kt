@@ -6,6 +6,7 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -91,6 +92,9 @@ class MainActivity : ComponentActivity() {
      * `--es image /sdcard/.../x.jpg` uses a file instead of the camera, `--ez testbox true` and `--ez freeze true`
      * draw the mapping checks, `--es grounding contract|native` and `--es coords norm|px` switch prompt and scale.
      * Voice: `--es say "<text>"` speaks a line (timings in the log); `--ef ttsspeed F` changes its speed.
+     * IR remote (docs/ir-remote-plan.md §11): `--ez irinfo true` logs the hardware; `--ez irfake true` pretends to
+     * send; `--es ir "tv/LG/mute"` or `"ac/LG/cool 24"` sends one code; `--es irpair "tv:LG"` opens pairing;
+     * `--es irtake "take the remote"` runs a spoken remote request; `--es irpress vol_up` shows a key pop-up.
      */
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
@@ -102,6 +106,31 @@ class MainActivity : ComponentActivity() {
         intent.getStringExtra("ask")?.let { vm.debugAsk(it, intent.getStringExtra("image")) }
         if (intent.hasExtra("ttsspeed")) vm.debugVoice(intent.getFloatExtra("ttsspeed", 1f))
         intent.getStringExtra("say")?.let(vm::debugSay)
+        val irInfo = intent.getBooleanExtra("irinfo", false)
+        val irFake = flag("irfake")
+        val irSend = intent.getStringExtra("ir")
+        val irPair = intent.getStringExtra("irpair")
+        val irTake = intent.getStringExtra("irtake")
+        val irPress = intent.getStringExtra("irpress")
+        if (irInfo || irFake != null || irSend != null || irPair != null || irTake != null || irPress != null) {
+            vm.debugRemote(irInfo, irFake, irSend, irPair, irTake, irPress)
+        }
+    }
+
+    /**
+     * While pairing waits for a response, volume up = "it responded" and volume down = "no" (one hand aims the
+     * phone). Otherwise the keys change the volume as usual.
+     */
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        val up = event.keyCode == KeyEvent.KEYCODE_VOLUME_UP
+        if ((up || event.keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) && allGranted()) {
+            val vm = ViewModelProvider(this)[FixLensViewModel::class.java]
+            if (vm.remoteVolumeKeyUsable(up)) {
+                if (event.action == KeyEvent.ACTION_DOWN && event.repeatCount == 0) vm.remoteVolumeKey(up)
+                return true
+            }
+        }
+        return super.dispatchKeyEvent(event)
     }
 
     private fun allGranted() = REQUIRED_PERMISSIONS.all { checkSelfPermission(it) == PackageManager.PERMISSION_GRANTED }

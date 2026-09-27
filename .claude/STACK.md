@@ -20,6 +20,7 @@ without asking.
 | Speech-to-text | **sherpa-onnx**: Silero VAD + **Moonshine Base English (int8)** | sherpa-onnx GitHub releases (AAR + models) |
 | Text-to-speech | **Piper** `en_US-lessac-medium` via the sherpa-onnx `OfflineTts` already in the AAR | sherpa-onnx `tts-models` release |
 | Knowledge base | **JSON in assets** + `kotlinx.serialization`, 4-stage lookup | Gradle |
+| IR remote | `ConsumerIrManager` + code catalog in assets (IRext + Flipper-IRDB) + **IRext AC decoder** (vendored C, MIT) | `tools/ir/build_ir_assets.py`, `app/src/main/cpp/irext/` |
 | Concurrency | Kotlin coroutines | Gradle |
 | Persona | Fixy: hard-coded greeting + system prompt (no training) | Our code |
 
@@ -114,7 +115,8 @@ Enable the `kotlinx-serialization` plugin.
 
 ## 5. Android manifest
 
-- Permissions: `android.permission.CAMERA`, `android.permission.RECORD_AUDIO`. **Nothing else.**
+- Permissions: `android.permission.CAMERA`, `android.permission.RECORD_AUDIO`, `android.permission.TRANSMIT_IR`
+  (the IR blaster; a normal permission, no network). **Nothing else.**
 - **No `INTERNET` permission** (this is proof of offline operation for the judges).
 - Lock orientation to portrait for the demo (it simplifies coordinate mapping).
 

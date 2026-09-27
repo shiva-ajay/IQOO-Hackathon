@@ -7,6 +7,9 @@
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!-- "Fixy takes the remote": the phone's IR blaster (a normal permission: no prompt, no network). -->
+    <uses-permission android:name="android.permission.TRANSMIT_IR" />
+    <uses-feature android:name="android.hardware.consumerir" android:required="false" />
 
     <!-- Offline by design: strip any network permission a library tries to merge in. -->
     <uses-permission android:name="android.permission.INTERNET" tools:node="remove" />

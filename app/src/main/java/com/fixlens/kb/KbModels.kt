@@ -26,6 +26,8 @@ data class KbEntry(
     val severity: Severity,
     @SerialName("escalate_if") val escalateIf: List<String> = emptyList(),
     val safety: List<String> = emptyList(),
+    /** How to do each safety line, by position (null = none), e.g. unplug first. */
+    @SerialName("safety_anim") val safetyAnim: List<StepAnim?> = emptyList(),
     val steps: List<KbStep> = emptyList(),
     val source: String = "",
 )
@@ -54,7 +56,38 @@ data class KbStep(
     /** Something visible that shows the step is done ("the oil filler cap is off"), checked by the VLM; or null. */
     val verify: String? = null,
     val caution: String? = null,
+    /** How to do it, shown as a small animation (and on the pointed part). From the KB only, never guessed. */
+    val anim: StepAnim? = null,
 )
+
+/**
+ * A step's animation (docs/step-animations-plan.md). [dir]: `turn` needs `ccw`/`cw` and the step's words must say
+ * so; `pull`/`push` may say which way the part moves on screen (`up` default for pull, `down` for push).
+ */
+@Serializable
+data class StepAnim(val kind: AnimKind, val dir: AnimDir? = null)
+
+@Serializable
+enum class AnimKind {
+    @SerialName("turn") Turn,
+    @SerialName("pull") Pull,
+    @SerialName("push") Push,
+    @SerialName("level") Level,
+    @SerialName("pour") Pour,
+    @SerialName("unplug") Unplug,
+    @SerialName("switch_off") SwitchOff,
+    @SerialName("engine_off") EngineOff,
+}
+
+@Serializable
+enum class AnimDir {
+    @SerialName("ccw") Ccw,
+    @SerialName("cw") Cw,
+    @SerialName("up") Up,
+    @SerialName("down") Down,
+    @SerialName("left") Left,
+    @SerialName("right") Right,
+}
 
 @Serializable
 enum class Severity {

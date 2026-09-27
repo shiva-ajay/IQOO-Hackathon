@@ -1,0 +1,261 @@
+{
+  "category": "inverter",
+  "entries": [
+    {
+      "id": "inverter_no_backup",
+      "appliance": "inverter",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Inverter giving no backup or short backup",
+      "meaning": "Let's find out why your inverter backup is short or not working.",
+      "symptoms": [
+        "no backup during power cut",
+        "backup finishes quickly",
+        "short backup",
+        "inverter not giving backup",
+        "lights go off in a power cut",
+        "battery drains fast",
+        "backup time is less"
+      ],
+      "aliases": [
+        "inverter not working",
+        "UPS not working in power cut",
+        "inverter backup low",
+        "battery backup reduced",
+        "inverter battery not charging",
+        "home UPS no backup",
+        "inverter battery water level",
+        "top up inverter battery"
+      ],
+      "severity": "caution",
+      "escalate_if": [
+        "burning smell",
+        "battery swelling",
+        "acid leaking",
+        "sparks at battery",
+        "keeps tripping"
+      ],
+      "safety": [
+        "Don't open the inverter's cover. There's high voltage inside, even when it's switched off."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Check the inverter's front switch is on, and its plug is firmly in a working socket.",
+          "target": "the power switch on the front panel of the inverter",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Look at the small breaker on the back. If it has tripped, switch it back on once.",
+          "target": "the small circuit breaker switch or button on the back of the inverter",
+          "verify": null,
+          "caution": "If it trips again, leave it and call a technician."
+        },
+        {
+          "n": 3,
+          "say": "In a power cut, switch off heavy appliances you don't need. Too much load drains the battery fast.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "After a long power cut, let the battery recharge on mains power for several hours.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "If your battery has water level indicators on top, switch the inverter off and unplug it first.",
+          "target": "the water level indicators on top of the inverter battery",
+          "verify": null,
+          "caution": "Sealed maintenance-free batteries don't need water."
+        },
+        {
+          "n": 6,
+          "say": "Check the indicators. If any shows low, top up slowly with distilled water, only to the max mark.",
+          "target": "the water level indicators on top of the inverter battery",
+          "verify": null,
+          "caution": "Wear gloves; battery acid burns. Never use tap or drinking water, and keep flames away.",
+          "anim": {
+            "kind": "pour"
+          }
+        },
+        {
+          "n": 7,
+          "say": "Close the caps firmly, wipe any spills, then plug the inverter back in and switch it on.",
+          "target": "the vent caps on top of the inverter battery",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 8,
+          "say": "If backup is still short, the battery may be worn out. Please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "Microtek Heavy Duty VTurbo SW UPS OM p.3-4, 6-7 + Livfast Smart Flash UPS OM p.2-3, 5, 8-9 + Luminous battery water and maintenance guides (luminousindia.com) + Genus battery top-up guide + Livguard LGS1100i product FAQ; checked 2026-09-27"
+    },
+    {
+      "id": "inverter_beeping_overload",
+      "appliance": "inverter",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Inverter beeping or showing overload",
+      "meaning": "Let's find out why the inverter is beeping.",
+      "symptoms": [
+        "inverter beeping",
+        "inverter making a beep sound",
+        "overload warning",
+        "overload light on",
+        "UPS alarm sound",
+        "continuous beeping",
+        "battery low warning"
+      ],
+      "aliases": [
+        "inverter beep",
+        "UPS beeping",
+        "inverter alarm",
+        "overload on inverter",
+        "inverter overload trip",
+        "red light on inverter",
+        "stop the inverter beeping"
+      ],
+      "severity": "diy",
+      "escalate_if": [
+        "still beeping",
+        "burning smell",
+        "short circuit",
+        "battery swelling"
+      ],
+      "safety": [
+        "Don't open the inverter's cover. There's high voltage inside, even when it's switched off."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Look at the inverter's display or lights. They show whether it's overload or battery low.",
+          "target": "the display and indicator lights on the front of the inverter",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "For overload, switch off heavy appliances until the warning stops.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Then reset it: switch the inverter off at its front switch, and back on.",
+          "target": "the power switch on the front panel of the inverter",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "For battery low in a power cut, switch off what you don't need. It recharges when power returns.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "If it keeps beeping with little load, or shows a fault or short circuit, please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "Microtek Heavy Duty VTurbo SW UPS OM p.3-4, 6 + Livfast Smart Flash UPS OM p.2-3, 5, 9-10 + Luminous inverter battery maintenance guide (luminousindia.com); checked 2026-09-27"
+    },
+    {
+      "id": "inverter_battery_danger",
+      "appliance": "inverter",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Inverter or battery burning smell, swelling, acid leak or sparks",
+      "meaning": "Don't touch the battery. If it's safe, switch the inverter off and unplug it, then call a technician.",
+      "symptoms": [
+        "burning smell from the inverter",
+        "battery swelling",
+        "battery bulging",
+        "acid leaking from the battery",
+        "sparks at the battery terminals",
+        "smoke from the inverter",
+        "heavy corrosion on battery terminals"
+      ],
+      "aliases": [
+        "inverter burning smell",
+        "inverter smoke",
+        "battery leaking acid",
+        "swollen inverter battery",
+        "battery terminal sparking",
+        "replace inverter battery",
+        "open the inverter",
+        "repair the inverter",
+        "inverter wiring"
+      ],
+      "severity": "call_technician",
+      "escalate_if": [],
+      "safety": [],
+      "steps": [],
+      "source": "Microtek Heavy Duty VTurbo SW UPS OM p.6 + Livfast Smart Flash UPS OM p.2 + Luminous inverter battery maintenance guide (luminousindia.com) + Exide Industries battery tips + CPSC Pub 513 p.3; checked 2026-09-27"
+    }
+  ],
+  "test_queries": [
+    {
+      "q": "my inverter is not giving backup",
+      "expect": "inverter_no_backup"
+    },
+    {
+      "q": "the backup finishes very quickly",
+      "expect": "inverter_no_backup"
+    },
+    {
+      "q": "how do I top up the inverter battery",
+      "expect": "inverter_no_backup"
+    },
+    {
+      "q": "the inverter keeps beeping",
+      "expect": "inverter_beeping_overload"
+    },
+    {
+      "q": "it's showing an overload warning",
+      "expect": "inverter_beeping_overload"
+    },
+    {
+      "q": "my UPS is beeping",
+      "expect": "inverter_beeping_overload"
+    },
+    {
+      "q": "the inverter battery is swelling",
+      "expect": "inverter_battery_danger"
+    },
+    {
+      "q": "there's a burning smell from the inverter",
+      "expect": "inverter_battery_danger"
+    },
+    {
+      "q": "acid is leaking from the battery",
+      "expect": "inverter_battery_danger"
+    },
+    {
+      "q": "which inverter battery should I buy for my home",
+      "expect": "NONE"
+    },
+    {
+      "q": "how many watts does a ceiling fan use",
+      "expect": "NONE"
+    }
+  ]
+}

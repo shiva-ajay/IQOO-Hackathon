@@ -156,7 +156,13 @@ and Stack Exchange for edge cases (paraphrase only). Sources still to be collect
 ~6–8 categories × 3–5 entries ≈ 30–40 entries. At ~15 min each plus a grounding check on real photos, that is
 ~8–10 h, so the two live demos (car, washer printout) are done in depth first and the rest get 2–3 entries each.
 
-## 7. Decisions needed
+## 7. Decisions (2026-09-27)
+
+Decided and built: generic categories (the table above plus laptop), error codes kept as a second way in
+(`brand_codes`), the appliance taken from the user's words and the session notes. Result: 60 entries, see
+`tools/kb/`. Still open below: VLM appliance recognition from the picture, and `<kb_entry>` in the prompt.
+
+Original list:
 
 1. Which categories are in (table above), and how many entries per category.
 2. Whether error codes stay in as a secondary way in (a `brand_codes` field and "which brand is it?"), or entries are

@@ -1,0 +1,1102 @@
+[
+  {
+    "q": "my AC is not cooling",
+    "expect": "air_conditioner_not_cooling",
+    "from": "air_conditioner"
+  },
+  {
+    "q": "the air conditioner is blowing hot air",
+    "expect": "air_conditioner_not_cooling",
+    "from": "air_conditioner"
+  },
+  {
+    "q": "how do I clean my AC filter",
+    "expect": "air_conditioner_not_cooling",
+    "from": "air_conditioner"
+  },
+  {
+    "q": "my window AC isn't cooling the room",
+    "expect": "air_conditioner_not_cooling",
+    "from": "air_conditioner"
+  },
+  {
+    "q": "water is dripping from my AC",
+    "expect": "air_conditioner_water_dripping",
+    "from": "air_conditioner"
+  },
+  {
+    "q": "the AC indoor unit is leaking water on the wall",
+    "expect": "air_conditioner_water_dripping",
+    "from": "air_conditioner"
+  },
+  {
+    "q": "my split AC keeps dripping",
+    "expect": "air_conditioner_water_dripping",
+    "from": "air_conditioner"
+  },
+  {
+    "q": "my AC remote is not working",
+    "expect": "air_conditioner_remote_not_working",
+    "from": "air_conditioner"
+  },
+  {
+    "q": "the AC isn't responding to the remote",
+    "expect": "air_conditioner_remote_not_working",
+    "from": "air_conditioner"
+  },
+  {
+    "q": "my AC won't switch on",
+    "expect": "air_conditioner_remote_not_working",
+    "from": "air_conditioner"
+  },
+  {
+    "q": "my AC smells bad",
+    "expect": "air_conditioner_bad_smell",
+    "from": "air_conditioner"
+  },
+  {
+    "q": "there's a musty smell from the air conditioner",
+    "expect": "air_conditioner_bad_smell",
+    "from": "air_conditioner"
+  },
+  {
+    "q": "the AC stinks when I turn it on",
+    "expect": "air_conditioner_bad_smell",
+    "from": "air_conditioner"
+  },
+  {
+    "q": "I think my AC has a gas leak",
+    "expect": "air_conditioner_gas_or_compressor_fault",
+    "from": "air_conditioner"
+  },
+  {
+    "q": "there's a burning smell from my AC",
+    "expect": "air_conditioner_gas_or_compressor_fault",
+    "from": "air_conditioner"
+  },
+  {
+    "q": "my LG AC is showing CH38",
+    "expect": "air_conditioner_gas_or_compressor_fault",
+    "from": "air_conditioner"
+  },
+  {
+    "q": "Daikin AC error U4",
+    "expect": "air_conditioner_gas_or_compressor_fault",
+    "from": "air_conditioner"
+  },
+  {
+    "q": "how do I install a new AC",
+    "expect": "NONE",
+    "from": "air_conditioner"
+  },
+  {
+    "q": "what temperature should I keep my AC at to save electricity",
+    "expect": "NONE",
+    "from": "air_conditioner"
+  },
+  {
+    "q": "how do I check the engine oil on my scooter",
+    "expect": "bike_engine_oil_check",
+    "from": "bike"
+  },
+  {
+    "q": "where's the oil dipstick on my bike",
+    "expect": "bike_engine_oil_check",
+    "from": "bike"
+  },
+  {
+    "q": "how do I top up the engine oil in my motorcycle",
+    "expect": "bike_engine_oil_check",
+    "from": "bike"
+  },
+  {
+    "q": "how do I lube my bike chain",
+    "expect": "bike_chain_slack_lube",
+    "from": "bike"
+  },
+  {
+    "q": "my motorcycle chain is making noise",
+    "expect": "bike_chain_slack_lube",
+    "from": "bike"
+  },
+  {
+    "q": "how loose should the chain be",
+    "expect": "bike_chain_slack_lube",
+    "from": "bike"
+  },
+  {
+    "q": "my scooter won't start",
+    "expect": "bike_wont_start",
+    "from": "bike"
+  },
+  {
+    "q": "the self start isn't working on my bike",
+    "expect": "bike_wont_start",
+    "from": "bike"
+  },
+  {
+    "q": "my scooty is not starting in the morning",
+    "expect": "bike_wont_start",
+    "from": "bike"
+  },
+  {
+    "q": "how much air should be in my scooter tyres",
+    "expect": "bike_tyre_pressure_check",
+    "from": "bike"
+  },
+  {
+    "q": "I think I have a flat tire",
+    "expect": "bike_tyre_pressure_check",
+    "from": "bike"
+  },
+  {
+    "q": "check tyre pressure on my motorcycle",
+    "expect": "bike_tyre_pressure_check",
+    "from": "bike"
+  },
+  {
+    "q": "my back tyre has a puncture",
+    "expect": "bike_tyre_pressure_check",
+    "from": "bike"
+  },
+  {
+    "q": "how do I check the brake fluid on my bike",
+    "expect": "bike_brake_fluid_check",
+    "from": "bike"
+  },
+  {
+    "q": "is my brake oil level ok",
+    "expect": "bike_brake_fluid_check",
+    "from": "bike"
+  },
+  {
+    "q": "the brake lever goes too far",
+    "expect": "bike_brake_fluid_check",
+    "from": "bike"
+  },
+  {
+    "q": "how do I clean the battery terminals on my scooter",
+    "expect": "bike_battery_terminals",
+    "from": "bike"
+  },
+  {
+    "q": "there's white powder on my bike battery",
+    "expect": "bike_battery_terminals",
+    "from": "bike"
+  },
+  {
+    "q": "my battery cable is loose",
+    "expect": "bike_battery_terminals",
+    "from": "bike"
+  },
+  {
+    "q": "my brakes are not working",
+    "expect": "bike_brakes_fuel_wiring_danger",
+    "from": "bike"
+  },
+  {
+    "q": "my scooter brake feels spongy",
+    "expect": "bike_brakes_fuel_wiring_danger",
+    "from": "bike"
+  },
+  {
+    "q": "petrol is leaking from my scooter",
+    "expect": "bike_brakes_fuel_wiring_danger",
+    "from": "bike"
+  },
+  {
+    "q": "can you help me fix the wiring on my bike",
+    "expect": "bike_brakes_fuel_wiring_danger",
+    "from": "bike"
+  },
+  {
+    "q": "how do I polish the paint on my scooter",
+    "expect": "NONE",
+    "from": "bike"
+  },
+  {
+    "q": "can you tune the carburettor on my motorcycle",
+    "expect": "NONE",
+    "from": "bike"
+  },
+  {
+    "q": "how do I check the engine oil?",
+    "expect": "car_check_engine_oil",
+    "from": "car"
+  },
+  {
+    "q": "where's the dipstick on this car",
+    "expect": "car_check_engine_oil",
+    "from": "car"
+  },
+  {
+    "q": "I think the engine oil level is low, how do I top up the oil",
+    "expect": "car_check_engine_oil",
+    "from": "car"
+  },
+  {
+    "q": "where do I add coolant",
+    "expect": "car_check_coolant",
+    "from": "car"
+  },
+  {
+    "q": "how do I check the coolant level",
+    "expect": "car_check_coolant",
+    "from": "car"
+  },
+  {
+    "q": "the coolant tank looks empty",
+    "expect": "car_check_coolant",
+    "from": "car"
+  },
+  {
+    "q": "I need to fill the wiper fluid",
+    "expect": "car_top_up_washer_fluid",
+    "from": "car"
+  },
+  {
+    "q": "my car wipers spray nothing",
+    "expect": "car_top_up_washer_fluid",
+    "from": "car"
+  },
+  {
+    "q": "where do I top up the washer fluid in the car",
+    "expect": "car_top_up_washer_fluid",
+    "from": "car"
+  },
+  {
+    "q": "can you help me fix the wiring",
+    "expect": "car_electrical_wiring",
+    "from": "car"
+  },
+  {
+    "q": "how do I connect the wires under the car dashboard",
+    "expect": "car_electrical_wiring",
+    "from": "car"
+  },
+  {
+    "q": "there's a loose wire in the engine",
+    "expect": "car_electrical_wiring",
+    "from": "car"
+  },
+  {
+    "q": "there's white powder on the battery terminal",
+    "expect": "car_battery_terminals",
+    "from": "car"
+  },
+  {
+    "q": "how do I clean the car battery terminals",
+    "expect": "car_battery_terminals",
+    "from": "car"
+  },
+  {
+    "q": "is there corrosion on my car battery",
+    "expect": "car_battery_terminals",
+    "from": "car"
+  },
+  {
+    "q": "how do I check the brake fluid in my car",
+    "expect": "car_check_brake_fluid",
+    "from": "car"
+  },
+  {
+    "q": "is the brake oil level okay in the car",
+    "expect": "car_check_brake_fluid",
+    "from": "car"
+  },
+  {
+    "q": "where is the brake fluid reservoir under the bonnet",
+    "expect": "car_check_brake_fluid",
+    "from": "car"
+  },
+  {
+    "q": "how do I check the air filter in my car",
+    "expect": "car_check_air_filter",
+    "from": "car"
+  },
+  {
+    "q": "I think the engine air filter is dirty",
+    "expect": "car_check_air_filter",
+    "from": "car"
+  },
+  {
+    "q": "where's the air cleaner box on this car",
+    "expect": "car_check_air_filter",
+    "from": "car"
+  },
+  {
+    "q": "my car won't start",
+    "expect": "car_wont_start",
+    "from": "car"
+  },
+  {
+    "q": "the engine won't turn over, nothing happens when I turn the key",
+    "expect": "car_wont_start",
+    "from": "car"
+  },
+  {
+    "q": "I think my car battery is dead",
+    "expect": "car_wont_start",
+    "from": "car"
+  },
+  {
+    "q": "how do I jump start my car",
+    "expect": "car_jump_start",
+    "from": "car"
+  },
+  {
+    "q": "how do I connect the jumper cables to the car",
+    "expect": "car_jump_start",
+    "from": "car"
+  },
+  {
+    "q": "I have jump leads, how do I use them on my car",
+    "expect": "car_jump_start",
+    "from": "car"
+  },
+  {
+    "q": "the oil light is on in my car",
+    "expect": "car_oil_pressure_light",
+    "from": "car"
+  },
+  {
+    "q": "a red oil can symbol came on on the dashboard",
+    "expect": "car_oil_pressure_light",
+    "from": "car"
+  },
+  {
+    "q": "my car says low oil pressure",
+    "expect": "car_oil_pressure_light",
+    "from": "car"
+  },
+  {
+    "q": "my car is overheating",
+    "expect": "car_overheating",
+    "from": "car"
+  },
+  {
+    "q": "the temperature warning light came on in the car",
+    "expect": "car_overheating",
+    "from": "car"
+  },
+  {
+    "q": "there's steam coming from the bonnet",
+    "expect": "car_overheating",
+    "from": "car"
+  },
+  {
+    "q": "the battery light is on in my car",
+    "expect": "car_battery_charge_light",
+    "from": "car"
+  },
+  {
+    "q": "there's a battery symbol on the dashboard",
+    "expect": "car_battery_charge_light",
+    "from": "car"
+  },
+  {
+    "q": "my car battery is not charging",
+    "expect": "car_battery_charge_light",
+    "from": "car"
+  },
+  {
+    "q": "the check engine light came on in my car",
+    "expect": "car_check_engine_light",
+    "from": "car"
+  },
+  {
+    "q": "the engine light is blinking",
+    "expect": "car_check_engine_light",
+    "from": "car"
+  },
+  {
+    "q": "there's a yellow engine symbol on the dashboard",
+    "expect": "car_check_engine_light",
+    "from": "car"
+  },
+  {
+    "q": "the brake warning light is on in my car",
+    "expect": "car_brake_warning_light",
+    "from": "car"
+  },
+  {
+    "q": "there's a red brake symbol on the dashboard",
+    "expect": "car_brake_warning_light",
+    "from": "car"
+  },
+  {
+    "q": "the handbrake light stays on in my car even when it's released",
+    "expect": "car_brake_warning_light",
+    "from": "car"
+  },
+  {
+    "q": "how do I change a flat tyre on my car",
+    "expect": "NONE",
+    "from": "car"
+  },
+  {
+    "q": "my car stereo has no sound",
+    "expect": "NONE",
+    "from": "car"
+  },
+  {
+    "q": "my inverter is not giving backup",
+    "expect": "inverter_no_backup",
+    "from": "inverter"
+  },
+  {
+    "q": "the backup finishes very quickly",
+    "expect": "inverter_no_backup",
+    "from": "inverter"
+  },
+  {
+    "q": "how do I top up the inverter battery",
+    "expect": "inverter_no_backup",
+    "from": "inverter"
+  },
+  {
+    "q": "the inverter keeps beeping",
+    "expect": "inverter_beeping_overload",
+    "from": "inverter"
+  },
+  {
+    "q": "it's showing an overload warning",
+    "expect": "inverter_beeping_overload",
+    "from": "inverter"
+  },
+  {
+    "q": "my UPS is beeping",
+    "expect": "inverter_beeping_overload",
+    "from": "inverter"
+  },
+  {
+    "q": "the inverter battery is swelling",
+    "expect": "inverter_battery_danger",
+    "from": "inverter"
+  },
+  {
+    "q": "there's a burning smell from the inverter",
+    "expect": "inverter_battery_danger",
+    "from": "inverter"
+  },
+  {
+    "q": "acid is leaking from the battery",
+    "expect": "inverter_battery_danger",
+    "from": "inverter"
+  },
+  {
+    "q": "which inverter battery should I buy for my home",
+    "expect": "NONE",
+    "from": "inverter"
+  },
+  {
+    "q": "how many watts does a ceiling fan use",
+    "expect": "NONE",
+    "from": "inverter"
+  },
+  {
+    "q": "how do I open this laptop to clean it",
+    "expect": "laptop_open_bottom_cover",
+    "from": "laptop"
+  },
+  {
+    "q": "how do I remove the bottom cover",
+    "expect": "laptop_open_bottom_cover",
+    "from": "laptop"
+  },
+  {
+    "q": "the fan is full of dust, how do I take off the back cover",
+    "expect": "laptop_open_bottom_cover",
+    "from": "laptop"
+  },
+  {
+    "q": "can you help me clean the fan",
+    "expect": "laptop_open_bottom_cover",
+    "from": "laptop"
+  },
+  {
+    "q": "my laptop is not charging",
+    "expect": "laptop_not_charging",
+    "from": "laptop"
+  },
+  {
+    "q": "it says plugged in not charging",
+    "expect": "laptop_not_charging",
+    "from": "laptop"
+  },
+  {
+    "q": "the battery won't charge past 80 percent",
+    "expect": "laptop_not_charging",
+    "from": "laptop"
+  },
+  {
+    "q": "my laptop is overheating",
+    "expect": "laptop_overheating",
+    "from": "laptop"
+  },
+  {
+    "q": "the fan is too loud",
+    "expect": "laptop_overheating",
+    "from": "laptop"
+  },
+  {
+    "q": "my laptop gets very hot and shuts down",
+    "expect": "laptop_overheating",
+    "from": "laptop"
+  },
+  {
+    "q": "my laptop battery is swollen",
+    "expect": "laptop_swollen_battery",
+    "from": "laptop"
+  },
+  {
+    "q": "the bottom case is bulging and the touchpad is lifting up",
+    "expect": "laptop_swollen_battery",
+    "from": "laptop"
+  },
+  {
+    "q": "I think the battery is puffy",
+    "expect": "laptop_swollen_battery",
+    "from": "laptop"
+  },
+  {
+    "q": "how do I install windows",
+    "expect": "NONE",
+    "from": "laptop"
+  },
+  {
+    "q": "my wifi keeps disconnecting",
+    "expect": "NONE",
+    "from": "laptop"
+  },
+  {
+    "q": "my microwave is not heating",
+    "expect": "microwave_not_heating",
+    "from": "microwave"
+  },
+  {
+    "q": "the microwave won't start",
+    "expect": "microwave_not_heating",
+    "from": "microwave"
+  },
+  {
+    "q": "the buttons on the microwave aren't working",
+    "expect": "microwave_not_heating",
+    "from": "microwave"
+  },
+  {
+    "q": "there are sparks inside the microwave",
+    "expect": "microwave_sparks",
+    "from": "microwave"
+  },
+  {
+    "q": "my microwave is sparking",
+    "expect": "microwave_sparks",
+    "from": "microwave"
+  },
+  {
+    "q": "I see arcing in the microwave",
+    "expect": "microwave_sparks",
+    "from": "microwave"
+  },
+  {
+    "q": "smoke is coming from the microwave",
+    "expect": "microwave_internal_danger",
+    "from": "microwave"
+  },
+  {
+    "q": "the microwave door is broken",
+    "expect": "microwave_internal_danger",
+    "from": "microwave"
+  },
+  {
+    "q": "there's a burning smell from my microwave",
+    "expect": "microwave_internal_danger",
+    "from": "microwave"
+  },
+  {
+    "q": "how long should I microwave popcorn",
+    "expect": "NONE",
+    "from": "microwave"
+  },
+  {
+    "q": "can I bake a cake in convection mode",
+    "expect": "NONE",
+    "from": "microwave"
+  },
+  {
+    "q": "my fridge is not cooling",
+    "expect": "refrigerator_not_cooling",
+    "from": "refrigerator"
+  },
+  {
+    "q": "the freezer isn't freezing properly",
+    "expect": "refrigerator_not_cooling",
+    "from": "refrigerator"
+  },
+  {
+    "q": "the refrigerator feels warm inside",
+    "expect": "refrigerator_not_cooling",
+    "from": "refrigerator"
+  },
+  {
+    "q": "milk is going bad in my fridge",
+    "expect": "refrigerator_not_cooling",
+    "from": "refrigerator"
+  },
+  {
+    "q": "my fridge is leaking water",
+    "expect": "refrigerator_water_leak",
+    "from": "refrigerator"
+  },
+  {
+    "q": "there's a puddle under the fridge",
+    "expect": "refrigerator_water_leak",
+    "from": "refrigerator"
+  },
+  {
+    "q": "water is collecting under the vegetable tray in the fridge",
+    "expect": "refrigerator_water_leak",
+    "from": "refrigerator"
+  },
+  {
+    "q": "there's too much ice in my freezer",
+    "expect": "refrigerator_ice_build_up",
+    "from": "refrigerator"
+  },
+  {
+    "q": "how do I defrost my fridge",
+    "expect": "refrigerator_ice_build_up",
+    "from": "refrigerator"
+  },
+  {
+    "q": "the freezer box is full of ice",
+    "expect": "refrigerator_ice_build_up",
+    "from": "refrigerator"
+  },
+  {
+    "q": "my fridge is making a loud noise",
+    "expect": "refrigerator_noisy",
+    "from": "refrigerator"
+  },
+  {
+    "q": "the refrigerator keeps rattling",
+    "expect": "refrigerator_noisy",
+    "from": "refrigerator"
+  },
+  {
+    "q": "the fridge motor noise is very loud",
+    "expect": "refrigerator_noisy",
+    "from": "refrigerator"
+  },
+  {
+    "q": "I think my fridge needs a gas refill",
+    "expect": "refrigerator_gas_or_compressor_fault",
+    "from": "refrigerator"
+  },
+  {
+    "q": "there's a burning smell from the fridge",
+    "expect": "refrigerator_gas_or_compressor_fault",
+    "from": "refrigerator"
+  },
+  {
+    "q": "the fridge compressor is not working",
+    "expect": "refrigerator_gas_or_compressor_fault",
+    "from": "refrigerator"
+  },
+  {
+    "q": "my Haier fridge is showing E6",
+    "expect": "refrigerator_gas_or_compressor_fault",
+    "from": "refrigerator"
+  },
+  {
+    "q": "how long can I keep cooked rice in the fridge",
+    "expect": "NONE",
+    "from": "refrigerator"
+  },
+  {
+    "q": "how do I change the fridge door to open the other way",
+    "expect": "NONE",
+    "from": "refrigerator"
+  },
+  {
+    "q": "my tv won't turn on",
+    "expect": "television_no_power",
+    "from": "television"
+  },
+  {
+    "q": "the tv is completely dead",
+    "expect": "television_no_power",
+    "from": "television"
+  },
+  {
+    "q": "tv not switching on and the red light is not on",
+    "expect": "television_no_power",
+    "from": "television"
+  },
+  {
+    "q": "nothing happens when I press power",
+    "expect": "television_no_power",
+    "from": "television"
+  },
+  {
+    "q": "I can hear sound but there's no picture",
+    "expect": "television_sound_no_picture",
+    "from": "television"
+  },
+  {
+    "q": "black screen but the audio is playing",
+    "expect": "television_sound_no_picture",
+    "from": "television"
+  },
+  {
+    "q": "the screen went dark",
+    "expect": "television_sound_no_picture",
+    "from": "television"
+  },
+  {
+    "q": "tv says no signal",
+    "expect": "television_no_signal",
+    "from": "television"
+  },
+  {
+    "q": "my tata play is not showing on the tv",
+    "expect": "television_no_signal",
+    "from": "television"
+  },
+  {
+    "q": "it says check signal cable",
+    "expect": "television_no_signal",
+    "from": "television"
+  },
+  {
+    "q": "my tv remote is not working",
+    "expect": "television_remote_not_working",
+    "from": "television"
+  },
+  {
+    "q": "the tv is not responding to the remote",
+    "expect": "television_remote_not_working",
+    "from": "television"
+  },
+  {
+    "q": "do I need to change the remote batteries",
+    "expect": "television_remote_not_working",
+    "from": "television"
+  },
+  {
+    "q": "there are vertical lines on my tv",
+    "expect": "television_damage_or_burning_smell",
+    "from": "television"
+  },
+  {
+    "q": "the screen is cracked",
+    "expect": "television_damage_or_burning_smell",
+    "from": "television"
+  },
+  {
+    "q": "how do I open the back of the tv to replace the backlight",
+    "expect": "television_damage_or_burning_smell",
+    "from": "television"
+  },
+  {
+    "q": "how do I mount my tv on the wall",
+    "expect": "NONE",
+    "from": "television"
+  },
+  {
+    "q": "which streaming apps can I install",
+    "expect": "NONE",
+    "from": "television"
+  },
+  {
+    "q": "my washing machine won't drain",
+    "expect": "washing_machine_not_draining",
+    "from": "washing_machine"
+  },
+  {
+    "q": "water is stuck in the washing machine drum",
+    "expect": "washing_machine_not_draining",
+    "from": "washing_machine"
+  },
+  {
+    "q": "how do I clean the drain filter on my washer",
+    "expect": "washing_machine_not_draining",
+    "from": "washing_machine"
+  },
+  {
+    "q": "my LG washer is showing OE",
+    "expect": "washing_machine_not_draining",
+    "from": "washing_machine"
+  },
+  {
+    "q": "my Bosch washing machine shows E18",
+    "expect": "washing_machine_not_draining",
+    "from": "washing_machine"
+  },
+  {
+    "q": "my washing machine is not filling with water",
+    "expect": "washing_machine_not_filling",
+    "from": "washing_machine"
+  },
+  {
+    "q": "no water coming into the washer",
+    "expect": "washing_machine_not_filling",
+    "from": "washing_machine"
+  },
+  {
+    "q": "Samsung washing machine showing 4C",
+    "expect": "washing_machine_not_filling",
+    "from": "washing_machine"
+  },
+  {
+    "q": "the washing machine door won't open",
+    "expect": "washing_machine_door_problem",
+    "from": "washing_machine"
+  },
+  {
+    "q": "my washer door won't lock",
+    "expect": "washing_machine_door_problem",
+    "from": "washing_machine"
+  },
+  {
+    "q": "the washing machine door is stuck after the wash",
+    "expect": "washing_machine_door_problem",
+    "from": "washing_machine"
+  },
+  {
+    "q": "my LG washer shows dE error",
+    "expect": "washing_machine_door_problem",
+    "from": "washing_machine"
+  },
+  {
+    "q": "my washing machine is shaking a lot",
+    "expect": "washing_machine_shaking_unbalanced",
+    "from": "washing_machine"
+  },
+  {
+    "q": "the washer is moving across the floor when it spins",
+    "expect": "washing_machine_shaking_unbalanced",
+    "from": "washing_machine"
+  },
+  {
+    "q": "washing machine won't spin",
+    "expect": "washing_machine_shaking_unbalanced",
+    "from": "washing_machine"
+  },
+  {
+    "q": "Samsung washer showing Ub",
+    "expect": "washing_machine_shaking_unbalanced",
+    "from": "washing_machine"
+  },
+  {
+    "q": "my washing machine won't turn on",
+    "expect": "washing_machine_wont_start",
+    "from": "washing_machine"
+  },
+  {
+    "q": "the washer is dead, nothing on the display",
+    "expect": "washing_machine_wont_start",
+    "from": "washing_machine"
+  },
+  {
+    "q": "washing machine buttons are not working",
+    "expect": "washing_machine_wont_start",
+    "from": "washing_machine"
+  },
+  {
+    "q": "my LG washer shows CL",
+    "expect": "washing_machine_wont_start",
+    "from": "washing_machine"
+  },
+  {
+    "q": "my washing machine smells bad",
+    "expect": "washing_machine_bad_smell",
+    "from": "washing_machine"
+  },
+  {
+    "q": "the washer has a musty smell",
+    "expect": "washing_machine_bad_smell",
+    "from": "washing_machine"
+  },
+  {
+    "q": "how do I clean my washing machine",
+    "expect": "washing_machine_bad_smell",
+    "from": "washing_machine"
+  },
+  {
+    "q": "LG washer showing tcL",
+    "expect": "washing_machine_bad_smell",
+    "from": "washing_machine"
+  },
+  {
+    "q": "there's a burning smell from my washing machine",
+    "expect": "washing_machine_technician_fault",
+    "from": "washing_machine"
+  },
+  {
+    "q": "smoke is coming out of the washer",
+    "expect": "washing_machine_technician_fault",
+    "from": "washing_machine"
+  },
+  {
+    "q": "Samsung washing machine showing 3C",
+    "expect": "washing_machine_technician_fault",
+    "from": "washing_machine"
+  },
+  {
+    "q": "my Bosch washer has error E23",
+    "expect": "washing_machine_technician_fault",
+    "from": "washing_machine"
+  },
+  {
+    "q": "which washing machine should I buy",
+    "expect": "NONE",
+    "from": "washing_machine"
+  },
+  {
+    "q": "can I wash a woollen sweater in my washing machine",
+    "expect": "NONE",
+    "from": "washing_machine"
+  },
+  {
+    "q": "my geyser is not heating the water",
+    "expect": "water_heater_no_hot_water",
+    "from": "water_heater"
+  },
+  {
+    "q": "there's no hot water from the geyser",
+    "expect": "water_heater_no_hot_water",
+    "from": "water_heater"
+  },
+  {
+    "q": "the water heater isn't working",
+    "expect": "water_heater_no_hot_water",
+    "from": "water_heater"
+  },
+  {
+    "q": "the heating light is not coming on",
+    "expect": "water_heater_no_hot_water",
+    "from": "water_heater"
+  },
+  {
+    "q": "water is dripping from the geyser",
+    "expect": "water_heater_leaking",
+    "from": "water_heater"
+  },
+  {
+    "q": "the safety valve keeps dripping",
+    "expect": "water_heater_leaking",
+    "from": "water_heater"
+  },
+  {
+    "q": "my water heater is leaking",
+    "expect": "water_heater_leaking",
+    "from": "water_heater"
+  },
+  {
+    "q": "I got a shock from the tap",
+    "expect": "water_heater_electric_danger",
+    "from": "water_heater"
+  },
+  {
+    "q": "there's a burning smell from the geyser",
+    "expect": "water_heater_electric_danger",
+    "from": "water_heater"
+  },
+  {
+    "q": "the water is too hot and there's steam",
+    "expect": "water_heater_electric_danger",
+    "from": "water_heater"
+  },
+  {
+    "q": "my Havells geyser shows E2",
+    "expect": "water_heater_electric_danger",
+    "from": "water_heater"
+  },
+  {
+    "q": "I can smell gas from the geyser",
+    "expect": "water_heater_gas_smell",
+    "from": "water_heater"
+  },
+  {
+    "q": "the gas geyser has a yellow flame",
+    "expect": "water_heater_gas_smell",
+    "from": "water_heater"
+  },
+  {
+    "q": "there is a problem with my gas geyser",
+    "expect": "water_heater_gas_smell",
+    "from": "water_heater"
+  },
+  {
+    "q": "how many litres geyser should I buy for my family",
+    "expect": "NONE",
+    "from": "water_heater"
+  },
+  {
+    "q": "how do I install a solar panel on the roof",
+    "expect": "NONE",
+    "from": "water_heater"
+  },
+  {
+    "q": "my RO is not giving water",
+    "expect": "water_purifier_no_water",
+    "from": "water_purifier"
+  },
+  {
+    "q": "the water purifier is very slow",
+    "expect": "water_purifier_no_water",
+    "from": "water_purifier"
+  },
+  {
+    "q": "the purifier tank is not filling",
+    "expect": "water_purifier_no_water",
+    "from": "water_purifier"
+  },
+  {
+    "q": "the filter change light is on",
+    "expect": "water_purifier_no_water",
+    "from": "water_purifier"
+  },
+  {
+    "q": "the water tastes bad",
+    "expect": "water_purifier_bad_taste",
+    "from": "water_purifier"
+  },
+  {
+    "q": "my purifier water smells",
+    "expect": "water_purifier_bad_taste",
+    "from": "water_purifier"
+  },
+  {
+    "q": "the RO water tastes salty",
+    "expect": "water_purifier_bad_taste",
+    "from": "water_purifier"
+  },
+  {
+    "q": "water is leaking from the purifier",
+    "expect": "water_purifier_leaking",
+    "from": "water_purifier"
+  },
+  {
+    "q": "my RO is dripping water",
+    "expect": "water_purifier_leaking",
+    "from": "water_purifier"
+  },
+  {
+    "q": "there's water on the floor under the purifier",
+    "expect": "water_purifier_leaking",
+    "from": "water_purifier"
+  },
+  {
+    "q": "what is the TDS of my borewell water",
+    "expect": "NONE",
+    "from": "water_purifier"
+  },
+  {
+    "q": "which purifier should I buy for my home",
+    "expect": "NONE",
+    "from": "water_purifier"
+  }
+]

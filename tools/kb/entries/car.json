@@ -9,37 +9,124 @@
       "code_aliases": [],
       "title": "Check and top up engine oil",
       "meaning": "Let's check your engine oil on the dipstick, and top it up if it's low.",
-      "symptoms": ["low engine oil", "oil level low", "need to add oil"],
-      "aliases": ["check the engine oil", "check the oil", "engine oil level", "dipstick", "add engine oil", "top up the oil", "put oil in the engine"],
+      "symptoms": [
+        "low engine oil",
+        "oil level low",
+        "need to add oil"
+      ],
+      "aliases": [
+        "check the engine oil",
+        "check the oil",
+        "engine oil level",
+        "dipstick",
+        "add engine oil",
+        "top up the oil",
+        "put oil in the engine"
+      ],
       "severity": "diy",
-      "escalate_if": ["oil leaking", "burning smell", "oil light stays on"],
+      "escalate_if": [
+        "oil leaking",
+        "burning smell",
+        "oil light stays on"
+      ],
       "safety": [
         "Park on level ground and switch the engine off.",
         "Wait about five minutes for the oil to settle. Some engine parts may still be hot."
       ],
       "steps": [
-        {"n": 1, "say": "Open the bonnet and prop it up with its support rod.",
-         "target": null, "verify": null, "caution": "The rod can be hot after driving. Hold it by its grip."},
-        {"n": 2, "say": "Find the dipstick. Its handle is a bright ring or loop, usually yellow or orange.",
-         "target": "the engine oil dipstick handle, a brightly coloured ring or loop, usually yellow or orange", "verify": null, "caution": null},
-        {"n": 3, "say": "Pull the dipstick all the way out and wipe it clean with a cloth.",
-         "target": "the engine oil dipstick handle, a brightly coloured ring or loop, usually yellow or orange", "verify": null, "caution": null},
-        {"n": 4, "say": "Push it back in fully, then pull it out again.",
-         "target": "the engine oil dipstick handle, a brightly coloured ring or loop, usually yellow or orange", "verify": null, "caution": null},
-        {"n": 5, "say": "The oil should be between the two marks near the tip.",
-         "target": "the end of the oil dipstick with its two level marks", "verify": null, "caution": null},
-        {"n": 6, "say": "If it's near or below the lower mark, unscrew the oil filler cap on top of the engine.",
-         "target": "the round engine oil filler cap on top of the engine, marked with an oil can symbol or the words engine oil",
-         "verify": "the engine oil filler cap is off and the round filler opening is visible", "caution": null},
-        {"n": 7, "say": "Slowly pour in a little of the oil your manual recommends.",
-         "target": "the open round engine oil filler hole on top of the engine", "verify": null,
-         "caution": "Don't fill above the upper mark. Too much oil is as bad as too little."},
-        {"n": 8, "say": "Screw the filler cap back on tightly, wait a few minutes, then check the dipstick again.",
-         "target": "the round engine oil filler cap on top of the engine", "verify": null, "caution": null},
-        {"n": 9, "say": "When the oil is between the marks, push the dipstick back in fully.",
-         "target": "the engine oil dipstick handle, a brightly coloured ring or loop, usually yellow or orange", "verify": null, "caution": null}
+        {
+          "n": 1,
+          "say": "Open the bonnet and prop it up with its support rod.",
+          "target": null,
+          "verify": null,
+          "caution": "The rod can be hot after driving. Hold it by its grip."
+        },
+        {
+          "n": 2,
+          "say": "Find the dipstick. Its handle is a bright ring or loop, usually yellow or orange.",
+          "target": "the engine oil dipstick handle, a brightly coloured ring or loop, usually yellow or orange",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Pull the dipstick all the way out and wipe it clean with a cloth.",
+          "target": "the engine oil dipstick handle, a brightly coloured ring or loop, usually yellow or orange",
+          "verify": null,
+          "caution": null,
+          "anim": {
+            "kind": "pull"
+          }
+        },
+        {
+          "n": 4,
+          "say": "Push it back in fully, then pull it out again.",
+          "target": "the engine oil dipstick handle, a brightly coloured ring or loop, usually yellow or orange",
+          "verify": null,
+          "caution": null,
+          "anim": {
+            "kind": "push"
+          }
+        },
+        {
+          "n": 5,
+          "say": "The oil should be between the two marks near the tip.",
+          "target": "the end of the oil dipstick with its two level marks",
+          "verify": null,
+          "caution": null,
+          "anim": {
+            "kind": "level"
+          }
+        },
+        {
+          "n": 6,
+          "say": "If it's near or below the lower mark, unscrew the oil filler cap on top of the engine.",
+          "target": "the round engine oil filler cap on top of the engine, marked with an oil can symbol or the words engine oil",
+          "verify": "the engine oil filler cap is off and the round filler opening is visible",
+          "caution": null,
+          "anim": {
+            "kind": "turn",
+            "dir": "ccw"
+          }
+        },
+        {
+          "n": 7,
+          "say": "Slowly pour in a little of the oil your manual recommends.",
+          "target": "the open round engine oil filler hole on top of the engine",
+          "verify": null,
+          "caution": "Don't fill above the upper mark. Too much oil is as bad as too little.",
+          "anim": {
+            "kind": "pour"
+          }
+        },
+        {
+          "n": 8,
+          "say": "Screw the filler cap back on tightly, wait a few minutes, then check the dipstick again.",
+          "target": "the round engine oil filler cap on top of the engine",
+          "verify": null,
+          "caution": null,
+          "anim": {
+            "kind": "turn",
+            "dir": "cw"
+          }
+        },
+        {
+          "n": 9,
+          "say": "When the oil is between the marks, push the dipstick back in fully.",
+          "target": "the engine oil dipstick handle, a brightly coloured ring or loop, usually yellow or orange",
+          "verify": null,
+          "caution": null,
+          "anim": {
+            "kind": "push"
+          }
+        }
       ],
-      "source": "Maruti Swift OM 99011M75T08-74W p.9-8 + Honda City 2022 OM pp.263, 268-270 + Hyundai Creta 2019 OM p.9-29, 9-30 + Tata Nexon BS-VI OM p.176-177; checked 2026-09-27"
+      "source": "Maruti Swift OM 99011M75T08-74W p.9-8 + Honda City 2022 OM pp.263, 268-270 + Hyundai Creta 2019 OM p.9-29, 9-30 + Tata Nexon BS-VI OM p.176-177; checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "engine_off"
+        }
+      ]
     },
     {
       "id": "car_check_coolant",
@@ -49,31 +136,86 @@
       "code_aliases": [],
       "title": "Check and top up the engine coolant",
       "meaning": "Let's check the coolant in the see-through tank. The engine must be cold.",
-      "symptoms": ["coolant low", "coolant tank empty"],
-      "aliases": ["check coolant", "coolant level", "add coolant", "top up coolant", "where does the coolant go", "coolant reservoir", "radiator water"],
+      "symptoms": [
+        "coolant low",
+        "coolant tank empty"
+      ],
+      "aliases": [
+        "check coolant",
+        "coolant level",
+        "add coolant",
+        "top up coolant",
+        "where does the coolant go",
+        "coolant reservoir",
+        "radiator water"
+      ],
       "severity": "caution",
-      "escalate_if": ["coolant keeps dropping", "coolant leaking", "steam coming out", "temperature light on"],
+      "escalate_if": [
+        "coolant keeps dropping",
+        "coolant leaking",
+        "steam coming out",
+        "temperature light on"
+      ],
       "safety": [
         "Only do this when the engine is completely cold.",
         "Never open the radiator cap or coolant cap on a hot engine. Hot coolant can scald you."
       ],
       "steps": [
-        {"n": 1, "say": "Open the bonnet and prop it up with its support rod.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 2, "say": "Find the see-through plastic coolant tank with level marks on its side.",
-         "target": "the see-through plastic engine coolant reservoir tank with MIN and MAX or LOW and FULL marks on its side", "verify": null, "caution": null},
-        {"n": 3, "say": "Check the coolant is between the lower and upper marks.",
-         "target": "the see-through plastic engine coolant reservoir tank with MIN and MAX or LOW and FULL marks on its side", "verify": null, "caution": null},
-        {"n": 4, "say": "If it's below the lower mark, slowly open the tank's cap. Don't open the radiator cap.",
-         "target": "the cap of the see-through plastic coolant reservoir tank", "verify": "the coolant reservoir cap is off",
-         "caution": "Only open it when the engine is cold."},
-        {"n": 5, "say": "Add the coolant type your manual says until it reaches the upper mark.",
-         "target": "the open see-through plastic coolant reservoir tank", "verify": null,
-         "caution": "Don't mix different coolant types, and don't fill above the upper mark."},
-        {"n": 6, "say": "Put the cap back on and close it firmly.",
-         "target": "the cap of the see-through plastic coolant reservoir tank", "verify": null, "caution": null},
-        {"n": 7, "say": "If you need to top up often, please have the cooling system checked for leaks.",
-         "target": null, "verify": null, "caution": null}
+        {
+          "n": 1,
+          "say": "Open the bonnet and prop it up with its support rod.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Find the see-through plastic coolant tank with level marks on its side.",
+          "target": "the see-through plastic engine coolant reservoir tank with MIN and MAX or LOW and FULL marks on its side",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Check the coolant is between the lower and upper marks.",
+          "target": "the see-through plastic engine coolant reservoir tank with MIN and MAX or LOW and FULL marks on its side",
+          "verify": null,
+          "caution": null,
+          "anim": {
+            "kind": "level"
+          }
+        },
+        {
+          "n": 4,
+          "say": "If it's below the lower mark, slowly open the tank's cap. Don't open the radiator cap.",
+          "target": "the cap of the see-through plastic coolant reservoir tank",
+          "verify": "the coolant reservoir cap is off",
+          "caution": "Only open it when the engine is cold."
+        },
+        {
+          "n": 5,
+          "say": "Add the coolant type your manual says until it reaches the upper mark.",
+          "target": "the open see-through plastic coolant reservoir tank",
+          "verify": null,
+          "caution": "Don't mix different coolant types, and don't fill above the upper mark.",
+          "anim": {
+            "kind": "pour"
+          }
+        },
+        {
+          "n": 6,
+          "say": "Put the cap back on and close it firmly.",
+          "target": "the cap of the see-through plastic coolant reservoir tank",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 7,
+          "say": "If you need to top up often, please have the cooling system checked for leaks.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
       ],
       "source": "Maruti Swift OM p.9-9, 9-10 + Honda City 2022 OM pp.271-273 + Hyundai Creta 2019 OM pp.9-32 to 9-34 + Tata Nexon BS-VI OM p.178; checked 2026-09-27"
     },
@@ -85,30 +227,79 @@
       "code_aliases": [],
       "title": "Top up windscreen washer fluid",
       "meaning": "Let's fill up the windscreen washer fluid.",
-      "symptoms": ["washer not spraying", "wipers spray nothing", "washer tank empty"],
-      "aliases": ["washer fluid", "wiper fluid", "wiper water", "windscreen water", "windshield washer fluid"],
+      "symptoms": [
+        "washer not spraying",
+        "wipers spray nothing",
+        "washer tank empty"
+      ],
+      "aliases": [
+        "washer fluid",
+        "wiper fluid",
+        "wiper water",
+        "windscreen water",
+        "windshield washer fluid"
+      ],
       "severity": "diy",
-      "escalate_if": ["still not spraying", "washer tank leaking"],
+      "escalate_if": [
+        "still not spraying",
+        "washer tank leaking"
+      ],
       "safety": [
         "Switch the engine off and let it cool first. Washer fluid can catch fire on a hot engine."
       ],
       "steps": [
-        {"n": 1, "say": "Open the bonnet and prop it up with its support rod.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 2, "say": "Find the washer fluid cap. It often shows a windscreen and water spray symbol.",
-         "target": "the windscreen washer fluid reservoir cap, often blue, with a windscreen and water spray symbol", "verify": null, "caution": null},
-        {"n": 3, "say": "Open the cap.",
-         "target": "the windscreen washer fluid reservoir cap, often blue, with a windscreen and water spray symbol",
-         "verify": "the washer fluid cap is open", "caution": null},
-        {"n": 4, "say": "Pour in windscreen washer fluid, mixed with water as the bottle says.",
-         "target": "the open windscreen washer fluid filler neck", "verify": null,
-         "caution": "Never put radiator coolant or antifreeze in the washer tank."},
-        {"n": 5, "say": "Stop before it overflows, then close the cap firmly.",
-         "target": "the windscreen washer fluid reservoir cap", "verify": null, "caution": null},
-        {"n": 6, "say": "If it still doesn't spray once it's full, please have it checked at a workshop.",
-         "target": null, "verify": null, "caution": "Don't keep running the washer with an empty tank. It can damage the pump."}
+        {
+          "n": 1,
+          "say": "Open the bonnet and prop it up with its support rod.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Find the washer fluid cap. It often shows a windscreen and water spray symbol.",
+          "target": "the windscreen washer fluid reservoir cap, often blue, with a windscreen and water spray symbol",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Open the cap.",
+          "target": "the windscreen washer fluid reservoir cap, often blue, with a windscreen and water spray symbol",
+          "verify": "the washer fluid cap is open",
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "Pour in windscreen washer fluid, mixed with water as the bottle says.",
+          "target": "the open windscreen washer fluid filler neck",
+          "verify": null,
+          "caution": "Never put radiator coolant or antifreeze in the washer tank.",
+          "anim": {
+            "kind": "pour"
+          }
+        },
+        {
+          "n": 5,
+          "say": "Stop before it overflows, then close the cap firmly.",
+          "target": "the windscreen washer fluid reservoir cap",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 6,
+          "say": "If it still doesn't spray once it's full, please have it checked at a workshop.",
+          "target": null,
+          "verify": null,
+          "caution": "Don't keep running the washer with an empty tank. It can damage the pump."
+        }
       ],
-      "source": "Maruti Swift OM p.9-40 + Honda City 2022 OM pp.263, 276 + Hyundai Creta 2019 OM p.9-37 + Tata Nexon BS-VI OM p.179; checked 2026-09-27"
+      "source": "Maruti Swift OM p.9-40 + Honda City 2022 OM pp.263, 276 + Hyundai Creta 2019 OM p.9-37 + Tata Nexon BS-VI OM p.179; checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "engine_off"
+        }
+      ]
     },
     {
       "id": "car_electrical_wiring",
@@ -118,8 +309,19 @@
       "code_aliases": [],
       "title": "Car electrical wiring",
       "meaning": "Wiring and electrical faults can hurt you or damage the car, so they need a technician.",
-      "symptoms": ["short circuit", "sparks from the wires", "electrical problem"],
-      "aliases": ["wiring", "rewire", "cut the wire", "connect the wires", "loose wire", "electrical wires"],
+      "symptoms": [
+        "short circuit",
+        "sparks from the wires",
+        "electrical problem"
+      ],
+      "aliases": [
+        "wiring",
+        "rewire",
+        "cut the wire",
+        "connect the wires",
+        "loose wire",
+        "electrical wires"
+      ],
       "severity": "call_technician",
       "escalate_if": [],
       "safety": [],
@@ -134,28 +336,72 @@
       "code_aliases": [],
       "title": "Check the battery terminals for corrosion",
       "meaning": "Let's look at your battery terminals for corrosion or loose clamps.",
-      "symptoms": ["white powder on the battery", "corroded battery terminals", "crusty battery terminals", "battery clamp loose"],
-      "aliases": ["battery terminals", "battery corrosion", "clean the battery terminals", "check the battery", "battery clamps"],
+      "symptoms": [
+        "white powder on the battery",
+        "corroded battery terminals",
+        "crusty battery terminals",
+        "battery clamp loose"
+      ],
+      "aliases": [
+        "battery terminals",
+        "battery corrosion",
+        "clean the battery terminals",
+        "check the battery",
+        "battery clamps"
+      ],
       "severity": "caution",
-      "escalate_if": ["battery leaking", "battery cracked", "acid spilled"],
+      "escalate_if": [
+        "battery leaking",
+        "battery cracked",
+        "acid spilled"
+      ],
       "safety": [
         "Switch the engine off and keep flames, sparks and cigarettes away. Batteries give off explosive gas.",
         "Battery acid burns skin and eyes, so wear eye protection and don't lean over the battery."
       ],
       "steps": [
-        {"n": 1, "say": "Open the bonnet and prop it up with its support rod.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 2, "say": "Find the battery. It's a box with two metal posts marked plus and minus.",
-         "target": "the car battery, a rectangular box with two metal terminal posts marked plus and minus", "verify": null, "caution": null},
-        {"n": 3, "say": "Without touching them, look at both posts and clamps for white or yellowish crusty powder.",
-         "target": "the two battery terminal posts and their cable clamps on top of the car battery", "verify": null,
-         "caution": "Never let a metal tool touch both posts, or a post and the car body."},
-        {"n": 4, "say": "Check that both cable clamps look tight on their posts.",
-         "target": "the two battery terminal posts and their cable clamps on top of the car battery", "verify": null, "caution": null},
-        {"n": 5, "say": "If you see powder or a loose clamp, please have a mechanic clean and tighten the terminals.",
-         "target": null, "verify": null, "caution": null}
+        {
+          "n": 1,
+          "say": "Open the bonnet and prop it up with its support rod.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Find the battery. It's a box with two metal posts marked plus and minus.",
+          "target": "the car battery, a rectangular box with two metal terminal posts marked plus and minus",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Without touching them, look at both posts and clamps for white or yellowish crusty powder.",
+          "target": "the two battery terminal posts and their cable clamps on top of the car battery",
+          "verify": null,
+          "caution": "Never let a metal tool touch both posts, or a post and the car body."
+        },
+        {
+          "n": 4,
+          "say": "Check that both cable clamps look tight on their posts.",
+          "target": "the two battery terminal posts and their cable clamps on top of the car battery",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "If you see powder or a loose clamp, please have a mechanic clean and tighten the terminals.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
       ],
-      "source": "Maruti Swift OM p.9-20 + Honda City 2022 OM pp.253, 303-304 + Hyundai Creta 2019 OM pp.9-45 to 9-48 + Tata Nexon BS-VI OM pp.179-181; checked 2026-09-27"
+      "source": "Maruti Swift OM p.9-20 + Honda City 2022 OM pp.253, 303-304 + Hyundai Creta 2019 OM pp.9-45 to 9-48 + Tata Nexon BS-VI OM pp.179-181; checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "engine_off"
+        }
+      ]
     },
     {
       "id": "car_check_brake_fluid",
@@ -165,28 +411,73 @@
       "code_aliases": [],
       "title": "Check the brake fluid level",
       "meaning": "Let's check the brake fluid level. We'll only look, not top it up.",
-      "symptoms": ["brake fluid low", "brake oil low"],
-      "aliases": ["brake fluid", "brake fluid level", "brake oil", "brake fluid reservoir", "brake fluid tank"],
+      "symptoms": [
+        "brake fluid low",
+        "brake oil low"
+      ],
+      "aliases": [
+        "brake fluid",
+        "brake fluid level",
+        "brake oil",
+        "brake fluid reservoir",
+        "brake fluid tank"
+      ],
       "severity": "caution",
-      "escalate_if": ["below minimum", "fluid leaking", "soft pedal"],
+      "escalate_if": [
+        "below minimum",
+        "fluid leaking",
+        "soft pedal"
+      ],
       "safety": [
         "Park on level ground, set the parking brake and switch the engine off.",
         "Keep the cap closed. Brake fluid harms skin, eyes and paint."
       ],
       "steps": [
-        {"n": 1, "say": "Open the bonnet and prop it up with its support rod.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 2, "say": "Find the small brake fluid tank, usually at the back of the engine bay on the driver's side.",
-         "target": "the small see-through brake fluid reservoir with MAX and MIN marks, near the back of the engine bay on the driver's side", "verify": null, "caution": null},
-        {"n": 3, "say": "Without opening it, look at the fluid level through the side of the tank.",
-         "target": "the small see-through brake fluid reservoir with MAX and MIN marks, near the back of the engine bay on the driver's side", "verify": null, "caution": null},
-        {"n": 4, "say": "The level should be between the MAX and MIN marks.",
-         "target": "the MAX and MIN marks on the side of the brake fluid reservoir", "verify": null, "caution": null},
-        {"n": 5, "say": "If it's at or near MIN, don't top it up. Please have the brakes checked soon.",
-         "target": null, "verify": null,
-         "caution": "If the level drops quickly, there may be a leak. Don't drive until it's checked."}
+        {
+          "n": 1,
+          "say": "Open the bonnet and prop it up with its support rod.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Find the small brake fluid tank, usually at the back of the engine bay on the driver's side.",
+          "target": "the small see-through brake fluid reservoir with MAX and MIN marks, near the back of the engine bay on the driver's side",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Without opening it, look at the fluid level through the side of the tank.",
+          "target": "the small see-through brake fluid reservoir with MAX and MIN marks, near the back of the engine bay on the driver's side",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "The level should be between the MAX and MIN marks.",
+          "target": "the MAX and MIN marks on the side of the brake fluid reservoir",
+          "verify": null,
+          "caution": null,
+          "anim": {
+            "kind": "level"
+          }
+        },
+        {
+          "n": 5,
+          "say": "If it's at or near MIN, don't top it up. Please have the brakes checked soon.",
+          "target": null,
+          "verify": null,
+          "caution": "If the level drops quickly, there may be a leak. Don't drive until it's checked."
+        }
       ],
-      "source": "Maruti Swift OM p.9-13, 9-14 + Honda City 2022 OM pp.253-254, 263, 275 + Hyundai Creta 2019 OM p.9-35, 9-36 + Tata Nexon BS-VI OM p.177; checked 2026-09-27"
+      "source": "Maruti Swift OM p.9-13, 9-14 + Honda City 2022 OM pp.253-254, 263, 275 + Hyundai Creta 2019 OM p.9-35, 9-36 + Tata Nexon BS-VI OM p.177; checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "engine_off"
+        }
+      ]
     },
     {
       "id": "car_check_air_filter",
@@ -196,29 +487,74 @@
       "code_aliases": [],
       "title": "Check the engine air filter",
       "meaning": "Let's open the air filter box and see if the filter is dirty.",
-      "symptoms": ["dirty air filter", "clogged air filter"],
-      "aliases": ["air filter", "engine air filter", "air cleaner", "air filter box"],
+      "symptoms": [
+        "dirty air filter",
+        "clogged air filter"
+      ],
+      "aliases": [
+        "air filter",
+        "engine air filter",
+        "air cleaner",
+        "air filter box"
+      ],
       "severity": "diy",
-      "escalate_if": ["clip is broken", "filter is torn"],
+      "escalate_if": [
+        "clip is broken",
+        "filter is torn"
+      ],
       "safety": [
         "Switch the engine off and let it cool before you reach in."
       ],
       "steps": [
-        {"n": 1, "say": "Open the bonnet and prop it up with its support rod.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 2, "say": "Find the air filter box. It's a large plastic box with clips around its lid.",
-         "target": "the large plastic engine air filter box with clips around its lid, joined to a wide air intake hose", "verify": null, "caution": null},
-        {"n": 3, "say": "Undo the clips on the lid.",
-         "target": "the clips on the lid of the engine air filter box", "verify": null, "caution": null},
-        {"n": 4, "say": "Lift the lid and take out the filter.",
-         "target": "the lid of the engine air filter box", "verify": "the air filter box lid is open", "caution": null},
-        {"n": 5, "say": "If it looks very dirty or clogged with dust, it needs a new filter of the right type.",
-         "target": "the engine air filter element", "verify": null, "caution": null},
-        {"n": 6, "say": "Put the filter back the same way, close the lid, and snap all the clips shut.",
-         "target": "the clips on the lid of the engine air filter box", "verify": null,
-         "caution": "Don't drive with the filter out, and don't let dirt fall into the box."}
+        {
+          "n": 1,
+          "say": "Open the bonnet and prop it up with its support rod.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Find the air filter box. It's a large plastic box with clips around its lid.",
+          "target": "the large plastic engine air filter box with clips around its lid, joined to a wide air intake hose",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Undo the clips on the lid.",
+          "target": "the clips on the lid of the engine air filter box",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "Lift the lid and take out the filter.",
+          "target": "the lid of the engine air filter box",
+          "verify": "the air filter box lid is open",
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "If it looks very dirty or clogged with dust, it needs a new filter of the right type.",
+          "target": "the engine air filter element",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 6,
+          "say": "Put the filter back the same way, close the lid, and snap all the clips shut.",
+          "target": "the clips on the lid of the engine air filter box",
+          "verify": null,
+          "caution": "Don't drive with the filter out, and don't let dirt fall into the box."
+        }
       ],
-      "source": "Maruti Swift OM p.9-11 + Hyundai Creta 2019 OM p.9-39; Honda City 2022 lists it for the dealer only; checked 2026-09-27"
+      "source": "Maruti Swift OM p.9-11 + Hyundai Creta 2019 OM p.9-39; Honda City 2022 lists it for the dealer only; checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "engine_off"
+        }
+      ]
     },
     {
       "id": "car_wont_start",
@@ -228,29 +564,77 @@
       "code_aliases": [],
       "title": "Car engine won't start",
       "meaning": "Let's find out why the car won't start, beginning with the battery and fuel.",
-      "symptoms": ["won't start", "starter turns slowly", "nothing happens when I turn the key", "flat battery"],
-      "aliases": ["won't crank", "engine won't turn over", "battery is dead", "starter problem"],
+      "symptoms": [
+        "won't start",
+        "starter turns slowly",
+        "nothing happens when I turn the key",
+        "flat battery"
+      ],
+      "aliases": [
+        "won't crank",
+        "engine won't turn over",
+        "battery is dead",
+        "starter problem"
+      ],
       "severity": "diy",
-      "escalate_if": ["fuel smell", "burning smell", "battery keeps dying"],
+      "escalate_if": [
+        "fuel smell",
+        "burning smell",
+        "battery keeps dying"
+      ],
       "safety": [
         "Set the parking brake firmly. If you're near traffic, turn on the hazard lights."
       ],
       "steps": [
-        {"n": 1, "say": "Make sure the gear is in P or neutral, and press the brake or clutch fully.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 2, "say": "Switch on the headlights or the inside light, then try to start the engine.",
-         "target": null, "verify": null,
-         "caution": "Don't crank for more than about ten seconds at a time."},
-        {"n": 3, "say": "If the lights went very dim or off, the battery is flat or its terminals are loose.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 4, "say": "In that case, check the battery terminals look clean and tight.",
-         "target": "the two battery terminal posts and their cable clamps on top of the car battery", "verify": null, "caution": null},
-        {"n": 5, "say": "If they look fine, the battery needs a jump start or a charge. Just ask me about jump starting.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 6, "say": "If the lights stayed bright, check the fuel gauge isn't on empty.",
-         "target": "the fuel gauge on the instrument cluster", "verify": null, "caution": null},
-        {"n": 7, "say": "If it still won't start, please don't push-start it. Call a mechanic or roadside help.",
-         "target": null, "verify": null, "caution": null}
+        {
+          "n": 1,
+          "say": "Make sure the gear is in P or neutral, and press the brake or clutch fully.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Switch on the headlights or the inside light, then try to start the engine.",
+          "target": null,
+          "verify": null,
+          "caution": "Don't crank for more than about ten seconds at a time."
+        },
+        {
+          "n": 3,
+          "say": "If the lights went very dim or off, the battery is flat or its terminals are loose.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "In that case, check the battery terminals look clean and tight.",
+          "target": "the two battery terminal posts and their cable clamps on top of the car battery",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "If they look fine, the battery needs a jump start or a charge. Just ask me about jump starting.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 6,
+          "say": "If the lights stayed bright, check the fuel gauge isn't on empty.",
+          "target": "the fuel gauge on the instrument cluster",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 7,
+          "say": "If it still won't start, please don't push-start it. Call a mechanic or roadside help.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
       ],
       "source": "Maruti Swift OM p.10-15, 10-16 + Honda City 2022 OM pp.206, 329-330 + Hyundai Creta 2019 OM p.8-4 + Tata Nexon BS-VI OM pp.119, 122 (starting); checked 2026-09-27"
     },
@@ -262,38 +646,101 @@
       "code_aliases": [],
       "title": "Jump start a flat battery",
       "meaning": "Let's jump start your car from another car's battery, connecting the leads in the safe order.",
-      "symptoms": ["need a jump start", "jump the battery", "need a boost"],
-      "aliases": ["jump start", "jump start the car", "jumper cables", "jump leads", "connect the jumper cables", "boost the battery"],
+      "symptoms": [
+        "need a jump start",
+        "jump the battery",
+        "need a boost"
+      ],
+      "aliases": [
+        "jump start",
+        "jump start the car",
+        "jumper cables",
+        "jump leads",
+        "connect the jumper cables",
+        "boost the battery"
+      ],
       "severity": "caution",
-      "escalate_if": ["battery cracked", "battery leaking", "sparks flying", "burning smell"],
+      "escalate_if": [
+        "battery cracked",
+        "battery leaking",
+        "sparks flying",
+        "burning smell"
+      ],
       "safety": [
         "Keep flames, sparks and cigarettes away. Batteries give off explosive gas.",
         "Don't jump start a battery that's cracked, leaking or frozen."
       ],
       "steps": [
-        {"n": 1, "say": "Park the other car close, but not touching yours. Both engines off, parking brakes on.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 2, "say": "Switch off the AC, music and any lights you don't need.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 3, "say": "Clip one end of the first lead to the plus terminal of your flat battery.",
-         "target": "the plus terminal of the car battery, marked with a plus sign, often under a red cover", "verify": null,
-         "caution": "Some cars have a separate jump point. Check your manual."},
-        {"n": 4, "say": "Clip the other end of that lead to the plus terminal of the good battery.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 5, "say": "Clip the second lead to the minus terminal of the good battery.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 6, "say": "Clip its other end to bare, unpainted metal on your engine, such as an engine mounting bolt.",
-         "target": "a bare unpainted metal bolt on the engine, away from the battery", "verify": null,
-         "caution": "Never clip it to the minus terminal of the flat battery. It could explode."},
-        {"n": 7, "say": "Start the other car and let it run a little above idle for a few minutes.",
-         "target": null, "verify": null,
-         "caution": "Keep hands and leads away from fans and belts."},
-        {"n": 8, "say": "Now start your car.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 9, "say": "Remove the leads in the exact reverse order you connected them.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 10, "say": "If it won't start after a few tries, or keeps going flat, please call a mechanic.",
-         "target": null, "verify": null, "caution": null}
+        {
+          "n": 1,
+          "say": "Park the other car close, but not touching yours. Both engines off, parking brakes on.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Switch off the AC, music and any lights you don't need.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Clip one end of the first lead to the plus terminal of your flat battery.",
+          "target": "the plus terminal of the car battery, marked with a plus sign, often under a red cover",
+          "verify": null,
+          "caution": "Some cars have a separate jump point. Check your manual."
+        },
+        {
+          "n": 4,
+          "say": "Clip the other end of that lead to the plus terminal of the good battery.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "Clip the second lead to the minus terminal of the good battery.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 6,
+          "say": "Clip its other end to bare, unpainted metal on your engine, such as an engine mounting bolt.",
+          "target": "a bare unpainted metal bolt on the engine, away from the battery",
+          "verify": null,
+          "caution": "Never clip it to the minus terminal of the flat battery. It could explode."
+        },
+        {
+          "n": 7,
+          "say": "Start the other car and let it run a little above idle for a few minutes.",
+          "target": null,
+          "verify": null,
+          "caution": "Keep hands and leads away from fans and belts."
+        },
+        {
+          "n": 8,
+          "say": "Now start your car.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 9,
+          "say": "Remove the leads in the exact reverse order you connected them.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 10,
+          "say": "If it won't start after a few tries, or keeps going flat, please call a mechanic.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
       ],
       "source": "Maruti Swift OM p.10-14, 10-15 + Honda City 2022 OM pp.333-336 + Hyundai Creta 2019 OM pp.8-5 to 8-7 + Tata Nexon BS-VI OM pp.160-161; checked 2026-09-27"
     },
@@ -305,30 +752,83 @@
       "code_aliases": [],
       "title": "Oil pressure warning light",
       "meaning": "The oil light means the oil pressure is low. Let's stop and check the oil.",
-      "symptoms": ["oil light on", "oil warning light", "oil pressure light", "red oil can light", "low oil pressure", "oil symbol on the dashboard"],
-      "aliases": ["oil light", "oil lamp", "oil pressure warning", "oil can light on the dashboard"],
+      "symptoms": [
+        "oil light on",
+        "oil warning light",
+        "oil pressure light",
+        "red oil can light",
+        "low oil pressure",
+        "oil symbol on the dashboard"
+      ],
+      "aliases": [
+        "oil light",
+        "oil lamp",
+        "oil pressure warning",
+        "oil can light on the dashboard"
+      ],
       "severity": "caution",
-      "escalate_if": ["light stays on", "oil leaking", "burning smell"],
+      "escalate_if": [
+        "light stays on",
+        "oil leaking",
+        "burning smell"
+      ],
       "safety": [
         "Pull over somewhere safe and level, and switch the engine off straight away."
       ],
       "steps": [
-        {"n": 1, "say": "Wait a few minutes for the oil to settle.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 2, "say": "Open the bonnet and prop it up with its support rod.",
-         "target": null, "verify": null, "caution": "The engine and the rod may be hot. Hold the rod by its grip."},
-        {"n": 3, "say": "Pull out the dipstick, wipe it, push it back in fully, and pull it out again.",
-         "target": "the engine oil dipstick handle, a brightly coloured ring or loop, usually yellow or orange", "verify": null, "caution": null},
-        {"n": 4, "say": "If the oil is below the lower mark, add the oil your manual recommends up to the upper mark.",
-         "target": "the round engine oil filler cap on top of the engine, marked with an oil can symbol or the words engine oil", "verify": null,
-         "caution": "Don't fill above the upper mark."},
-        {"n": 5, "say": "If the oil level was already fine, don't drive. Please call a workshop.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 6, "say": "If you added oil, start the engine. If the light stays on, switch off and call a workshop.",
-         "target": "the red oil can warning light on the instrument cluster", "verify": null,
-         "caution": "Running the engine with this light on can badly damage it."}
+        {
+          "n": 1,
+          "say": "Wait a few minutes for the oil to settle.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Open the bonnet and prop it up with its support rod.",
+          "target": null,
+          "verify": null,
+          "caution": "The engine and the rod may be hot. Hold the rod by its grip."
+        },
+        {
+          "n": 3,
+          "say": "Pull out the dipstick, wipe it, push it back in fully, and pull it out again.",
+          "target": "the engine oil dipstick handle, a brightly coloured ring or loop, usually yellow or orange",
+          "verify": null,
+          "caution": null,
+          "anim": null
+        },
+        {
+          "n": 4,
+          "say": "If the oil is below the lower mark, add the oil your manual recommends up to the upper mark.",
+          "target": "the round engine oil filler cap on top of the engine, marked with an oil can symbol or the words engine oil",
+          "verify": null,
+          "caution": "Don't fill above the upper mark.",
+          "anim": {
+            "kind": "pour"
+          }
+        },
+        {
+          "n": 5,
+          "say": "If the oil level was already fine, don't drive. Please call a workshop.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 6,
+          "say": "If you added oil, start the engine. If the light stays on, switch off and call a workshop.",
+          "target": "the red oil can warning light on the instrument cluster",
+          "verify": null,
+          "caution": "Running the engine with this light on can badly damage it."
+        }
       ],
-      "source": "Maruti Swift OM p.4-41 + Honda City 2022 OM pp.340-341 + Hyundai Creta 2019 OM p.5-59 + Tata Nexon BS-VI OM p.63; checked 2026-09-27"
+      "source": "Maruti Swift OM p.4-41 + Honda City 2022 OM pp.340-341 + Hyundai Creta 2019 OM p.5-59 + Tata Nexon BS-VI OM p.63; checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "engine_off"
+        }
+      ]
     },
     {
       "id": "car_overheating",
@@ -338,34 +838,88 @@
       "code_aliases": [],
       "title": "Engine overheating or temperature warning light",
       "meaning": "The engine is running too hot. Let's cool it down safely.",
-      "symptoms": ["temperature warning light", "running hot", "temperature gauge in the red", "steam"],
-      "aliases": ["overheating", "hot engine", "temperature light", "coolant temperature light", "high temperature warning"],
+      "symptoms": [
+        "temperature warning light",
+        "running hot",
+        "temperature gauge in the red",
+        "steam"
+      ],
+      "aliases": [
+        "overheating",
+        "hot engine",
+        "temperature light",
+        "coolant temperature light",
+        "high temperature warning"
+      ],
       "severity": "caution",
-      "escalate_if": ["coolant leaking", "overheats again"],
+      "escalate_if": [
+        "coolant leaking",
+        "overheats again"
+      ],
       "safety": [
         "Pull over somewhere safe, park, and switch the AC off.",
         "Don't open the bonnet while steam is coming out, and never open the radiator cap hot."
       ],
       "steps": [
-        {"n": 1, "say": "If you see or hear steam, switch the engine off and wait until it stops.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 2, "say": "If there's no steam, leave the engine idling for a few minutes to cool down.",
-         "target": "the temperature warning light or temperature gauge on the instrument cluster", "verify": null, "caution": null},
-        {"n": 3, "say": "Open the bonnet and check the radiator fan is spinning. If not, switch the engine off.",
-         "target": "the radiator cooling fan behind the radiator at the front of the engine bay", "verify": null,
-         "caution": "Keep hands and clothes away from the fan and belts. The fan can start by itself."},
-        {"n": 4, "say": "When the temperature is back to normal, switch the engine off and let it cool.",
-         "target": "the temperature warning light or temperature gauge on the instrument cluster", "verify": null, "caution": null},
-        {"n": 5, "say": "Look for coolant leaking from the radiator, the hoses, or under the car.",
-         "target": "the radiator and the rubber coolant hoses at the front of the engine bay", "verify": null,
-         "caution": "Clear water dripping from the AC under the car is normal."},
-        {"n": 6, "say": "If coolant is leaking, don't drive on. Please call a workshop or roadside help.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 7, "say": "Once it's cool, check the coolant tank. If it's low, slowly add coolant, never above MAX.",
-         "target": "the see-through plastic engine coolant reservoir tank with MIN and MAX or LOW and FULL marks on its side", "verify": null,
-         "caution": "Open only the plastic tank's cap, never the radiator cap."},
-        {"n": 8, "say": "Restart and watch the temperature. If it overheats again, please call a workshop.",
-         "target": "the temperature warning light or temperature gauge on the instrument cluster", "verify": null, "caution": null}
+        {
+          "n": 1,
+          "say": "If you see or hear steam, switch the engine off and wait until it stops.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "If there's no steam, leave the engine idling for a few minutes to cool down.",
+          "target": "the temperature warning light or temperature gauge on the instrument cluster",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Open the bonnet and check the radiator fan is spinning. If not, switch the engine off.",
+          "target": "the radiator cooling fan behind the radiator at the front of the engine bay",
+          "verify": null,
+          "caution": "Keep hands and clothes away from the fan and belts. The fan can start by itself."
+        },
+        {
+          "n": 4,
+          "say": "When the temperature is back to normal, switch the engine off and let it cool.",
+          "target": "the temperature warning light or temperature gauge on the instrument cluster",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "Look for coolant leaking from the radiator, the hoses, or under the car.",
+          "target": "the radiator and the rubber coolant hoses at the front of the engine bay",
+          "verify": null,
+          "caution": "Clear water dripping from the AC under the car is normal."
+        },
+        {
+          "n": 6,
+          "say": "If coolant is leaking, don't drive on. Please call a workshop or roadside help.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 7,
+          "say": "Once it's cool, check the coolant tank. If it's low, slowly add coolant, never above MAX.",
+          "target": "the see-through plastic engine coolant reservoir tank with MIN and MAX or LOW and FULL marks on its side",
+          "verify": null,
+          "caution": "Open only the plastic tank's cap, never the radiator cap.",
+          "anim": {
+            "kind": "pour"
+          }
+        },
+        {
+          "n": 8,
+          "say": "Restart and watch the temperature. If it overheats again, please call a workshop.",
+          "target": "the temperature warning light or temperature gauge on the instrument cluster",
+          "verify": null,
+          "caution": null
+        }
       ],
       "source": "Maruti Swift OM p.4-39, 10-17 + Honda City 2022 OM pp.338-339 + Hyundai Creta 2019 OM p.5-44, 8-8, 8-9 + Tata Nexon BS-VI OM p.64; checked 2026-09-27"
     },
@@ -377,20 +931,49 @@
       "code_aliases": [],
       "title": "Battery charging warning light",
       "meaning": "The battery light means the battery isn't being charged. Let's save power and get it checked.",
-      "symptoms": ["battery warning light", "battery symbol on the dashboard", "battery not charging"],
-      "aliases": ["battery light", "charging light", "charge light", "alternator light", "battery lamp"],
+      "symptoms": [
+        "battery warning light",
+        "battery symbol on the dashboard",
+        "battery not charging"
+      ],
+      "aliases": [
+        "battery light",
+        "charging light",
+        "charge light",
+        "alternator light",
+        "battery lamp"
+      ],
       "severity": "caution",
-      "escalate_if": ["burning smell", "lights going dim", "engine stalls"],
+      "escalate_if": [
+        "burning smell",
+        "lights going dim",
+        "engine stalls"
+      ],
       "safety": [
         "If you need to stop, pull over somewhere safe, away from traffic."
       ],
       "steps": [
-        {"n": 1, "say": "It's normal for this light to glow briefly at start-up, then go out.",
-         "target": "the red battery-shaped warning light on the instrument cluster", "verify": null, "caution": null},
-        {"n": 2, "say": "If it stays on while the engine runs, switch off the AC and anything electrical you don't need.",
-         "target": "the red battery-shaped warning light on the instrument cluster", "verify": null, "caution": null},
-        {"n": 3, "say": "Please get the charging system checked at a workshop right away. The battery may soon run flat.",
-         "target": null, "verify": null, "caution": null}
+        {
+          "n": 1,
+          "say": "It's normal for this light to glow briefly at start-up, then go out.",
+          "target": "the red battery-shaped warning light on the instrument cluster",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "If it stays on while the engine runs, switch off the AC and anything electrical you don't need.",
+          "target": "the red battery-shaped warning light on the instrument cluster",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Please get the charging system checked at a workshop right away. The battery may soon run flat.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
       ],
       "source": "Maruti Swift OM p.4-41 + Honda City 2022 OM p.342 + Hyundai Creta 2019 OM p.5-58 + Tata Nexon BS-VI OM p.63; checked 2026-09-27"
     },
@@ -402,24 +985,64 @@
       "code_aliases": [],
       "title": "Check engine light",
       "meaning": "The engine light means a fault in the engine or emissions system. Let's see how urgent it is.",
-      "symptoms": ["check engine light", "engine warning light", "engine symbol on the dashboard", "engine light blinking", "engine light flashing"],
-      "aliases": ["engine light", "check engine lamp", "malfunction indicator light", "engine management light"],
+      "symptoms": [
+        "check engine light",
+        "engine warning light",
+        "engine symbol on the dashboard",
+        "engine light blinking",
+        "engine light flashing"
+      ],
+      "aliases": [
+        "engine light",
+        "check engine lamp",
+        "malfunction indicator light",
+        "engine management light"
+      ],
       "severity": "caution",
-      "escalate_if": ["blinks again", "burning smell", "power loss"],
+      "escalate_if": [
+        "blinks again",
+        "burning smell",
+        "power loss"
+      ],
       "safety": [
         "If you stop, don't park on dry grass or leaves. A hot exhaust can start a fire."
       ],
       "steps": [
-        {"n": 1, "say": "It's normal for the engine light to glow at start-up and go out once the engine runs.",
-         "target": "the amber engine-shaped warning light on the instrument cluster", "verify": null, "caution": null},
-        {"n": 2, "say": "If it's blinking, slow down and pull over somewhere safe, away from dry grass.",
-         "target": "the amber engine-shaped warning light on the instrument cluster", "verify": null, "caution": null},
-        {"n": 3, "say": "Switch the engine off and let it cool for a while.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 4, "say": "If you must move the car, drive slowly and gently straight to a workshop.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 5, "say": "If the light is steady, not blinking, avoid high speeds and get the engine checked soon.",
-         "target": "the amber engine-shaped warning light on the instrument cluster", "verify": null, "caution": null}
+        {
+          "n": 1,
+          "say": "It's normal for the engine light to glow at start-up and go out once the engine runs.",
+          "target": "the amber engine-shaped warning light on the instrument cluster",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "If it's blinking, slow down and pull over somewhere safe, away from dry grass.",
+          "target": "the amber engine-shaped warning light on the instrument cluster",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Switch the engine off and let it cool for a while.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "If you must move the car, drive slowly and gently straight to a workshop.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "If the light is steady, not blinking, avoid high speeds and get the engine checked soon.",
+          "target": "the amber engine-shaped warning light on the instrument cluster",
+          "verify": null,
+          "caution": null
+        }
       ],
       "source": "Maruti Swift OM p.4-39, 4-40 + Honda City 2022 OM p.343 + Hyundai Creta 2019 OM p.5-57, 5-58 + Tata Nexon BS-VI OM p.62; checked 2026-09-27"
     },
@@ -431,87 +1054,245 @@
       "code_aliases": [],
       "title": "Brake warning light",
       "meaning": "The red brake light means the parking brake is on, brake fluid is low, or a brake fault.",
-      "symptoms": ["brake warning light", "brake symbol on the dashboard", "exclamation mark light", "parking brake light won't go off", "handbrake light stays on"],
-      "aliases": ["brake warning", "brake system light", "handbrake warning light", "brake light on the dashboard"],
+      "symptoms": [
+        "brake warning light",
+        "brake symbol on the dashboard",
+        "exclamation mark light",
+        "parking brake light won't go off",
+        "handbrake light stays on"
+      ],
+      "aliases": [
+        "brake warning",
+        "brake system light",
+        "handbrake warning light",
+        "brake light on the dashboard"
+      ],
       "severity": "caution",
-      "escalate_if": ["soft pedal", "brakes not working", "fluid leaking", "light stays on"],
+      "escalate_if": [
+        "soft pedal",
+        "brakes not working",
+        "fluid leaking",
+        "light stays on"
+      ],
       "safety": [
         "If it came on while driving, slow down gently and stop somewhere safe. You may need to brake harder."
       ],
       "steps": [
-        {"n": 1, "say": "First, make sure the parking brake is fully released.",
-         "target": "the parking brake lever or button next to the driver's seat", "verify": null, "caution": null},
-        {"n": 2, "say": "If the light stays on with the parking brake off, the brake fluid may be low.",
-         "target": "the red brake warning light on the instrument cluster, often a circle with an exclamation mark or the word BRAKE", "verify": null, "caution": null},
-        {"n": 3, "say": "With the engine off, open the bonnet and look at the brake fluid tank's level.",
-         "target": "the small see-through brake fluid reservoir with MAX and MIN marks, near the back of the engine bay on the driver's side", "verify": null, "caution": null},
-        {"n": 4, "say": "If it's at or below MIN, it isn't safe to drive. Please call a workshop or roadside help.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 5, "say": "If the level looks fine but the light stays on, please have the brakes checked right away.",
-         "target": null, "verify": null,
-         "caution": "If the brake light and the ABS light are both on, get it checked immediately."}
+        {
+          "n": 1,
+          "say": "First, make sure the parking brake is fully released.",
+          "target": "the parking brake lever or button next to the driver's seat",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "If the light stays on with the parking brake off, the brake fluid may be low.",
+          "target": "the red brake warning light on the instrument cluster, often a circle with an exclamation mark or the word BRAKE",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "With the engine off, open the bonnet and look at the brake fluid tank's level.",
+          "target": "the small see-through brake fluid reservoir with MAX and MIN marks, near the back of the engine bay on the driver's side",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "If it's at or below MIN, it isn't safe to drive. Please call a workshop or roadside help.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "If the level looks fine but the light stays on, please have the brakes checked right away.",
+          "target": null,
+          "verify": null,
+          "caution": "If the brake light and the ABS light are both on, get it checked immediately."
+        }
       ],
       "source": "Maruti Swift OM p.4-36, 4-37, 9-13 + Honda City 2022 OM p.343 + Hyundai Creta 2019 OM p.5-55, 5-56 + Tata Nexon BS-VI OM p.64; checked 2026-09-27"
     }
   ],
   "test_queries": [
-    {"q": "how do I check the engine oil?", "expect": "car_check_engine_oil"},
-    {"q": "where's the dipstick on this car", "expect": "car_check_engine_oil"},
-    {"q": "I think the engine oil level is low, how do I top up the oil", "expect": "car_check_engine_oil"},
-
-    {"q": "where do I add coolant", "expect": "car_check_coolant"},
-    {"q": "how do I check the coolant level", "expect": "car_check_coolant"},
-    {"q": "the coolant tank looks empty", "expect": "car_check_coolant"},
-
-    {"q": "I need to fill the wiper fluid", "expect": "car_top_up_washer_fluid"},
-    {"q": "my car wipers spray nothing", "expect": "car_top_up_washer_fluid"},
-    {"q": "where do I top up the washer fluid in the car", "expect": "car_top_up_washer_fluid"},
-
-    {"q": "can you help me fix the wiring", "expect": "car_electrical_wiring"},
-    {"q": "how do I connect the wires under the car dashboard", "expect": "car_electrical_wiring"},
-    {"q": "there's a loose wire in the engine", "expect": "car_electrical_wiring"},
-
-    {"q": "there's white powder on the battery terminal", "expect": "car_battery_terminals"},
-    {"q": "how do I clean the car battery terminals", "expect": "car_battery_terminals"},
-    {"q": "is there corrosion on my car battery", "expect": "car_battery_terminals"},
-
-    {"q": "how do I check the brake fluid in my car", "expect": "car_check_brake_fluid"},
-    {"q": "is the brake oil level okay in the car", "expect": "car_check_brake_fluid"},
-    {"q": "where is the brake fluid reservoir under the bonnet", "expect": "car_check_brake_fluid"},
-
-    {"q": "how do I check the air filter in my car", "expect": "car_check_air_filter"},
-    {"q": "I think the engine air filter is dirty", "expect": "car_check_air_filter"},
-    {"q": "where's the air cleaner box on this car", "expect": "car_check_air_filter"},
-
-    {"q": "my car won't start", "expect": "car_wont_start"},
-    {"q": "the engine won't turn over, nothing happens when I turn the key", "expect": "car_wont_start"},
-    {"q": "I think my car battery is dead", "expect": "car_wont_start"},
-
-    {"q": "how do I jump start my car", "expect": "car_jump_start"},
-    {"q": "how do I connect the jumper cables to the car", "expect": "car_jump_start"},
-    {"q": "I have jump leads, how do I use them on my car", "expect": "car_jump_start"},
-
-    {"q": "the oil light is on in my car", "expect": "car_oil_pressure_light"},
-    {"q": "a red oil can symbol came on on the dashboard", "expect": "car_oil_pressure_light"},
-    {"q": "my car says low oil pressure", "expect": "car_oil_pressure_light"},
-
-    {"q": "my car is overheating", "expect": "car_overheating"},
-    {"q": "the temperature warning light came on in the car", "expect": "car_overheating"},
-    {"q": "there's steam coming from the bonnet", "expect": "car_overheating"},
-
-    {"q": "the battery light is on in my car", "expect": "car_battery_charge_light"},
-    {"q": "there's a battery symbol on the dashboard", "expect": "car_battery_charge_light"},
-    {"q": "my car battery is not charging", "expect": "car_battery_charge_light"},
-
-    {"q": "the check engine light came on in my car", "expect": "car_check_engine_light"},
-    {"q": "the engine light is blinking", "expect": "car_check_engine_light"},
-    {"q": "there's a yellow engine symbol on the dashboard", "expect": "car_check_engine_light"},
-
-    {"q": "the brake warning light is on in my car", "expect": "car_brake_warning_light"},
-    {"q": "there's a red brake symbol on the dashboard", "expect": "car_brake_warning_light"},
-    {"q": "the handbrake light stays on in my car even when it's released", "expect": "car_brake_warning_light"},
-
-    {"q": "how do I change a flat tyre on my car", "expect": "NONE"},
-    {"q": "my car stereo has no sound", "expect": "NONE"}
+    {
+      "q": "how do I check the engine oil?",
+      "expect": "car_check_engine_oil"
+    },
+    {
+      "q": "where's the dipstick on this car",
+      "expect": "car_check_engine_oil"
+    },
+    {
+      "q": "I think the engine oil level is low, how do I top up the oil",
+      "expect": "car_check_engine_oil"
+    },
+    {
+      "q": "where do I add coolant",
+      "expect": "car_check_coolant"
+    },
+    {
+      "q": "how do I check the coolant level",
+      "expect": "car_check_coolant"
+    },
+    {
+      "q": "the coolant tank looks empty",
+      "expect": "car_check_coolant"
+    },
+    {
+      "q": "I need to fill the wiper fluid",
+      "expect": "car_top_up_washer_fluid"
+    },
+    {
+      "q": "my car wipers spray nothing",
+      "expect": "car_top_up_washer_fluid"
+    },
+    {
+      "q": "where do I top up the washer fluid in the car",
+      "expect": "car_top_up_washer_fluid"
+    },
+    {
+      "q": "can you help me fix the wiring",
+      "expect": "car_electrical_wiring"
+    },
+    {
+      "q": "how do I connect the wires under the car dashboard",
+      "expect": "car_electrical_wiring"
+    },
+    {
+      "q": "there's a loose wire in the engine",
+      "expect": "car_electrical_wiring"
+    },
+    {
+      "q": "there's white powder on the battery terminal",
+      "expect": "car_battery_terminals"
+    },
+    {
+      "q": "how do I clean the car battery terminals",
+      "expect": "car_battery_terminals"
+    },
+    {
+      "q": "is there corrosion on my car battery",
+      "expect": "car_battery_terminals"
+    },
+    {
+      "q": "how do I check the brake fluid in my car",
+      "expect": "car_check_brake_fluid"
+    },
+    {
+      "q": "is the brake oil level okay in the car",
+      "expect": "car_check_brake_fluid"
+    },
+    {
+      "q": "where is the brake fluid reservoir under the bonnet",
+      "expect": "car_check_brake_fluid"
+    },
+    {
+      "q": "how do I check the air filter in my car",
+      "expect": "car_check_air_filter"
+    },
+    {
+      "q": "I think the engine air filter is dirty",
+      "expect": "car_check_air_filter"
+    },
+    {
+      "q": "where's the air cleaner box on this car",
+      "expect": "car_check_air_filter"
+    },
+    {
+      "q": "my car won't start",
+      "expect": "car_wont_start"
+    },
+    {
+      "q": "the engine won't turn over, nothing happens when I turn the key",
+      "expect": "car_wont_start"
+    },
+    {
+      "q": "I think my car battery is dead",
+      "expect": "car_wont_start"
+    },
+    {
+      "q": "how do I jump start my car",
+      "expect": "car_jump_start"
+    },
+    {
+      "q": "how do I connect the jumper cables to the car",
+      "expect": "car_jump_start"
+    },
+    {
+      "q": "I have jump leads, how do I use them on my car",
+      "expect": "car_jump_start"
+    },
+    {
+      "q": "the oil light is on in my car",
+      "expect": "car_oil_pressure_light"
+    },
+    {
+      "q": "a red oil can symbol came on on the dashboard",
+      "expect": "car_oil_pressure_light"
+    },
+    {
+      "q": "my car says low oil pressure",
+      "expect": "car_oil_pressure_light"
+    },
+    {
+      "q": "my car is overheating",
+      "expect": "car_overheating"
+    },
+    {
+      "q": "the temperature warning light came on in the car",
+      "expect": "car_overheating"
+    },
+    {
+      "q": "there's steam coming from the bonnet",
+      "expect": "car_overheating"
+    },
+    {
+      "q": "the battery light is on in my car",
+      "expect": "car_battery_charge_light"
+    },
+    {
+      "q": "there's a battery symbol on the dashboard",
+      "expect": "car_battery_charge_light"
+    },
+    {
+      "q": "my car battery is not charging",
+      "expect": "car_battery_charge_light"
+    },
+    {
+      "q": "the check engine light came on in my car",
+      "expect": "car_check_engine_light"
+    },
+    {
+      "q": "the engine light is blinking",
+      "expect": "car_check_engine_light"
+    },
+    {
+      "q": "there's a yellow engine symbol on the dashboard",
+      "expect": "car_check_engine_light"
+    },
+    {
+      "q": "the brake warning light is on in my car",
+      "expect": "car_brake_warning_light"
+    },
+    {
+      "q": "there's a red brake symbol on the dashboard",
+      "expect": "car_brake_warning_light"
+    },
+    {
+      "q": "the handbrake light stays on in my car even when it's released",
+      "expect": "car_brake_warning_light"
+    },
+    {
+      "q": "how do I change a flat tyre on my car",
+      "expect": "NONE"
+    },
+    {
+      "q": "my car stereo has no sound",
+      "expect": "NONE"
+    }
   ]
 }

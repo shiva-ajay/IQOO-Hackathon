@@ -1,0 +1,404 @@
+{
+  "category": "laptop",
+  "entries": [
+    {
+      "id": "laptop_open_bottom_cover",
+      "appliance": "laptop",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Open a laptop's bottom cover for cleaning",
+      "meaning": "Let's take the bottom cover off so you can clean the dust out.",
+      "symptoms": [
+        "dust inside the laptop",
+        "fan full of dust",
+        "dust in the fan",
+        "fan clogged with dust",
+        "clean inside the laptop"
+      ],
+      "aliases": [
+        "open this laptop",
+        "open the laptop",
+        "clean the fan",
+        "clean the laptop fan",
+        "remove the bottom cover",
+        "take off the back cover",
+        "open the back of the laptop",
+        "unscrew the bottom panel",
+        "laptop screws"
+      ],
+      "severity": "caution",
+      "escalate_if": [
+        "swollen battery",
+        "battery puffed up",
+        "cracked battery",
+        "burning smell",
+        "liquid inside"
+      ],
+      "safety": [
+        "Shut the laptop down fully, unplug the charger, and remove any cables and cards.",
+        "Work on a clean, flat, dry table, and touch bare metal first to discharge static."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Check your laptop's manual first; on many models, opening the cover can void the warranty.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Close the lid and turn the laptop upside down on the table.",
+          "target": "the bottom cover of the laptop",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Remove every screw from the bottom cover, and keep track of where each one goes.",
+          "target": "the small screws around the edge of the laptop's bottom cover",
+          "verify": null,
+          "caution": "Some screws stay in the cover, and some hide under rubber feet. Check your manual."
+        },
+        {
+          "n": 4,
+          "say": "Gently pry the cover loose with a plastic pry tool, working around the edge.",
+          "target": "the seam along the edge of the laptop's bottom cover",
+          "verify": null,
+          "caution": "Don't force it; clips broken by force aren't covered by warranty."
+        },
+        {
+          "n": 5,
+          "say": "Lift the cover off and set it aside.",
+          "target": "the laptop's bottom cover",
+          "verify": "the laptop bottom cover is lifted off",
+          "caution": null
+        },
+        {
+          "n": 6,
+          "say": "Unplug the battery cable from the board by pulling its connector, never the wires.",
+          "target": "the battery cable connector where the flat battery's wires plug into the circuit board",
+          "verify": null,
+          "caution": "If the battery looks swollen or puffed up, stop and call a technician."
+        },
+        {
+          "n": 7,
+          "say": "Blow the dust out of the fan and vents with short puffs of compressed air.",
+          "target": "the round cooling fan and the metal fins next to it",
+          "verify": null,
+          "caution": "Hold the fan still and the can upright. Don't use a vacuum cleaner."
+        },
+        {
+          "n": 8,
+          "say": "Plug the battery cable back in until it sits fully in its socket.",
+          "target": "the battery cable connector on the circuit board",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 9,
+          "say": "Snap the cover back on and put every screw back in its own hole.",
+          "target": "the bottom cover of the laptop",
+          "verify": null,
+          "caution": "Make sure no screw is left loose inside before you switch it on.",
+          "anim": null
+        }
+      ],
+      "source": "Dell Inspiron 15 3520 Service Manual (2023): before working inside, safety, removing/installing the base cover, swollen batteries; HP 15 Laptop PC Maintenance and Service Guide (L58964-001): preparation, bottom cover; Lenovo IdeaPad Gaming 3 HMM (2022): general guidelines, remove the lower case, battery; Dell blog 'How to clean a laptop fan safely'; HP Tech Takes 'How to clean your laptop'; checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "unplug"
+        }
+      ]
+    },
+    {
+      "id": "laptop_not_charging",
+      "appliance": "laptop",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Laptop not charging",
+      "meaning": "Let's find out why the laptop isn't charging.",
+      "symptoms": [
+        "battery not charging",
+        "plugged in not charging",
+        "charging light is off",
+        "charger not working",
+        "battery stuck at 80 percent",
+        "battery stops at 60 percent"
+      ],
+      "aliases": [
+        "not charging",
+        "won't charge",
+        "laptop not charging",
+        "battery won't charge",
+        "doesn't charge",
+        "charging problem",
+        "stops charging at 80"
+      ],
+      "severity": "diy",
+      "escalate_if": [
+        "swollen battery",
+        "burning smell",
+        "charger buzzing",
+        "sparks",
+        "still not charging"
+      ],
+      "safety": [
+        "If the charger or its cable is damaged or buzzing, unplug it and don't use it."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Unplug the charger from both the wall socket and the laptop.",
+          "target": "the charger plug in the side of the laptop",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Check the cable and plugs for fraying, kinks, or bent pins.",
+          "target": "the laptop charger's cable and power brick",
+          "verify": null,
+          "caution": "If anything is damaged, stop and get a replacement charger from the maker."
+        },
+        {
+          "n": 3,
+          "say": "Look inside the laptop's charging port for dust or lint, and gently clear it.",
+          "target": "the charging port on the side of the laptop",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "Plug the charger firmly into the laptop, then into a wall socket you know works.",
+          "target": "the charging port on the side of the laptop",
+          "verify": null,
+          "caution": "On USB-C laptops, only some ports can charge. Check your manual."
+        },
+        {
+          "n": 5,
+          "say": "Check that the charging light next to the charging port comes on.",
+          "target": "the small charging light next to the laptop's charging port",
+          "verify": null,
+          "caution": "Where the light is differs by model."
+        },
+        {
+          "n": 6,
+          "say": "If it stops at sixty or eighty percent, a battery-saving setting may be on; check the maker's app.",
+          "target": null,
+          "verify": null,
+          "caution": "Stopping just short of full is normal; it protects the battery."
+        },
+        {
+          "n": 7,
+          "say": "If it still won't charge, please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "Dell 'Laptop battery not charging: resolve AC adapter issues' + Dell KB 000123069 battery issues; HP Tech Takes 'Laptop not charging? 10 easy solutions'; ASUS FAQ 1012793 battery not charging; Lenovo IdeaPad Slim 3 User Guide (charging light, conservation mode); checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "unplug"
+        }
+      ]
+    },
+    {
+      "id": "laptop_overheating",
+      "appliance": "laptop",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Laptop overheating or fan too loud",
+      "meaning": "Let's find out why the laptop is running hot.",
+      "symptoms": [
+        "laptop overheating",
+        "laptop getting hot",
+        "fan is loud",
+        "fan noise",
+        "laptop too hot",
+        "shuts down when hot",
+        "laptop heating"
+      ],
+      "aliases": [
+        "overheating",
+        "running hot",
+        "loud fan",
+        "fan too loud",
+        "fan keeps running",
+        "gets very hot",
+        "heating up",
+        "hot laptop",
+        "clean the vents"
+      ],
+      "severity": "caution",
+      "escalate_if": [
+        "burning smell",
+        "swollen battery",
+        "keeps shutting down",
+        "fan stopped spinning",
+        "still overheating"
+      ],
+      "safety": [
+        "If it's too hot to hold, shut it down, unplug it, and let it cool."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Put the laptop on a hard, flat table, not a bed, sofa, cushion, or your lap.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Make sure nothing is covering the air vents on the sides, back, or bottom.",
+          "target": "the slotted air vents on the side or back edge of the laptop",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Close programs you aren't using; Task Manager shows which ones work hardest.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "Shut it down and unplug the charger before cleaning the vents.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "Blow short puffs of compressed air into the vents to clear the dust.",
+          "target": "the slotted air vents on the side or back edge of the laptop",
+          "verify": null,
+          "caution": "Hold the can upright, and don't use a vacuum or an air compressor."
+        },
+        {
+          "n": 6,
+          "say": "If it still runs hot, the fan may need cleaning inside; please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "HP 15 Maintenance and Service Guide safety warning notice; HP Tech Takes 'How to fix overheating issues in HP laptops'; Dell 'How to prevent overheating'; ASUS FAQ 1015064 overheating and fan issues; Lenovo 'Heat and product ventilation' safety notice + Lenovo 'Laptop fan' glossary + IdeaPad Slim 3 User Guide; checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "unplug"
+        }
+      ]
+    },
+    {
+      "id": "laptop_swollen_battery",
+      "appliance": "laptop",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Laptop battery swollen",
+      "meaning": "Please stop using the laptop and unplug the charger. Don't press, puncture, or try to remove a swollen battery.",
+      "symptoms": [
+        "swollen battery",
+        "battery bulging",
+        "bottom case bulging",
+        "touchpad lifting up",
+        "case not closing properly",
+        "laptop rocks on the table"
+      ],
+      "aliases": [
+        "battery swelling",
+        "bloated battery",
+        "puffy battery",
+        "battery expanded",
+        "battery puffed up",
+        "case popping open"
+      ],
+      "severity": "call_technician",
+      "escalate_if": [
+        "burning smell",
+        "smoke",
+        "battery very hot"
+      ],
+      "safety": [
+        "Stop using it and unplug the charger; don't charge a swollen battery.",
+        "Don't press, bend, puncture, or pry the battery, and keep it away from heat."
+      ],
+      "steps": [],
+      "source": "Dell Inspiron 15 3520 Service Manual 'Handling swollen rechargeable Li-ion batteries'; Microsoft Support 'Caring for your Surface battery'; HP Tech Takes 'Laptop not charging' (stop charging a swollen battery); checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "unplug"
+        }
+      ]
+    }
+  ],
+  "test_queries": [
+    {
+      "q": "how do I open this laptop to clean it",
+      "expect": "laptop_open_bottom_cover"
+    },
+    {
+      "q": "how do I remove the bottom cover",
+      "expect": "laptop_open_bottom_cover"
+    },
+    {
+      "q": "the fan is full of dust, how do I take off the back cover",
+      "expect": "laptop_open_bottom_cover"
+    },
+    {
+      "q": "can you help me clean the fan",
+      "expect": "laptop_open_bottom_cover"
+    },
+    {
+      "q": "my laptop is not charging",
+      "expect": "laptop_not_charging"
+    },
+    {
+      "q": "it says plugged in not charging",
+      "expect": "laptop_not_charging"
+    },
+    {
+      "q": "the battery won't charge past 80 percent",
+      "expect": "laptop_not_charging"
+    },
+    {
+      "q": "my laptop is overheating",
+      "expect": "laptop_overheating"
+    },
+    {
+      "q": "the fan is too loud",
+      "expect": "laptop_overheating"
+    },
+    {
+      "q": "my laptop gets very hot and shuts down",
+      "expect": "laptop_overheating"
+    },
+    {
+      "q": "my laptop battery is swollen",
+      "expect": "laptop_swollen_battery"
+    },
+    {
+      "q": "the bottom case is bulging and the touchpad is lifting up",
+      "expect": "laptop_swollen_battery"
+    },
+    {
+      "q": "I think the battery is puffy",
+      "expect": "laptop_swollen_battery"
+    },
+    {
+      "q": "how do I install windows",
+      "expect": "NONE"
+    },
+    {
+      "q": "my wifi keeps disconnecting",
+      "expect": "NONE"
+    }
+  ]
+}

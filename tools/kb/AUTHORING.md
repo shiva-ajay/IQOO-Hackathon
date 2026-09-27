@@ -67,6 +67,8 @@ The app reads `app/src/main/assets/kb/fixlens_kb.json`. It is **generated** by `
 | `steps[].verify` | Optional: something the camera would clearly see when the step is done ("the filter cover is open"). Usually `null`. |
 | `steps[].caution` | Optional short warning shown on the step card. |
 | `source` | Short citation(s) + "checked 2026-09-27". Full notes go in `sources/<category>.md`. |
+| `steps[].anim` | Optional small animation (how-to card + cue on the part): `{"kind": "turn", "dir": "ccw"}`. Kinds: `turn` (needs `dir` `ccw`/`cw`, and the step's words must say unscrew/anticlockwise or tighten/screw on/clockwise), `pull` / `push` (optional `dir` up/down/left/right: the way the part moves on screen), `level`, `pour`. `null` = reviewed, no animation. Propose with `tools/kb/suggest_anims.py`, then review. |
+| `safety_anim` | Optional, one per safety line by position: `unplug`, `switch_off`, `engine_off`, or `null`. |
 
 ## How matching works (write aliases for this)
 
@@ -88,6 +90,7 @@ The app reads `app/src/main/assets/kb/fixlens_kb.json`. It is **generated** by `
 
 - `tools/kb/entries/<category>.json`:
   `{"category": "<name>", "entries": [ ... ], "test_queries": [{"q": "my washer won't drain", "expect": "<id>"}, {"q": "...", "expect": "NONE"}]}`
+  (KbTest looks each one up as in a session about this category, unless the question names another appliance)
   with 3–4 test queries per entry (spoken style, including one code query per entry that has `brand_codes`) and
   2 that must return `NONE` (out of scope for this category).
 - `tools/kb/sources/<category>.md`: per entry, the sources (URL, document, page/section), which sources agree on

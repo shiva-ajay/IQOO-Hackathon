@@ -29,3 +29,9 @@ app/libs/*.aar
 .claude/state/
 ui_*.xml
 app/src/main/cpp/libs/
+
+# IR: build helpers of tools/ir/build_ir_assets.py (fetched Flipper encoders, compiled tools)
+tools/ir/.build/
+
+# Tool scratch that lands in subfolders
+**/.claude/state/

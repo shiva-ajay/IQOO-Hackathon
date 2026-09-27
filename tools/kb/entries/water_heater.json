@@ -1,0 +1,334 @@
+{
+  "category": "water_heater",
+  "entries": [
+    {
+      "id": "water_heater_no_hot_water",
+      "appliance": "water_heater",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Geyser not giving hot water",
+      "meaning": "Let's find out why the geyser isn't giving you hot water.",
+      "symptoms": [
+        "no hot water",
+        "water not getting hot",
+        "geyser not heating",
+        "cold water from the geyser",
+        "water only lukewarm",
+        "geyser light not on",
+        "heating light not coming on"
+      ],
+      "aliases": [
+        "geyser not working",
+        "water heater not working",
+        "water heater not heating",
+        "geyser not turning on",
+        "geyser takes too long to heat",
+        "no hot water from geyser",
+        "geyser water is cold",
+        "hot water not coming"
+      ],
+      "severity": "diy",
+      "escalate_if": [
+        "keeps tripping",
+        "burning smell",
+        "electric shock",
+        "water leaking",
+        "smoke coming out"
+      ],
+      "safety": [
+        "Don't open the geyser's cover or touch its wiring. We'll only use the switch, the knob and the valve."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Check the geyser's switch on the wall is turned on.",
+          "target": "the wall switch next to the socket the geyser is plugged into",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Look for the power light on the geyser. It should glow when the switch is on.",
+          "target": "the small indicator lights on the front of the geyser",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "If no light glows at all, don't try to reset anything. Please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "Check the valve on the cold water pipe going into the geyser is fully open.",
+          "target": "the valve handle on the cold water pipe going into the bottom of the geyser",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "If your geyser has a temperature knob, turn it clockwise to a warmer setting.",
+          "target": "the round temperature knob on the front of the geyser",
+          "verify": null,
+          "caution": "Only use the outside knob, and don't force it past its last mark.",
+          "anim": {
+            "kind": "turn",
+            "dir": "cw"
+          }
+        },
+        {
+          "n": 6,
+          "say": "Now give it half an hour to an hour to heat up before you use it.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 7,
+          "say": "If there's still no hot water, or the switch keeps tripping, please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "V-Guard Divino OM p.5, 7 + A. O. Smith Finesse SDS OM p.10-11, 13 + Racold CDR/Buono Pro OM p.3, 8, 13 + Racold Eterno 2 NXT OM p.5 + Havells Adonia R OM p.12, 14 + Havells Monza Slim i OM p.31; checked 2026-09-27"
+    },
+    {
+      "id": "water_heater_leaking",
+      "appliance": "water_heater",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Geyser leaking or dripping water",
+      "meaning": "Let's see where the water is coming from, and whether it's normal.",
+      "symptoms": [
+        "water dripping from geyser",
+        "geyser leaking",
+        "safety valve dripping",
+        "valve under the geyser dripping",
+        "water under the geyser",
+        "drops from the pipe under the geyser"
+      ],
+      "aliases": [
+        "geyser leakage",
+        "water heater leaking",
+        "water heater dripping",
+        "pressure valve dripping",
+        "geyser dripping",
+        "leak from geyser tank",
+        "water coming out of the geyser"
+      ],
+      "severity": "caution",
+      "escalate_if": [
+        "burning smell",
+        "electric shock",
+        "socket is wet",
+        "keeps tripping"
+      ],
+      "safety": [
+        "Switch the geyser off at the wall. If that switch is wet, use the main switch instead."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Look where the water comes from: the small valve under the geyser, a pipe joint, or the tank.",
+          "target": "the pipes and valve under the bottom of the geyser",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "A few drops from the safety valve while it heats are normal. Water expands as it warms.",
+          "target": "the safety valve with a small lever on the cold water pipe under the geyser",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Never block, plug or tighten that valve to stop the drips. It protects the tank.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "If it drips all the time, not just while heating, the pressure may be high. Please call a plumber.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "If water leaks from the tank or its joints, keep the geyser off and call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "A. O. Smith Finesse SDS OM p.5, 13 + Havells Adonia R OM p.7, 14 + Racold CDR/Buono Pro OM p.4, 8, 10 + V-Guard Divino OM p.3, 7 + CPSC Pub 513 p.5; checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "switch_off"
+        }
+      ]
+    },
+    {
+      "id": "water_heater_electric_danger",
+      "appliance": "water_heater",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "brand_codes": [
+        {
+          "brand": "Havells",
+          "codes": [
+            "E2",
+            "E5"
+          ],
+          "spoken": [
+            "e two",
+            "e five"
+          ]
+        },
+        {
+          "brand": "V-Guard",
+          "codes": [
+            "E4"
+          ],
+          "spoken": [
+            "e four"
+          ]
+        }
+      ],
+      "title": "Geyser shock, burning smell, sparks or overheating",
+      "meaning": "That isn't safe to fix yourself. Switch the geyser off at the main switch and call a technician.",
+      "symptoms": [
+        "shock from the tap",
+        "electric shock from geyser",
+        "current in the water",
+        "burning smell from geyser",
+        "sparks from geyser",
+        "smoke from geyser",
+        "water too hot",
+        "steam from the hot tap"
+      ],
+      "aliases": [
+        "geyser giving shock",
+        "getting current from tap",
+        "tingling from the shower",
+        "geyser burning smell",
+        "geyser sparking",
+        "geyser overheating",
+        "water heater too hot",
+        "open the geyser",
+        "geyser wiring",
+        "replace heating element",
+        "reset the thermal cutout"
+      ],
+      "severity": "call_technician",
+      "escalate_if": [],
+      "safety": [],
+      "steps": [],
+      "source": "V-Guard Divino OM p.7 (shock: contact service at once; E4 over temperature) + Racold CDR/Buono Pro OM p.8 (shock: earthing) + A. O. Smith Finesse SDS OM p.13 (water too hot) + Havells Adonia R OM p.14 and Monza Slim i OM p.20, 31 (E2/E5; abnormality: switch off main power) + CPSC Pub 513 p.5; checked 2026-09-27"
+    },
+    {
+      "id": "water_heater_gas_smell",
+      "appliance": "water_heater",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Gas geyser smells of gas or burns badly",
+      "meaning": "Close the gas valve, open windows, put out flames, and don't touch switches. Then call a technician.",
+      "symptoms": [
+        "gas smell from geyser",
+        "smell of gas in the bathroom",
+        "yellow flame in the geyser",
+        "black smoke from gas geyser",
+        "gas geyser flame not steady",
+        "flame stays on after tap is closed"
+      ],
+      "aliases": [
+        "gas geyser problem",
+        "gas geyser not working",
+        "gas geyser leaking gas",
+        "LPG geyser smell",
+        "gas water heater",
+        "repair gas geyser"
+      ],
+      "severity": "call_technician",
+      "escalate_if": [],
+      "safety": [],
+      "steps": [],
+      "source": "Havells Flagro gas water heater OM p.9-10 (gas leak: shut the gas, open windows, no switching) and p.11 (abnormal flame or smell: gas valve off, call service) + PMUY LPG Consumer Guidance p.3 + Racold gas water heater OM p.6 (ventilation); checked 2026-09-27"
+    }
+  ],
+  "test_queries": [
+    {
+      "q": "my geyser is not heating the water",
+      "expect": "water_heater_no_hot_water"
+    },
+    {
+      "q": "there's no hot water from the geyser",
+      "expect": "water_heater_no_hot_water"
+    },
+    {
+      "q": "the water heater isn't working",
+      "expect": "water_heater_no_hot_water"
+    },
+    {
+      "q": "the heating light is not coming on",
+      "expect": "water_heater_no_hot_water"
+    },
+    {
+      "q": "water is dripping from the geyser",
+      "expect": "water_heater_leaking"
+    },
+    {
+      "q": "the safety valve keeps dripping",
+      "expect": "water_heater_leaking"
+    },
+    {
+      "q": "my water heater is leaking",
+      "expect": "water_heater_leaking"
+    },
+    {
+      "q": "I got a shock from the tap",
+      "expect": "water_heater_electric_danger"
+    },
+    {
+      "q": "there's a burning smell from the geyser",
+      "expect": "water_heater_electric_danger"
+    },
+    {
+      "q": "the water is too hot and there's steam",
+      "expect": "water_heater_electric_danger"
+    },
+    {
+      "q": "my Havells geyser shows E2",
+      "expect": "water_heater_electric_danger"
+    },
+    {
+      "q": "I can smell gas from the geyser",
+      "expect": "water_heater_gas_smell"
+    },
+    {
+      "q": "the gas geyser has a yellow flame",
+      "expect": "water_heater_gas_smell"
+    },
+    {
+      "q": "there is a problem with my gas geyser",
+      "expect": "water_heater_gas_smell"
+    },
+    {
+      "q": "how many litres geyser should I buy for my family",
+      "expect": "NONE"
+    },
+    {
+      "q": "how do I install a solar panel on the roof",
+      "expect": "NONE"
+    }
+  ]
+}

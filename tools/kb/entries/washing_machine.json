@@ -8,51 +8,184 @@
       "error_code": null,
       "code_aliases": [],
       "brand_codes": [
-        {"brand": "LG", "codes": ["OE"], "spoken": ["oh e", "zero e"]},
-        {"brand": "Samsung", "codes": ["5C", "5E", "SE", "nd", "LC", "LC1"], "spoken": ["five c", "five e"]},
-        {"brand": "Bosch", "codes": ["E18", "F18", "d02"], "spoken": ["e eighteen", "f eighteen"]},
-        {"brand": "IFB", "codes": ["dPEr"], "spoken": ["d p e r"]},
-        {"brand": "Whirlpool", "codes": ["F9E1", "drn"], "spoken": ["f nine e one", "d r n"]}
+        {
+          "brand": "LG",
+          "codes": [
+            "OE"
+          ],
+          "spoken": [
+            "oh e",
+            "zero e"
+          ]
+        },
+        {
+          "brand": "Samsung",
+          "codes": [
+            "5C",
+            "5E",
+            "SE",
+            "nd",
+            "LC",
+            "LC1"
+          ],
+          "spoken": [
+            "five c",
+            "five e"
+          ]
+        },
+        {
+          "brand": "Bosch",
+          "codes": [
+            "E18",
+            "F18",
+            "d02"
+          ],
+          "spoken": [
+            "e eighteen",
+            "f eighteen"
+          ]
+        },
+        {
+          "brand": "IFB",
+          "codes": [
+            "dPEr"
+          ],
+          "spoken": [
+            "d p e r"
+          ]
+        },
+        {
+          "brand": "Whirlpool",
+          "codes": [
+            "F9E1",
+            "drn"
+          ],
+          "spoken": [
+            "f nine e one",
+            "d r n"
+          ]
+        }
       ],
       "title": "Washing machine not draining",
       "meaning": "Let's find out why the water isn't draining.",
-      "symptoms": ["water left in the drum", "slow draining", "drain hose blocked", "filter clogged", "drum full of water", "washer full of water"],
-      "aliases": ["not draining", "won't drain", "water not going out", "water stuck in the drum", "drain filter", "clean the drain filter", "drain pump filter", "debris filter", "drain error", "washing machine not draining"],
+      "symptoms": [
+        "water left in the drum",
+        "slow draining",
+        "drain hose blocked",
+        "filter clogged",
+        "drum full of water",
+        "washer full of water"
+      ],
+      "aliases": [
+        "not draining",
+        "won't drain",
+        "water not going out",
+        "water stuck in the drum",
+        "drain filter",
+        "clean the drain filter",
+        "drain pump filter",
+        "debris filter",
+        "drain error",
+        "washing machine not draining"
+      ],
       "severity": "caution",
-      "escalate_if": ["burning smell", "smoke", "sparks", "still showing", "same error"],
+      "escalate_if": [
+        "burning smell",
+        "smoke",
+        "sparks",
+        "still showing",
+        "same error"
+      ],
       "safety": [
         "Switch the machine off and unplug it.",
         "If it just ran a hot wash, let the water cool for about an hour first."
       ],
       "steps": [
-        {"n": 1, "say": "Check the drain hose behind the machine isn't bent, squashed or blocked.",
-         "target": "the ribbed drain hose coming out of the back of the washing machine", "verify": null, "caution": null},
-        {"n": 2, "say": "Check the end of the drain hose sits in the drain the way your manual shows.",
-         "target": "the end of the drain hose where it goes into the drain pipe or floor outlet", "verify": null,
-         "caution": "The right height differs by model."},
-        {"n": 3, "say": "On a front-loader, open the small flap at the bottom front. No flap? Say next until the last step.",
-         "target": "the small square flap at the bottom front corner of the washing machine",
-         "verify": "the small flap at the bottom front corner of the washing machine is open",
-         "caution": "Some flaps need a coin to open."},
-        {"n": 4, "say": "Put a wide, shallow tray and an old towel on the floor below the flap.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 5, "say": "Pull out the small drain tube, open its cap, and let the water run into the tray.",
-         "target": "the small drain tube with a cap behind the bottom front flap", "verify": null,
-         "caution": "There can be a lot of water. Cap the tube to empty the tray."},
-        {"n": 6, "say": "When it stops, cap the tube and slowly unscrew the round filter anticlockwise.",
-         "target": "the round filter cap with a grip handle behind the bottom front flap", "verify": null,
-         "caution": "A little more water will come out."},
-        {"n": 7, "say": "Clear out lint, coins and hair, and rinse the filter under the tap.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 8, "say": "Check the opening is clear and the small propeller inside it can turn.",
-         "target": "the round opening behind the filter at the bottom front of the washing machine", "verify": null, "caution": null},
-        {"n": 9, "say": "Screw the filter back in firmly, clockwise, and close the flap.",
-         "target": "the round filter opening behind the bottom front flap", "verify": null,
-         "caution": "A loose filter will leak."},
-        {"n": 10, "say": "Plug it in and run a spin-only or drain cycle. If it still won't drain, please call a technician.",
-         "target": null, "verify": null, "caution": "Watch the filter for drips."}
+        {
+          "n": 1,
+          "say": "Check the drain hose behind the machine isn't bent, squashed or blocked.",
+          "target": "the ribbed drain hose coming out of the back of the washing machine",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Check the end of the drain hose sits in the drain the way your manual shows.",
+          "target": "the end of the drain hose where it goes into the drain pipe or floor outlet",
+          "verify": null,
+          "caution": "The right height differs by model."
+        },
+        {
+          "n": 3,
+          "say": "On a front-loader, open the small flap at the bottom front. No flap? Say next until the last step.",
+          "target": "the small square flap at the bottom front corner of the washing machine",
+          "verify": "the small flap at the bottom front corner of the washing machine is open",
+          "caution": "Some flaps need a coin to open."
+        },
+        {
+          "n": 4,
+          "say": "Put a wide, shallow tray and an old towel on the floor below the flap.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "Pull out the small drain tube, open its cap, and let the water run into the tray.",
+          "target": "the small drain tube with a cap behind the bottom front flap",
+          "verify": null,
+          "caution": "There can be a lot of water. Cap the tube to empty the tray."
+        },
+        {
+          "n": 6,
+          "say": "When it stops, cap the tube and slowly unscrew the round filter anticlockwise.",
+          "target": "the round filter cap with a grip handle behind the bottom front flap",
+          "verify": null,
+          "caution": "A little more water will come out.",
+          "anim": {
+            "kind": "turn",
+            "dir": "ccw"
+          }
+        },
+        {
+          "n": 7,
+          "say": "Clear out lint, coins and hair, and rinse the filter under the tap.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 8,
+          "say": "Check the opening is clear and the small propeller inside it can turn.",
+          "target": "the round opening behind the filter at the bottom front of the washing machine",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 9,
+          "say": "Screw the filter back in firmly, clockwise, and close the flap.",
+          "target": "the round filter opening behind the bottom front flap",
+          "verify": null,
+          "caution": "A loose filter will leak.",
+          "anim": {
+            "kind": "turn",
+            "dir": "cw"
+          }
+        },
+        {
+          "n": 10,
+          "say": "Plug it in and run a spin-only or drain cycle. If it still won't drain, please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": "Watch the filter for drips."
+        }
       ],
-      "source": "Samsung WW70T4020EE manual pp.10,45,48,51-52,55 + Samsung India 4E/5E page + LG help library OE (UAE) and drain pump filter (US) + Bosch India E18 page + IFB Senator Plus manual pp.60,67,75 + Whirlpool product help F9E1 and drain pump filter; checked 2026-09-27"
+      "source": "Samsung WW70T4020EE manual pp.10,45,48,51-52,55 + Samsung India 4E/5E page + LG help library OE (UAE) and drain pump filter (US) + Bosch India E18 page + IFB Senator Plus manual pp.60,67,75 + Whirlpool product help F9E1 and drain pump filter; checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "unplug"
+        }
+      ]
     },
     {
       "id": "washing_machine_not_filling",
@@ -61,39 +194,154 @@
       "error_code": null,
       "code_aliases": [],
       "brand_codes": [
-        {"brand": "Samsung", "codes": ["4C", "4E", "nF"], "spoken": ["four c", "four e"]},
-        {"brand": "LG", "codes": ["IE"], "spoken": ["i e"]},
-        {"brand": "Bosch", "codes": ["E17", "F17"], "spoken": ["e seventeen", "f seventeen"]},
-        {"brand": "Whirlpool", "codes": ["F8E1", "LF", "LoFL"], "spoken": ["f eight e one"]}
+        {
+          "brand": "Samsung",
+          "codes": [
+            "4C",
+            "4E",
+            "nF"
+          ],
+          "spoken": [
+            "four c",
+            "four e"
+          ]
+        },
+        {
+          "brand": "LG",
+          "codes": [
+            "IE"
+          ],
+          "spoken": [
+            "i e"
+          ]
+        },
+        {
+          "brand": "Bosch",
+          "codes": [
+            "E17",
+            "F17"
+          ],
+          "spoken": [
+            "e seventeen",
+            "f seventeen"
+          ]
+        },
+        {
+          "brand": "Whirlpool",
+          "codes": [
+            "F8E1",
+            "LF",
+            "LoFL"
+          ],
+          "spoken": [
+            "f eight e one"
+          ]
+        }
       ],
       "title": "Washing machine not filling with water",
       "meaning": "Let's find out why water isn't coming into the machine.",
-      "symptoms": ["drum stays dry", "no water in the drum", "low water pressure", "tap error", "showing tap"],
-      "aliases": ["not filling", "won't fill", "no water coming in", "water not coming in", "not taking water", "water supply error", "water inlet error", "inlet filter", "mesh filter", "inlet hose"],
-      "severity": "diy",
-      "escalate_if": ["damaged hose", "cracked hose", "burning smell", "still showing", "same error"],
-      "safety": ["Switch the machine off and unplug it before touching the hoses."],
-      "steps": [
-        {"n": 1, "say": "Make sure the water tap feeding the machine is turned fully on.",
-         "target": "the water tap on the wall that the washing machine's inlet hose is connected to", "verify": null, "caution": null},
-        {"n": 2, "say": "Check other taps in the house have water. If the supply's off, wait for it to return.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 3, "say": "Follow the inlet hose from the tap to the machine and straighten any kinks.",
-         "target": "the inlet water hose running from the tap to the back of the washing machine", "verify": null, "caution": null},
-        {"n": 4, "say": "Shut the door, or the lid on a top-loader, firmly. Many machines won't fill with it open.",
-         "target": "the washing machine door", "verify": null, "caution": null},
-        {"n": 5, "say": "Turn the tap off, then unscrew the inlet hose from the back of the machine.",
-         "target": "the point where the inlet hose screws onto the back of the washing machine", "verify": null,
-         "caution": "Hold a cloth over it; a little water will come out."},
-        {"n": 6, "say": "Gently pull out the small mesh filter with pliers and rinse it clean under the tap.",
-         "target": "the water inlet connector on the back of the washing machine", "verify": null,
-         "caution": "It sits in the machine's inlet or in the hose end, depending on the model."},
-        {"n": 7, "say": "Push the filter back in, screw the hose on, and open the tap. Check for drips.",
-         "target": "the point where the inlet hose screws onto the back of the washing machine", "verify": null, "caution": null},
-        {"n": 8, "say": "Plug it in and start the cycle again. If it still won't fill, please call a technician.",
-         "target": null, "verify": null, "caution": null}
+      "symptoms": [
+        "drum stays dry",
+        "no water in the drum",
+        "low water pressure",
+        "tap error",
+        "showing tap"
       ],
-      "source": "Samsung WW70T4020EE manual pp.47,51,55 + Samsung India 4E/5E page + LG help library IE (UAE) + Bosch India E17 page + IFB Senator Plus manual pp.59,65,74 + Whirlpool product help F8E1; checked 2026-09-27"
+      "aliases": [
+        "not filling",
+        "won't fill",
+        "no water coming in",
+        "water not coming in",
+        "not taking water",
+        "water supply error",
+        "water inlet error",
+        "inlet filter",
+        "mesh filter",
+        "inlet hose"
+      ],
+      "severity": "diy",
+      "escalate_if": [
+        "damaged hose",
+        "cracked hose",
+        "burning smell",
+        "still showing",
+        "same error"
+      ],
+      "safety": [
+        "Switch the machine off and unplug it before touching the hoses."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Make sure the water tap feeding the machine is turned fully on.",
+          "target": "the water tap on the wall that the washing machine's inlet hose is connected to",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Check other taps in the house have water. If the supply's off, wait for it to return.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Follow the inlet hose from the tap to the machine and straighten any kinks.",
+          "target": "the inlet water hose running from the tap to the back of the washing machine",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "Shut the door, or the lid on a top-loader, firmly. Many machines won't fill with it open.",
+          "target": "the washing machine door",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "Turn the tap off, then unscrew the inlet hose from the back of the machine.",
+          "target": "the point where the inlet hose screws onto the back of the washing machine",
+          "verify": null,
+          "caution": "Hold a cloth over it; a little water will come out.",
+          "anim": {
+            "kind": "turn",
+            "dir": "ccw"
+          }
+        },
+        {
+          "n": 6,
+          "say": "Gently pull out the small mesh filter with pliers and rinse it clean under the tap.",
+          "target": "the water inlet connector on the back of the washing machine",
+          "verify": null,
+          "caution": "It sits in the machine's inlet or in the hose end, depending on the model."
+        },
+        {
+          "n": 7,
+          "say": "Push the filter back in, screw the hose on, and open the tap. Check for drips.",
+          "target": "the point where the inlet hose screws onto the back of the washing machine",
+          "verify": null,
+          "caution": null,
+          "anim": {
+            "kind": "turn",
+            "dir": "cw"
+          }
+        },
+        {
+          "n": 8,
+          "say": "Plug it in and start the cycle again. If it still won't fill, please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "Samsung WW70T4020EE manual pp.47,51,55 + Samsung India 4E/5E page + LG help library IE (UAE) + Bosch India E17 page + IFB Senator Plus manual pp.59,65,74 + Whirlpool product help F8E1; checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "unplug"
+        }
+      ]
     },
     {
       "id": "washing_machine_door_problem",
@@ -102,40 +350,148 @@
       "error_code": null,
       "code_aliases": [],
       "brand_codes": [
-        {"brand": "Samsung", "codes": ["dC", "dE", "dC1"]},
-        {"brand": "LG", "codes": ["dE", "dE1", "dE2"]},
-        {"brand": "Bosch", "codes": ["E16", "F16"], "spoken": ["e sixteen", "f sixteen"]},
-        {"brand": "IFB", "codes": ["dLEr"], "spoken": ["d l e r"]},
-        {"brand": "Whirlpool", "codes": ["F5E2", "LdL"], "spoken": ["f five e two"]}
+        {
+          "brand": "Samsung",
+          "codes": [
+            "dC",
+            "dE",
+            "dC1"
+          ]
+        },
+        {
+          "brand": "LG",
+          "codes": [
+            "dE",
+            "dE1",
+            "dE2"
+          ]
+        },
+        {
+          "brand": "Bosch",
+          "codes": [
+            "E16",
+            "F16"
+          ],
+          "spoken": [
+            "e sixteen",
+            "f sixteen"
+          ]
+        },
+        {
+          "brand": "IFB",
+          "codes": [
+            "dLEr"
+          ],
+          "spoken": [
+            "d l e r"
+          ]
+        },
+        {
+          "brand": "Whirlpool",
+          "codes": [
+            "F5E2",
+            "LdL"
+          ],
+          "spoken": [
+            "f five e two"
+          ]
+        }
       ],
       "title": "Door won't open, close or lock",
       "meaning": "Let's get the door working. It stays locked on purpose while the machine is hot, full or spinning.",
-      "symptoms": ["door lock light stays on", "clothes caught in the door", "showing door"],
-      "aliases": ["door won't open", "door won't lock", "door won't close", "door stuck", "door jammed", "door locked", "door error", "door lock error", "lid won't open", "lid won't lock", "can't get my clothes out"],
+      "symptoms": [
+        "door lock light stays on",
+        "clothes caught in the door",
+        "showing door"
+      ],
+      "aliases": [
+        "door won't open",
+        "door won't lock",
+        "door won't close",
+        "door stuck",
+        "door jammed",
+        "door locked",
+        "door error",
+        "door lock error",
+        "lid won't open",
+        "lid won't lock",
+        "can't get my clothes out"
+      ],
       "severity": "caution",
-      "escalate_if": ["broken latch", "damaged door", "burning smell", "water leaking", "still showing"],
-      "safety": ["Never force the door. The water and clothes inside can be very hot."],
+      "escalate_if": [
+        "broken latch",
+        "damaged door",
+        "burning smell",
+        "water leaking",
+        "still showing"
+      ],
+      "safety": [
+        "Never force the door. The water and clothes inside can be very hot."
+      ],
       "steps": [
-        {"n": 1, "say": "If a cycle is running, press Start/Pause and wait for the drum to stop.",
-         "target": "the Start/Pause button on the washing machine control panel", "verify": null, "caution": null},
-        {"n": 2, "say": "If the door's locked shut, wait a few minutes for it to click open by itself.",
-         "target": "the door lock symbol on the washing machine control panel", "verify": null,
-         "caution": "After a hot wash or a power cut it can take longer."},
-        {"n": 3, "say": "If Child Lock is on, turn it off. It's often two buttons held for three seconds.",
-         "target": "the child lock symbol on the washing machine control panel", "verify": null,
-         "caution": "Your manual shows which buttons."},
-        {"n": 4, "say": "If water is still inside, run a drain or spin-only cycle, then wait for the lock.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 5, "say": "Once it's open, check no clothes are caught in the rubber seal, or under a top-loader's lid.",
-         "target": "the rubber seal around the door opening of the washing machine", "verify": null, "caution": null},
-        {"n": 6, "say": "Look at the door hook and its catch. If either is bent or broken, please call a technician.",
-         "target": "the hook on the inside edge of the washing machine door", "verify": null, "caution": null},
-        {"n": 7, "say": "Push the door firmly shut until it clicks.",
-         "target": "the washing machine door", "verify": null, "caution": null},
-        {"n": 8, "say": "Switch it off at the wall for a few minutes, then switch on and try again.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 9, "say": "If the door still won't open or lock, please call a technician. Never force it.",
-         "target": null, "verify": null, "caution": null}
+        {
+          "n": 1,
+          "say": "If a cycle is running, press Start/Pause and wait for the drum to stop.",
+          "target": "the Start/Pause button on the washing machine control panel",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "If the door's locked shut, wait a few minutes for it to click open by itself.",
+          "target": "the door lock symbol on the washing machine control panel",
+          "verify": null,
+          "caution": "After a hot wash or a power cut it can take longer."
+        },
+        {
+          "n": 3,
+          "say": "If Child Lock is on, turn it off. It's often two buttons held for three seconds.",
+          "target": "the child lock symbol on the washing machine control panel",
+          "verify": null,
+          "caution": "Your manual shows which buttons."
+        },
+        {
+          "n": 4,
+          "say": "If water is still inside, run a drain or spin-only cycle, then wait for the lock.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "Once it's open, check no clothes are caught in the rubber seal, or under a top-loader's lid.",
+          "target": "the rubber seal around the door opening of the washing machine",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 6,
+          "say": "Look at the door hook and its catch. If either is bent or broken, please call a technician.",
+          "target": "the hook on the inside edge of the washing machine door",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 7,
+          "say": "Push the door firmly shut until it clicks.",
+          "target": "the washing machine door",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 8,
+          "say": "Switch it off at the wall for a few minutes, then switch on and try again.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 9,
+          "say": "If the door still won't open or lock, please call a technician. Never force it.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
       ],
       "source": "Samsung WW70T4020EE manual pp.8-9,42,52,55-56 + Samsung US error-code page + LG help library dE (UAE), door won't open (UK) and locked door (Canada) + Bosch India E16 page + IFB Senator Plus manual pp.16,39-40,64,73 + Whirlpool product help F5E2/LdL; checked 2026-09-27"
     },
@@ -146,36 +502,128 @@
       "error_code": null,
       "code_aliases": [],
       "brand_codes": [
-        {"brand": "Samsung", "codes": ["Ub", "U6", "UE"]},
-        {"brand": "LG", "codes": ["UE"]},
-        {"brand": "IFB", "codes": ["UnbL"], "spoken": ["u n b l"]},
-        {"brand": "Whirlpool", "codes": ["OFb", "OL"], "spoken": ["o f b"]}
+        {
+          "brand": "Samsung",
+          "codes": [
+            "Ub",
+            "U6",
+            "UE"
+          ]
+        },
+        {
+          "brand": "LG",
+          "codes": [
+            "UE"
+          ]
+        },
+        {
+          "brand": "IFB",
+          "codes": [
+            "UnbL"
+          ],
+          "spoken": [
+            "u n b l"
+          ]
+        },
+        {
+          "brand": "Whirlpool",
+          "codes": [
+            "OFb",
+            "OL"
+          ],
+          "spoken": [
+            "o f b"
+          ]
+        }
       ],
       "title": "Shaking or unbalanced load",
       "meaning": "Let's calm the shaking. It's usually an uneven load or a machine that isn't level.",
-      "symptoms": ["rocking", "thumping during spin", "load out of balance", "banging during spin"],
-      "aliases": ["shaking", "shakes a lot", "vibrating", "vibration", "vibrates", "unbalanced load", "moving across the floor", "walking", "jumping", "not spinning", "won't spin"],
+      "symptoms": [
+        "rocking",
+        "thumping during spin",
+        "load out of balance",
+        "banging during spin"
+      ],
+      "aliases": [
+        "shaking",
+        "shakes a lot",
+        "vibrating",
+        "vibration",
+        "vibrates",
+        "unbalanced load",
+        "moving across the floor",
+        "walking",
+        "jumping",
+        "not spinning",
+        "won't spin"
+      ],
       "severity": "diy",
-      "escalate_if": ["grinding noise", "burning smell", "smoke", "still showing"],
-      "safety": ["Pause the machine and wait until the drum has stopped completely."],
+      "escalate_if": [
+        "grinding noise",
+        "burning smell",
+        "smoke",
+        "still showing"
+      ],
+      "safety": [
+        "Pause the machine and wait until the drum has stopped completely."
+      ],
       "steps": [
-        {"n": 1, "say": "Open the door or lid and spread the clothes evenly around the drum, untangling any knots.",
-         "target": "the clothes inside the washing machine drum", "verify": null, "caution": null},
-        {"n": 2, "say": "If it's one heavy item, like jeans or a blanket, add a few towels to balance it.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 3, "say": "If the drum is packed tight, take a few things out.",
-         "target": "the clothes inside the washing machine drum", "verify": null, "caution": null},
-        {"n": 4, "say": "Close the door or lid and start the spin again.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 5, "say": "Check the machine doesn't rock. If it does, adjust the feet so all four sit firmly.",
-         "target": "the adjustable feet at the bottom corners of the washing machine", "verify": null,
-         "caution": "Your manual shows how to lock the feet afterwards."},
-        {"n": 6, "say": "Make sure it stands on a solid, level floor, not on a carpet or rug.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 7, "say": "New machine? Check the transit bolts on the back were taken out. If not, your manual shows how.",
-         "target": "the transit bolts or round plastic caps on the back panel of the washing machine", "verify": null, "caution": null},
-        {"n": 8, "say": "If it still shakes hard or moves across the floor, please call a technician.",
-         "target": null, "verify": null, "caution": null}
+        {
+          "n": 1,
+          "say": "Open the door or lid and spread the clothes evenly around the drum, untangling any knots.",
+          "target": "the clothes inside the washing machine drum",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "If it's one heavy item, like jeans or a blanket, add a few towels to balance it.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "If the drum is packed tight, take a few things out.",
+          "target": "the clothes inside the washing machine drum",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "Close the door or lid and start the spin again.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "Check the machine doesn't rock. If it does, adjust the feet so all four sit firmly.",
+          "target": "the adjustable feet at the bottom corners of the washing machine",
+          "verify": null,
+          "caution": "Your manual shows how to lock the feet afterwards."
+        },
+        {
+          "n": 6,
+          "say": "Make sure it stands on a solid, level floor, not on a carpet or rug.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 7,
+          "say": "New machine? Check the transit bolts on the back were taken out. If not, your manual shows how.",
+          "target": "the transit bolts or round plastic caps on the back panel of the washing machine",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 8,
+          "say": "If it still shakes hard or moves across the floor, please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
       ],
       "source": "Samsung WW70T4020EE manual pp.18,21,51-52 + Samsung US error-code page + LG help library UE (UAE) + IFB Senator Plus manual pp.13,16,21-22,67-68,76 + Whirlpool product help OFb/OL and F7E1; checked 2026-09-27"
     },
@@ -186,37 +634,124 @@
       "error_code": null,
       "code_aliases": [],
       "brand_codes": [
-        {"brand": "LG", "codes": ["CL", "PF"]},
-        {"brand": "Samsung", "codes": ["UC", "PF", "CL"]},
-        {"brand": "Whirlpool", "codes": ["LOC", "PF"]}
+        {
+          "brand": "LG",
+          "codes": [
+            "CL",
+            "PF"
+          ]
+        },
+        {
+          "brand": "Samsung",
+          "codes": [
+            "UC",
+            "PF",
+            "CL"
+          ]
+        },
+        {
+          "brand": "Whirlpool",
+          "codes": [
+            "LOC",
+            "PF"
+          ]
+        }
       ],
       "title": "Washing machine won't start",
       "meaning": "Let's find out why it won't start, beginning with the power.",
-      "symptoms": ["no lights", "screen blank", "panel not responding"],
-      "aliases": ["won't start", "not starting", "won't turn on", "not turning on", "no power", "dead", "display blank", "nothing happens", "buttons not working", "start button not working", "child lock"],
+      "symptoms": [
+        "no lights",
+        "screen blank",
+        "panel not responding"
+      ],
+      "aliases": [
+        "won't start",
+        "not starting",
+        "won't turn on",
+        "not turning on",
+        "no power",
+        "dead",
+        "display blank",
+        "nothing happens",
+        "buttons not working",
+        "start button not working",
+        "child lock"
+      ],
       "severity": "diy",
-      "escalate_if": ["burning smell", "sparks", "keeps tripping", "electric shock", "melted plug"],
-      "safety": ["Keep your hands dry when you touch the plug, socket or switches."],
+      "escalate_if": [
+        "burning smell",
+        "sparks",
+        "keeps tripping",
+        "electric shock",
+        "melted plug"
+      ],
+      "safety": [
+        "Keep your hands dry when you touch the plug, socket or switches."
+      ],
       "steps": [
-        {"n": 1, "say": "Check it's plugged straight into a wall socket, not an extension cord, and the switch is on.",
-         "target": "the washing machine's power plug and the wall socket switch", "verify": null, "caution": null},
-        {"n": 2, "say": "Plug a lamp or phone charger into that socket to see if it has power.",
-         "target": "the wall socket the washing machine plugs into", "verify": null, "caution": null},
-        {"n": 3, "say": "If the socket's dead, check your home's MCB or fuse box for a tripped switch.",
-         "target": null, "verify": null, "caution": "If it trips again, call an electrician."},
-        {"n": 4, "say": "Close the door, or the lid on a top-loader, firmly until it clicks.",
-         "target": "the washing machine door", "verify": null, "caution": null},
-        {"n": 5, "say": "Make sure the water tap is turned on.",
-         "target": "the water tap on the wall that the washing machine's inlet hose is connected to", "verify": null, "caution": null},
-        {"n": 6, "say": "If the buttons don't respond, Child Lock may be on. Hold its buttons for about three seconds.",
-         "target": "the child lock symbol on the washing machine control panel", "verify": null,
-         "caution": "Your manual shows which buttons."},
-        {"n": 7, "say": "Choose a program, then press Start/Pause.",
-         "target": "the Start/Pause button on the washing machine control panel", "verify": null, "caution": null},
-        {"n": 8, "say": "Check the display isn't counting down a delay start or paused in a soak.",
-         "target": "the display on the washing machine control panel", "verify": null, "caution": null},
-        {"n": 9, "say": "If the display stays dark or it still won't start, please call a technician.",
-         "target": null, "verify": null, "caution": null}
+        {
+          "n": 1,
+          "say": "Check it's plugged straight into a wall socket, not an extension cord, and the switch is on.",
+          "target": "the washing machine's power plug and the wall socket switch",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Plug a lamp or phone charger into that socket to see if it has power.",
+          "target": "the wall socket the washing machine plugs into",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "If the socket's dead, check your home's MCB or fuse box for a tripped switch.",
+          "target": null,
+          "verify": null,
+          "caution": "If it trips again, call an electrician."
+        },
+        {
+          "n": 4,
+          "say": "Close the door, or the lid on a top-loader, firmly until it clicks.",
+          "target": "the washing machine door",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "Make sure the water tap is turned on.",
+          "target": "the water tap on the wall that the washing machine's inlet hose is connected to",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 6,
+          "say": "If the buttons don't respond, Child Lock may be on. Hold its buttons for about three seconds.",
+          "target": "the child lock symbol on the washing machine control panel",
+          "verify": null,
+          "caution": "Your manual shows which buttons."
+        },
+        {
+          "n": 7,
+          "say": "Choose a program, then press Start/Pause.",
+          "target": "the Start/Pause button on the washing machine control panel",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 8,
+          "say": "Check the display isn't counting down a delay start or paused in a soak.",
+          "target": "the display on the washing machine control panel",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 9,
+          "say": "If the display stays dark or it still won't start, please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
       ],
       "source": "Samsung WW70T4020EE manual pp.8-9,42,51,53,56 + Samsung US error-code page + LG help library CL/PF (UAE) and power-on page (US) + IFB Senator Plus manual pp.15,39,64-65,70,73 + Whirlpool product help LOC/PF; checked 2026-09-27"
     },
@@ -227,37 +762,111 @@
       "error_code": null,
       "code_aliases": [],
       "brand_codes": [
-        {"brand": "LG", "codes": ["tcL"], "spoken": ["t c l"]}
+        {
+          "brand": "LG",
+          "codes": [
+            "tcL"
+          ],
+          "spoken": [
+            "t c l"
+          ]
+        }
       ],
       "title": "Bad smell or dirty drum",
       "meaning": "Let's freshen it up. Musty smells usually come from leftover detergent and damp inside.",
-      "symptoms": ["mould on the door seal", "black gunk in the rubber seal", "sour smell"],
-      "aliases": ["bad smell", "smells bad", "stinks", "stinky", "musty smell", "damp smell", "mouldy smell", "moldy smell", "smelly clothes", "clothes smell bad", "clean the washing machine drum", "drum clean", "tub clean"],
-      "severity": "diy",
-      "escalate_if": ["burning smell", "smoke", "sparks"],
-      "safety": ["Switch the machine off and unplug it before you clean inside."],
-      "steps": [
-        {"n": 1, "say": "Take everything out of the drum. The cleaning program has to run empty.",
-         "target": "the inside of the washing machine drum", "verify": null, "caution": null},
-        {"n": 2, "say": "On a front-loader, wipe the rubber door seal with a damp cloth, including inside its folds.",
-         "target": "the rubber seal around the door opening of the washing machine", "verify": null,
-         "caution": "Pick out any hair, coins or fluff you find."},
-        {"n": 3, "say": "Slide out the detergent drawer and rinse it under warm running water with a soft brush.",
-         "target": "the detergent drawer on the front of the washing machine", "verify": null,
-         "caution": "Your manual shows how it releases; some have a small lever."},
-        {"n": 4, "say": "Wipe out the drawer's slot too, then slide the drawer back in.",
-         "target": "the empty detergent drawer slot on the front of the washing machine", "verify": null, "caution": null},
-        {"n": 5, "say": "Plug in and run the drum clean or tub clean program with the drum empty.",
-         "target": "the program dial or program buttons on the washing machine control panel", "verify": null,
-         "caution": "Its name differs by model; check your manual."},
-        {"n": 6, "say": "From now on, use only the detergent amount on the pack. Extra suds leave smelly residue.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 7, "say": "After each wash, leave the door slightly open so the inside can dry.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 8, "say": "If it still smells after a clean cycle, please call a technician.",
-         "target": null, "verify": null, "caution": null}
+      "symptoms": [
+        "mould on the door seal",
+        "black gunk in the rubber seal",
+        "sour smell"
       ],
-      "source": "Samsung WW70T4020EE manual pp.12,43,49,54 + LG help library tcL/Sud (UAE) + IFB Senator Plus manual pp.13,58,61,66 + Whirlpool product help odours, door seal and HE detergent pages; checked 2026-09-27"
+      "aliases": [
+        "bad smell",
+        "smells bad",
+        "stinks",
+        "stinky",
+        "musty smell",
+        "damp smell",
+        "mouldy smell",
+        "moldy smell",
+        "smelly clothes",
+        "clothes smell bad",
+        "clean the washing machine drum",
+        "drum clean",
+        "tub clean"
+      ],
+      "severity": "diy",
+      "escalate_if": [
+        "burning smell",
+        "smoke",
+        "sparks"
+      ],
+      "safety": [
+        "Switch the machine off and unplug it before you clean inside."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Take everything out of the drum. The cleaning program has to run empty.",
+          "target": "the inside of the washing machine drum",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "On a front-loader, wipe the rubber door seal with a damp cloth, including inside its folds.",
+          "target": "the rubber seal around the door opening of the washing machine",
+          "verify": null,
+          "caution": "Pick out any hair, coins or fluff you find."
+        },
+        {
+          "n": 3,
+          "say": "Slide out the detergent drawer and rinse it under warm running water with a soft brush.",
+          "target": "the detergent drawer on the front of the washing machine",
+          "verify": null,
+          "caution": "Your manual shows how it releases; some have a small lever."
+        },
+        {
+          "n": 4,
+          "say": "Wipe out the drawer's slot too, then slide the drawer back in.",
+          "target": "the empty detergent drawer slot on the front of the washing machine",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "Plug in and run the drum clean or tub clean program with the drum empty.",
+          "target": "the program dial or program buttons on the washing machine control panel",
+          "verify": null,
+          "caution": "Its name differs by model; check your manual."
+        },
+        {
+          "n": 6,
+          "say": "From now on, use only the detergent amount on the pack. Extra suds leave smelly residue.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 7,
+          "say": "After each wash, leave the door slightly open so the inside can dry.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 8,
+          "say": "If it still smells after a clean cycle, please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "Samsung WW70T4020EE manual pp.12,43,49,54 + LG help library tcL/Sud (UAE) + IFB Senator Plus manual pp.13,58,61,66 + Whirlpool product help odours, door seal and HE detergent pages; checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "unplug"
+        }
+      ]
     },
     {
       "id": "washing_machine_technician_fault",
@@ -266,58 +875,208 @@
       "error_code": null,
       "code_aliases": [],
       "brand_codes": [
-        {"brand": "Samsung", "codes": ["3C", "HC", "1C", "8C", "AC6", "OC"], "spoken": ["three c", "one c", "eight c"]},
-        {"brand": "LG", "codes": ["CE", "PE", "tE", "SE", "FE", "dHE"]},
-        {"brand": "Bosch", "codes": ["E19", "F19", "E20", "F20", "E23", "F23", "E25", "F25", "E26", "F26", "E27", "F27", "E28", "F28"]}
+        {
+          "brand": "Samsung",
+          "codes": [
+            "3C",
+            "HC",
+            "1C",
+            "8C",
+            "AC6",
+            "OC"
+          ],
+          "spoken": [
+            "three c",
+            "one c",
+            "eight c"
+          ]
+        },
+        {
+          "brand": "LG",
+          "codes": [
+            "CE",
+            "PE",
+            "tE",
+            "SE",
+            "FE",
+            "dHE"
+          ]
+        },
+        {
+          "brand": "Bosch",
+          "codes": [
+            "E19",
+            "F19",
+            "E20",
+            "F20",
+            "E23",
+            "F23",
+            "E25",
+            "F25",
+            "E26",
+            "F26",
+            "E27",
+            "F27",
+            "E28",
+            "F28"
+          ]
+        }
       ],
       "title": "Fault that needs a technician",
       "meaning": "That's a fault inside the machine. With dry hands, switch it off at the wall and turn off its tap.",
-      "symptoms": ["smoke coming out", "sparking", "water all over the floor", "machine flooded"],
-      "aliases": ["burning smell", "smells of burning", "smoke", "smoking", "sparks", "electric shock", "gave me a shock", "strange noise", "grinding noise", "water on the floor", "motor error", "heater error", "sensor error"],
+      "symptoms": [
+        "smoke coming out",
+        "sparking",
+        "water all over the floor",
+        "machine flooded"
+      ],
+      "aliases": [
+        "burning smell",
+        "smells of burning",
+        "smoke",
+        "smoking",
+        "sparks",
+        "electric shock",
+        "gave me a shock",
+        "strange noise",
+        "grinding noise",
+        "water on the floor",
+        "motor error",
+        "heater error",
+        "sensor error"
+      ],
       "severity": "call_technician",
-      "escalate_if": ["burning smell", "smoke", "sparks", "electric shock"],
+      "escalate_if": [
+        "burning smell",
+        "smoke",
+        "sparks",
+        "electric shock"
+      ],
       "safety": [],
       "steps": [],
       "source": "Samsung WW70T4020EE manual pp.8,55-56 + LG help library CE/PE/tE/SE/FE/dHE (UAE) + Bosch India E19-E28 pages; checked 2026-09-27"
     }
   ],
   "test_queries": [
-    {"q": "my washing machine won't drain", "expect": "washing_machine_not_draining"},
-    {"q": "water is stuck in the washing machine drum", "expect": "washing_machine_not_draining"},
-    {"q": "how do I clean the drain filter on my washer", "expect": "washing_machine_not_draining"},
-    {"q": "my LG washer is showing OE", "expect": "washing_machine_not_draining"},
-    {"q": "my Bosch washing machine shows E18", "expect": "washing_machine_not_draining"},
-
-    {"q": "my washing machine is not filling with water", "expect": "washing_machine_not_filling"},
-    {"q": "no water coming into the washer", "expect": "washing_machine_not_filling"},
-    {"q": "Samsung washing machine showing 4C", "expect": "washing_machine_not_filling"},
-
-    {"q": "the washing machine door won't open", "expect": "washing_machine_door_problem"},
-    {"q": "my washer door won't lock", "expect": "washing_machine_door_problem"},
-    {"q": "the washing machine door is stuck after the wash", "expect": "washing_machine_door_problem"},
-    {"q": "my LG washer shows dE error", "expect": "washing_machine_door_problem"},
-
-    {"q": "my washing machine is shaking a lot", "expect": "washing_machine_shaking_unbalanced"},
-    {"q": "the washer is moving across the floor when it spins", "expect": "washing_machine_shaking_unbalanced"},
-    {"q": "washing machine won't spin", "expect": "washing_machine_shaking_unbalanced"},
-    {"q": "Samsung washer showing Ub", "expect": "washing_machine_shaking_unbalanced"},
-
-    {"q": "my washing machine won't turn on", "expect": "washing_machine_wont_start"},
-    {"q": "the washer is dead, nothing on the display", "expect": "washing_machine_wont_start"},
-    {"q": "washing machine buttons are not working", "expect": "washing_machine_wont_start"},
-    {"q": "my LG washer shows CL", "expect": "washing_machine_wont_start"},
-
-    {"q": "my washing machine smells bad", "expect": "washing_machine_bad_smell"},
-    {"q": "the washer has a musty smell", "expect": "washing_machine_bad_smell"},
-    {"q": "how do I clean my washing machine", "expect": "washing_machine_bad_smell"},
-    {"q": "LG washer showing tcL", "expect": "washing_machine_bad_smell"},
-
-    {"q": "there's a burning smell from my washing machine", "expect": "washing_machine_technician_fault"},
-    {"q": "smoke is coming out of the washer", "expect": "washing_machine_technician_fault"},
-    {"q": "Samsung washing machine showing 3C", "expect": "washing_machine_technician_fault"},
-    {"q": "my Bosch washer has error E23", "expect": "washing_machine_technician_fault"},
-
-    {"q": "which washing machine should I buy", "expect": "NONE"},
-    {"q": "can I wash a woollen sweater in my washing machine", "expect": "NONE"}
+    {
+      "q": "my washing machine won't drain",
+      "expect": "washing_machine_not_draining"
+    },
+    {
+      "q": "water is stuck in the washing machine drum",
+      "expect": "washing_machine_not_draining"
+    },
+    {
+      "q": "how do I clean the drain filter on my washer",
+      "expect": "washing_machine_not_draining"
+    },
+    {
+      "q": "my LG washer is showing OE",
+      "expect": "washing_machine_not_draining"
+    },
+    {
+      "q": "my Bosch washing machine shows E18",
+      "expect": "washing_machine_not_draining"
+    },
+    {
+      "q": "my washing machine is not filling with water",
+      "expect": "washing_machine_not_filling"
+    },
+    {
+      "q": "no water coming into the washer",
+      "expect": "washing_machine_not_filling"
+    },
+    {
+      "q": "Samsung washing machine showing 4C",
+      "expect": "washing_machine_not_filling"
+    },
+    {
+      "q": "the washing machine door won't open",
+      "expect": "washing_machine_door_problem"
+    },
+    {
+      "q": "my washer door won't lock",
+      "expect": "washing_machine_door_problem"
+    },
+    {
+      "q": "the washing machine door is stuck after the wash",
+      "expect": "washing_machine_door_problem"
+    },
+    {
+      "q": "my LG washer shows dE error",
+      "expect": "washing_machine_door_problem"
+    },
+    {
+      "q": "my washing machine is shaking a lot",
+      "expect": "washing_machine_shaking_unbalanced"
+    },
+    {
+      "q": "the washer is moving across the floor when it spins",
+      "expect": "washing_machine_shaking_unbalanced"
+    },
+    {
+      "q": "washing machine won't spin",
+      "expect": "washing_machine_shaking_unbalanced"
+    },
+    {
+      "q": "Samsung washer showing Ub",
+      "expect": "washing_machine_shaking_unbalanced"
+    },
+    {
+      "q": "my washing machine won't turn on",
+      "expect": "washing_machine_wont_start"
+    },
+    {
+      "q": "the washer is dead, nothing on the display",
+      "expect": "washing_machine_wont_start"
+    },
+    {
+      "q": "washing machine buttons are not working",
+      "expect": "washing_machine_wont_start"
+    },
+    {
+      "q": "my LG washer shows CL",
+      "expect": "washing_machine_wont_start"
+    },
+    {
+      "q": "my washing machine smells bad",
+      "expect": "washing_machine_bad_smell"
+    },
+    {
+      "q": "the washer has a musty smell",
+      "expect": "washing_machine_bad_smell"
+    },
+    {
+      "q": "how do I clean my washing machine",
+      "expect": "washing_machine_bad_smell"
+    },
+    {
+      "q": "LG washer showing tcL",
+      "expect": "washing_machine_bad_smell"
+    },
+    {
+      "q": "there's a burning smell from my washing machine",
+      "expect": "washing_machine_technician_fault"
+    },
+    {
+      "q": "smoke is coming out of the washer",
+      "expect": "washing_machine_technician_fault"
+    },
+    {
+      "q": "Samsung washing machine showing 3C",
+      "expect": "washing_machine_technician_fault"
+    },
+    {
+      "q": "my Bosch washer has error E23",
+      "expect": "washing_machine_technician_fault"
+    },
+    {
+      "q": "which washing machine should I buy",
+      "expect": "NONE"
+    },
+    {
+      "q": "can I wash a woollen sweater in my washing machine",
+      "expect": "NONE"
+    }
   ]
 }

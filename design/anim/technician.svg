@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="118" viewBox="0 0 96 118">
+<g transform="translate(0.00 0.00)">
+<rect x="0.5" y="0.5" width="95.0" height="117.00" rx="16" fill="#0F1C2E" fill-opacity="0.86" stroke="#FF5A5F" stroke-opacity="0.4"/>
+<circle cx="48.00" cy="42.00" r="30.00" fill="none" stroke="#FF5A5F" stroke-width="2.10" opacity="0.00"><animate attributeName="r" dur="2.6s" repeatCount="indefinite" values="24.00;24.00;24.00;24.00;24.00;24.72;25.38;25.98;26.53;27.02;27.47;27.87;28.22;28.54;28.81;29.05;29.25;29.42;29.57;29.68;29.78;29.85;29.91;29.95;29.97;29.99;30.00;30.00;30.00;30.00;30.00;30.00;30.00;30.00;30.00;30.00;30.00;30.00;30.00;30.00;30.00;30.00;30.00;30.00;30.00;30.00;30.00;30.00;30.00;30.00;30.00;30.00;24.00"/><animate attributeName="opacity" dur="2.6s" repeatCount="indefinite" values="0.00;0.00;0.00;0.00;0.00;0.38;0.37;0.35;0.33;0.32;0.30;0.28;0.27;0.25;0.23;0.22;0.20;0.18;0.17;0.15;0.13;0.12;0.10;0.08;0.07;0.05;0.03;0.02;0.00;0.00;0.00;0.00;0.00;0.00;0.00;0.00;0.00;0.00;0.00;0.00;0.00;0.00;0.00;0.00;0.00;0.00;0.00;0.00;0.00;0.00;0.00;0.00;0.00"/></circle>
+<circle cx="48.00" cy="42.00" r="24.00" fill="none" stroke="#FF5A5F" stroke-width="3.00" opacity="1.00"/>
+<path d="M48.85 41.15 L37.82 52.18" fill="none" stroke="#F6F1E7" stroke-width="4.50" stroke-linecap="round" stroke-linejoin="round" opacity="0.92"/>
+<path d="M58.47 36.44 L58.47 37.41 L58.29 38.37 L57.94 39.29 L57.43 40.12 L56.78 40.85 L56.01 41.45 L55.15 41.90 L54.22 42.19 L53.25 42.31 L52.27 42.25 L51.33 42.01 L50.44 41.61 L49.63 41.06 L48.94 40.37 L48.39 39.56 L47.99 38.67 L47.75 37.73 L47.69 36.75 L47.81 35.78 L48.10 34.85 L48.55 33.99 L49.15 33.22 L49.88 32.57 L50.71 32.06 L51.63 31.71 L52.59 31.53 L53.56 31.53" fill="none" stroke="#F6F1E7" stroke-width="3.90" stroke-linecap="round" stroke-linejoin="round" opacity="0.92"/>
+<text x="48.0" y="92.00" text-anchor="middle" fill="#F6F1E7" font-family="Roboto, Inter, Helvetica, Arial, sans-serif" font-size="12" font-weight="500">Call a</text>
+<text x="48.0" y="107.00" text-anchor="middle" fill="#F6F1E7" font-family="Roboto, Inter, Helvetica, Arial, sans-serif" font-size="12" font-weight="500">technician</text>
+</g>
+</svg>

@@ -65,6 +65,10 @@ Language: **English only**. Two demo targets:
 Engine-bay guidance is limited to user-serviceable checks. **No wiring guidance.** Asking about
 wiring must produce a refusal and a mechanic recommendation; this is a deliberate demo moment.
 
+The two targets above are what we demo live. The **KB itself is generic** (user decision, 2026-09-27): common
+household appliances and vehicles, not one brand or car model: washing machine, AC, fridge, TV, laptop, geyser, water
+purifier, microwave, inverter, car, bike/scooter. See §7.
+
 ---
 
 ## 4. The hackathon (constraints that shape decisions)
@@ -163,6 +167,12 @@ com.fixlens
 Location: `app/src/main/assets/kb/fixlens_kb.json`. Loaded once at startup, validated, and
 indexed in a `HashMap` keyed by `appliance|brand|normalizedCode`.
 
+**Generated, don't hand-edit:** the sources are `tools/kb/entries/<category>.json` (one per appliance), merged by
+`python3 tools/kb/build_kb.py <kb_version>`, which also writes `tools/kb/test_queries.json` (run by `KbTest`).
+How to write entries (consensus of ≥ 2 manufacturers' manuals, symptom-first, spoken-length limits):
+[tools/kb/AUTHORING.md](tools/kb/AUTHORING.md). Per-entry sources: `tools/kb/sources/<category>.md`.
+Entries are generic (`brand: "generic"`); a brand's error codes for the same fault are listed in `brand_codes`.
+
 **Why JSON and not vector RAG (deliberate decision; don't change it without asking):**
 the primary keys are exact identifiers (error codes). Vector search is weak on exact codes and
 can return a neighbouring code, which is a safety issue. With 10–30 verified entries, exact lookup
@@ -196,10 +206,13 @@ post-hackathon plan, not now.
   oil dipstick", not "dipstick"), or `null` for steps with nothing to point at.
 
 ### Retrieval: 4 stages, in order
+0. **Appliance:** from the user's words, else the session notes (`MemoryRules.kbContext`); both stages search only
+   that appliance's entries ("not cooling" is an AC or a fridge). None known → all entries.
 1. **Exact:** normalize the code (uppercase, strip spaces, treat `0`/`O` as the same, apply
-   `code_aliases`) → HashMap lookup on `appliance|brand|code`.
+   `code_aliases` / `brand_codes[].spoken`) → match against each brand's codes. With the brand known, only its codes
+   count; without, the code must lead to one entry. Letters-only codes ("OE", "dC") also need a cue word or a brand.
 2. **Keyword/alias:** token-overlap score of the user text against `aliases` + `symptoms`,
-   filtered by appliance. Accept only if the top score clearly beats the second.
+   filtered by appliance ("won't"/"doesn't"/"no" read as "not"). Accept only if the top score clearly beats the second.
 3. **LLM router:** send the VLM the list of `id — title` for that appliance and require JSON
    `{"id":"<id>|NONE","confidence":"high|medium|low"}`. Accept only if the id exists and
    confidence is not low.
@@ -385,7 +398,20 @@ Notes:
   auto-checked by the VLM every 6 s while the user is idle. No KB match: the VLM answers and points, with no steps (user
   decision). Verified on the phone: match, safety gate, step pointing (~5 s), back, escalation, auto-check. Known issue:
   asked for a part that isn't in view, the VLM often points at something else anyway (keyboard as "engine").
-  `assets/kb/fixlens_kb.json` is a DRAFT (engine oil, coolant, washer fluid, wiring refusal, laptop cover): verify it.
+  `assets/kb/fixlens_kb.json` was a DRAFT; replaced by the generic KB below.
+- **Step animations (2026-09-27, not yet tried on the phone):** during a guide, a small how-to card (top right,
+  moves left if the part is under it) shows how to do the step: turn ↺/↻, pull out, push in, level between marks,
+  pour, unplug, switch off, engine off, call a technician. Turn/pull/push/pour also get a cue drawn on the tracked part
+  (arrows circling the cap). What to show comes only from the KB (`steps[].anim`, `safety_anim`); a turn's direction
+  must be stated in the step's words (validated). `ui/StepCues.kt`; SVGs in `design/anim/`; plan in
+  [docs/step-animations-plan.md](docs/step-animations-plan.md).
+- **Generic KB (2026-09-27, `2026-09-27.generic1`):** 60 entries over 11 appliances (car 14, washing machine 7, bike 7,
+  AC 5, fridge 5, TV 5, laptop 4, geyser 4, microwave 3, purifier 3, inverter 3), each step backed by ≥ 2 makers'
+  official manuals (sources per entry in `tools/kb/sources/`). Symptom-first; washer/AC/fridge/geyser brand error codes
+  map onto the generic entries (`brand_codes`). 220 retrieval test queries pass (`KbTest`). **Not yet done:** the
+  `target` phrases haven't been tried on real photos (M0/M1 method), and spoken codes ("five c", "d p e r") haven't
+  been tried with Moonshine. A first question with no appliance word ("fix the wiring") searches every appliance and
+  can tie → the VLM answers without a guide.
 - **Voice out (M3, 2026-09-27; not ticked until a spoken question + mic barge-in is tried by hand):** Piper
   `en_US-lessac-medium` from the sherpa-onnx `tts-models` release (`vits-piper-en_US-lessac-medium.tar.bz2`); pick others
   with `tools/tts/audition.py`, push with `VOICE=<voice> tools/push_models.sh`. Supertonic 3 was tried first and dropped:
@@ -402,6 +428,23 @@ Notes:
   (`ui/MarkerOverlay.kt`: flash + shockwaves, dim closes in like an iris, corner brackets spring in with a twist,
   outline traces round, scan line, name chip pops; settled = breathing ring + a glint lapping the outline) and a haptic
   tick. Silent re-grounds are `Seed(quiet = true)`: a short re-lock only. One frame clock drives it all (`ui/fx/Motion.kt`).
+- **Fixy takes the remote (2026-09-27, builds + unit-tested; not yet tried on the phone):** the IR blaster pairs with and
+  controls ACs, TVs, projectors and fans (`ir/`, `ui/remote/`). "Take the remote" → VLM reads device + brand (always
+  confirmed; brand sheet if unread) → pairing card tries each *distinct* code (test 1 mute/menu/AC on 24°, test 2 vol+/
+  back/25°; AC beeps auto-confirm via `ir/BeepProbe`, else buttons/voice/volume keys) → badge top-right ripples per send.
+  Spoken commands ("set it to 24", "volume up by 3") go out with no VLM; routines: AC not cooling, TV no picture (cycles
+  inputs, VLM checks the screen), no sound. Codes: `assets/ir/` (2.2 MB) built by `tools/ir/build_ir_assets.py` from
+  `ir-dataset/` (IRext MIT + Flipper-IRDB CC0); AC states from the vendored IRext decoder (`cpp/irext/`, JNI
+  `fixlens_ir.cpp`). Permission `TRANSMIT_IR` added. Debug: `--ez irinfo true`, `--ez irfake true`, `--es ir "tv/LG/mute"`,
+  `--es irpair "tv:LG"`, `--es irtake "take the remote"`. Plan + edge cases: [docs/ir-remote-plan.md](docs/ir-remote-plan.md).
+  Tried on the phone (2026-09-27): IR emitter present (carriers 30/33/36/38/40/56 kHz), TV and AC codes sent, the
+  AC decoder runs on the phone, badge + pairing card render. **Remote agent (2026-09-27, builds + tested, not yet on the
+  phone):** `ir/RemoteAgent.kt` + `RemoteController.agentLoop`: no agent SDK (they need a cloud model); Qwen-VL plans
+  one JSON action per step (press / wait / ask / done) from the camera frame, the goal and the history; the controller
+  checks it against the remote's real keys (power only if asked), sends it, max 8 steps. Goals like "switch to HDMI 2",
+  "no sound" go to it; plain commands stay on the fast path. Pairing now scans codes by itself: TV test = volume up,
+  seen by `ir/ScreenProbe` (24×24 brightness grid), AC by its beep; "It responded" / volume-up anytime. Every send drops
+  a key pop-up under the badge (`ui/remote/KeyPressStack.kt`). Debug: `--ez irfake true` (no IR out), `--es irpress vol_up`.
 
 ---
 

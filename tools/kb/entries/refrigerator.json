@@ -40,32 +40,90 @@
         "Don't open or unscrew any cover at the back of the fridge. There are gas pipes behind it."
       ],
       "steps": [
-        {"n": 1, "say": "Check the fridge is plugged in firmly and the wall switch is on.",
-         "target": "the fridge's power plug in the wall socket", "verify": null, "caution": null},
-        {"n": 2, "say": "If the inside light and display stay off, test that socket with another appliance.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 3, "say": "Turn the temperature knob one step colder, or set the fridge to about three degrees.",
-         "target": "the temperature control knob or display of the fridge", "verify": null, "caution": null},
-        {"n": 4, "say": "If it was just switched on or loaded with food, give it a few hours to cool.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 5, "say": "Make sure the door shuts fully, with no shelf, drawer or bottle stopping it.",
-         "target": "the edge of the fridge door where it meets the cabinet", "verify": null, "caution": null},
-        {"n": 6, "say": "Wipe the rubber door seal clean with a damp cloth so it seals tightly.",
-         "target": "the rubber door seal around the edge of the fridge door", "verify": null,
-         "caution": "If the seal is torn or leaves a gap, it needs replacing."},
-        {"n": 7, "say": "Don't overpack it. Leave gaps between the food so cold air can flow.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 8, "say": "Move any food that's blocking the cold air vents inside.",
-         "target": "the cold air vent slots on the back wall inside the fridge", "verify": null, "caution": null},
-        {"n": 9, "say": "Leave about a hand's width of space between the fridge and the walls behind and beside it.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 10, "say": "Keep it out of direct sun and away from the stove or other heat.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 11, "say": "Unplug it, vacuum the dust off the grille at the lower back, then plug it back in.",
-         "target": "the ventilation grille at the lower back of the fridge", "verify": null,
-         "caution": "Only clean the outside. Don't remove any cover."},
-        {"n": 12, "say": "If it's still not cold after a few hours, please call a technician.",
-         "target": null, "verify": null, "caution": null}
+        {
+          "n": 1,
+          "say": "Check the fridge is plugged in firmly and the wall switch is on.",
+          "target": "the fridge's power plug in the wall socket",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "If the inside light and display stay off, test that socket with another appliance.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Turn the temperature knob one step colder, or set the fridge to about three degrees.",
+          "target": "the temperature control knob or display of the fridge",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "If it was just switched on or loaded with food, give it a few hours to cool.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "Make sure the door shuts fully, with no shelf, drawer or bottle stopping it.",
+          "target": "the edge of the fridge door where it meets the cabinet",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 6,
+          "say": "Wipe the rubber door seal clean with a damp cloth so it seals tightly.",
+          "target": "the rubber door seal around the edge of the fridge door",
+          "verify": null,
+          "caution": "If the seal is torn or leaves a gap, it needs replacing."
+        },
+        {
+          "n": 7,
+          "say": "Don't overpack it. Leave gaps between the food so cold air can flow.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 8,
+          "say": "Move any food that's blocking the cold air vents inside.",
+          "target": "the cold air vent slots on the back wall inside the fridge",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 9,
+          "say": "Leave about a hand's width of space between the fridge and the walls behind and beside it.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 10,
+          "say": "Keep it out of direct sun and away from the stove or other heat.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 11,
+          "say": "Unplug it, vacuum the dust off the grille at the lower back, then plug it back in.",
+          "target": "the ventilation grille at the lower back of the fridge",
+          "verify": null,
+          "caution": "Only clean the outside. Don't remove any cover."
+        },
+        {
+          "n": 12,
+          "say": "If it's still not cold after a few hours, please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
       ],
       "source": "LG India help library (fridge not cooling properly; not cool enough) + Samsung UK fridge isn't cooling page + Godrej direct cool user manual p.3, 5, 8 + Haier India fridge compartment does not work page + ENERGY STAR refrigerator tips; checked 2026-09-27"
     },
@@ -106,25 +164,69 @@
         "If water is near the plug or socket, switch off at the wall before you touch anything."
       ],
       "steps": [
-        {"n": 1, "say": "A few drops inside after the door's been open are normal. Bigger puddles are what we're fixing.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 2, "say": "Make sure the door closes fully every time, so warm damp air can't get in.",
-         "target": "the edge of the fridge door where it meets the cabinet", "verify": null, "caution": null},
-        {"n": 3, "say": "Let hot food cool to room temperature before you put it in.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 4, "say": "Keep food and drinks covered or in closed containers, so nothing spills.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 5, "say": "Look for the small drain hole or channel on the back wall inside, and clear any food bits.",
-         "target": "the small drain hole or channel on the back wall inside the fridge compartment", "verify": null,
-         "caution": "Don't pour hot water into it."},
-        {"n": 6, "say": "If there's a drip tray under the freezer box, empty it and set it back straight.",
-         "target": "the plastic drip tray under the freezer box", "verify": null, "caution": null},
-        {"n": 7, "say": "In a single door fridge, defrost every few days so melting ice doesn't overflow.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 8, "say": "If water still collects, please unplug the fridge and call a technician.",
-         "target": null, "verify": null, "caution": null}
+        {
+          "n": 1,
+          "say": "A few drops inside after the door's been open are normal. Bigger puddles are what we're fixing.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Make sure the door closes fully every time, so warm damp air can't get in.",
+          "target": "the edge of the fridge door where it meets the cabinet",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Let hot food cool to room temperature before you put it in.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "Keep food and drinks covered or in closed containers, so nothing spills.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "Look for the small drain hole or channel on the back wall inside, and clear any food bits.",
+          "target": "the small drain hole or channel on the back wall inside the fridge compartment",
+          "verify": null,
+          "caution": "Don't pour hot water into it."
+        },
+        {
+          "n": 6,
+          "say": "If there's a drip tray under the freezer box, empty it and set it back straight.",
+          "target": "the plastic drip tray under the freezer box",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 7,
+          "say": "In a single door fridge, defrost every few days so melting ice doesn't overflow.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 8,
+          "say": "If water still collects, please unplug the fridge and call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
       ],
-      "source": "LG India help library (water on the floor; top-freezer water leak) + Samsung India water leakage in refrigerator page + Godrej direct cool user manual p.5, 8, 9 + LG India direct cool defrost page; checked 2026-09-27"
+      "source": "LG India help library (water on the floor; top-freezer water leak) + Samsung India water leakage in refrigerator page + Godrej direct cool user manual p.5, 8, 9 + LG India direct cool defrost page; checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "switch_off"
+        }
+      ]
     },
     {
       "id": "refrigerator_ice_build_up",
@@ -163,25 +265,69 @@
         "Never chip the ice with a knife or anything sharp. It can damage the fridge."
       ],
       "steps": [
-        {"n": 1, "say": "Make sure the fridge door and the freezer door close fully, with nothing sticking out.",
-         "target": "the freezer door", "verify": null, "caution": null},
-        {"n": 2, "say": "Wipe the rubber door seal clean, and check it isn't torn or loose.",
-         "target": "the rubber door seal around the edge of the fridge door", "verify": null, "caution": null},
-        {"n": 3, "say": "If your fridge has a defrost button, take the food out of the freezer box first.",
-         "target": "the freezer box at the top inside the fridge", "verify": null, "caution": null},
-        {"n": 4, "say": "Check the drip tray is in place under the freezer box to catch the water.",
-         "target": "the plastic drip tray under the freezer box", "verify": null, "caution": null},
-        {"n": 5, "say": "Press the defrost button, usually in the middle of the temperature knob.",
-         "target": "the defrost button in the centre of the round temperature knob inside the fridge", "verify": null,
-         "caution": "On some models the button is inside the freezer box."},
-        {"n": 6, "say": "Keep the door closed. When the ice has melted, the button pops out and cooling restarts.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 7, "say": "From now on, let hot food cool before it goes in, and open the door less often.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 8, "say": "Defrost every few days, before the ice gets thicker than about half a centimetre.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 9, "say": "If a fridge without a defrost button keeps icing up, or the button won't pop out, call a technician.",
-         "target": null, "verify": null, "caution": null}
+        {
+          "n": 1,
+          "say": "Make sure the fridge door and the freezer door close fully, with nothing sticking out.",
+          "target": "the freezer door",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Wipe the rubber door seal clean, and check it isn't torn or loose.",
+          "target": "the rubber door seal around the edge of the fridge door",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "If your fridge has a defrost button, take the food out of the freezer box first.",
+          "target": "the freezer box at the top inside the fridge",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "Check the drip tray is in place under the freezer box to catch the water.",
+          "target": "the plastic drip tray under the freezer box",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "Press the defrost button, usually in the middle of the temperature knob.",
+          "target": "the defrost button in the centre of the round temperature knob inside the fridge",
+          "verify": null,
+          "caution": "On some models the button is inside the freezer box."
+        },
+        {
+          "n": 6,
+          "say": "Keep the door closed. When the ice has melted, the button pops out and cooling restarts.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 7,
+          "say": "From now on, let hot food cool before it goes in, and open the door less often.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 8,
+          "say": "Defrost every few days, before the ice gets thicker than about half a centimetre.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 9,
+          "say": "If a fridge without a defrost button keeps icing up, or the button won't pop out, call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
       ],
       "source": "LG India help library (manual defrost in single door direct cool; defrosting video page) + Samsung India excess ice in direct cool refrigerator page + Godrej direct cool user manual p.5, 11 + LG US frost build-up page; checked 2026-09-27"
     },
@@ -228,24 +374,69 @@
         "Unplug the fridge before you move it or turn its feet."
       ],
       "steps": [
-        {"n": 1, "say": "Soft humming, gurgling, cracking, or a click when the motor starts or stops is normal.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 2, "say": "A new fridge, or one that was just moved or switched on, runs louder at first.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 3, "say": "Take anything off the top of the fridge.",
-         "target": "the top surface of the fridge", "verify": null, "caution": null},
-        {"n": 4, "say": "Pull the fridge slightly out so its back and sides don't touch the wall or cabinets.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 5, "say": "Check it stands firm. If it rocks, turn the front feet until it's level and steady.",
-         "target": "the adjustable levelling feet at the bottom front corners of the fridge", "verify": null, "caution": null},
-        {"n": 6, "say": "Make sure no food or ice is pressing against the fan at the back of the freezer.",
-         "target": "the fan cover on the back wall inside the freezer", "verify": null, "caution": null},
-        {"n": 7, "say": "Wait about ten minutes, then plug the fridge back in and listen again.",
-         "target": "the fridge's power plug in the wall socket", "verify": null, "caution": null},
-        {"n": 8, "say": "If it still grinds, bangs or rattles loudly, please call a technician.",
-         "target": null, "verify": null, "caution": null}
+        {
+          "n": 1,
+          "say": "Soft humming, gurgling, cracking, or a click when the motor starts or stops is normal.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "A new fridge, or one that was just moved or switched on, runs louder at first.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Take anything off the top of the fridge.",
+          "target": "the top surface of the fridge",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "Pull the fridge slightly out so its back and sides don't touch the wall or cabinets.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "Check it stands firm. If it rocks, turn the front feet until it's level and steady.",
+          "target": "the adjustable levelling feet at the bottom front corners of the fridge",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 6,
+          "say": "Make sure no food or ice is pressing against the fan at the back of the freezer.",
+          "target": "the fan cover on the back wall inside the freezer",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 7,
+          "say": "Wait about ten minutes, then plug the fridge back in and listen again.",
+          "target": "the fridge's power plug in the wall socket",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 8,
+          "say": "If it still grinds, bangs or rattles loudly, please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
       ],
-      "source": "LG Levant help library (loud noise from refrigerator) + LG US help library (noise during operation; hissing, gurgling, cracking; rattling) + Samsung India abnormal noise page + Godrej direct cool user manual p.3, 9; checked 2026-09-27"
+      "source": "LG Levant help library (loud noise from refrigerator) + LG US help library (noise during operation; hissing, gurgling, cracking; rattling) + Samsung India abnormal noise page + Godrej direct cool user manual p.3, 9; checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "unplug"
+        }
+      ]
     },
     {
       "id": "refrigerator_gas_or_compressor_fault",
@@ -254,10 +445,43 @@
       "error_code": null,
       "code_aliases": [],
       "brand_codes": [
-        {"brand": "Haier",
-         "codes": ["F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "E0", "E1", "E2", "E6", "E9", "Ec", "Fd"],
-         "spoken": ["f one", "f two", "f three", "f four", "f five", "f six", "f seven", "f eight", "f nine",
-                    "e zero", "e one", "e two", "e six", "e nine"]}
+        {
+          "brand": "Haier",
+          "codes": [
+            "F1",
+            "F2",
+            "F3",
+            "F4",
+            "F5",
+            "F6",
+            "F7",
+            "F8",
+            "F9",
+            "E0",
+            "E1",
+            "E2",
+            "E6",
+            "E9",
+            "Ec",
+            "Fd"
+          ],
+          "spoken": [
+            "f one",
+            "f two",
+            "f three",
+            "f four",
+            "f five",
+            "f six",
+            "f seven",
+            "f eight",
+            "f nine",
+            "e zero",
+            "e one",
+            "e two",
+            "e six",
+            "e nine"
+          ]
+        }
       ],
       "title": "Fridge fault that needs a technician",
       "meaning": "This needs a trained technician. If you smell burning or see smoke, unplug the fridge now.",
@@ -294,24 +518,81 @@
     }
   ],
   "test_queries": [
-    {"q": "my fridge is not cooling", "expect": "refrigerator_not_cooling"},
-    {"q": "the freezer isn't freezing properly", "expect": "refrigerator_not_cooling"},
-    {"q": "the refrigerator feels warm inside", "expect": "refrigerator_not_cooling"},
-    {"q": "milk is going bad in my fridge", "expect": "refrigerator_not_cooling"},
-    {"q": "my fridge is leaking water", "expect": "refrigerator_water_leak"},
-    {"q": "there's a puddle under the fridge", "expect": "refrigerator_water_leak"},
-    {"q": "water is collecting under the vegetable tray in the fridge", "expect": "refrigerator_water_leak"},
-    {"q": "there's too much ice in my freezer", "expect": "refrigerator_ice_build_up"},
-    {"q": "how do I defrost my fridge", "expect": "refrigerator_ice_build_up"},
-    {"q": "the freezer box is full of ice", "expect": "refrigerator_ice_build_up"},
-    {"q": "my fridge is making a loud noise", "expect": "refrigerator_noisy"},
-    {"q": "the refrigerator keeps rattling", "expect": "refrigerator_noisy"},
-    {"q": "the fridge motor noise is very loud", "expect": "refrigerator_noisy"},
-    {"q": "I think my fridge needs a gas refill", "expect": "refrigerator_gas_or_compressor_fault"},
-    {"q": "there's a burning smell from the fridge", "expect": "refrigerator_gas_or_compressor_fault"},
-    {"q": "the fridge compressor is not working", "expect": "refrigerator_gas_or_compressor_fault"},
-    {"q": "my Haier fridge is showing E6", "expect": "refrigerator_gas_or_compressor_fault"},
-    {"q": "how long can I keep cooked rice in the fridge", "expect": "NONE"},
-    {"q": "how do I change the fridge door to open the other way", "expect": "NONE"}
+    {
+      "q": "my fridge is not cooling",
+      "expect": "refrigerator_not_cooling"
+    },
+    {
+      "q": "the freezer isn't freezing properly",
+      "expect": "refrigerator_not_cooling"
+    },
+    {
+      "q": "the refrigerator feels warm inside",
+      "expect": "refrigerator_not_cooling"
+    },
+    {
+      "q": "milk is going bad in my fridge",
+      "expect": "refrigerator_not_cooling"
+    },
+    {
+      "q": "my fridge is leaking water",
+      "expect": "refrigerator_water_leak"
+    },
+    {
+      "q": "there's a puddle under the fridge",
+      "expect": "refrigerator_water_leak"
+    },
+    {
+      "q": "water is collecting under the vegetable tray in the fridge",
+      "expect": "refrigerator_water_leak"
+    },
+    {
+      "q": "there's too much ice in my freezer",
+      "expect": "refrigerator_ice_build_up"
+    },
+    {
+      "q": "how do I defrost my fridge",
+      "expect": "refrigerator_ice_build_up"
+    },
+    {
+      "q": "the freezer box is full of ice",
+      "expect": "refrigerator_ice_build_up"
+    },
+    {
+      "q": "my fridge is making a loud noise",
+      "expect": "refrigerator_noisy"
+    },
+    {
+      "q": "the refrigerator keeps rattling",
+      "expect": "refrigerator_noisy"
+    },
+    {
+      "q": "the fridge motor noise is very loud",
+      "expect": "refrigerator_noisy"
+    },
+    {
+      "q": "I think my fridge needs a gas refill",
+      "expect": "refrigerator_gas_or_compressor_fault"
+    },
+    {
+      "q": "there's a burning smell from the fridge",
+      "expect": "refrigerator_gas_or_compressor_fault"
+    },
+    {
+      "q": "the fridge compressor is not working",
+      "expect": "refrigerator_gas_or_compressor_fault"
+    },
+    {
+      "q": "my Haier fridge is showing E6",
+      "expect": "refrigerator_gas_or_compressor_fault"
+    },
+    {
+      "q": "how long can I keep cooked rice in the fridge",
+      "expect": "NONE"
+    },
+    {
+      "q": "how do I change the fridge door to open the other way",
+      "expect": "NONE"
+    }
   ]
 }

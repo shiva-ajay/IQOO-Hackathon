@@ -42,33 +42,90 @@
         "Use a sturdy stool or ladder, not a chair, when you reach up to the indoor unit."
       ],
       "steps": [
-        {"n": 1, "say": "Check the remote is set to cool mode, not fan, dry or auto.",
-         "target": "the display screen of the AC remote control", "verify": null, "caution": null},
-        {"n": 2, "say": "Set the temperature a few degrees below the room temperature, and the fan speed to high.",
-         "target": "the display screen of the AC remote control", "verify": null, "caution": null},
-        {"n": 3, "say": "Close the doors and windows, and draw the curtains if the sun comes in.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 4, "say": "Make sure no furniture or curtains block the air going in or out of the indoor unit.",
-         "target": "the wall-mounted indoor AC unit and the space around it", "verify": null, "caution": null},
-        {"n": 5, "say": "If it's still not cold after thirty minutes, switch the AC off with the remote and at the wall.",
-         "target": "the wall switch or plug that powers the AC", "verify": null, "caution": null},
-        {"n": 6, "say": "Open the front cover of the indoor unit, or the front grille of a window AC.",
-         "target": "the front cover panel of the indoor AC unit", "verify": null,
-         "caution": "Make sure the AC is switched off at the wall first."},
-        {"n": 7, "say": "Slide out the mesh air filters from behind the cover.",
-         "target": "the plastic mesh air filter behind the front cover of the AC", "verify": null, "caution": null},
-        {"n": 8, "say": "Rinse the filters under running water, or vacuum off the dust if they're only dusty.",
-         "target": "the plastic mesh air filter", "verify": null,
-         "caution": "Never use hot water. A little mild soap is fine for heavy dirt."},
-        {"n": 9, "say": "Let the filters dry fully in the shade, not in direct sun.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 10, "say": "Put the dry filters back, close the cover, and switch on. Cooling can take three minutes to start.",
-         "target": "the front cover panel of the indoor AC unit", "verify": null, "caution": null},
-        {"n": 11, "say": "Outside, check nothing blocks the outdoor unit, or the back of a window AC.",
-         "target": "the outdoor AC unit with the round fan grille", "verify": null,
-         "caution": "Don't reach into the fan or touch the metal fins."},
-        {"n": 12, "say": "If it still isn't cooling after all this, it may need gas or a repair. Please call a technician.",
-         "target": null, "verify": null, "caution": null}
+        {
+          "n": 1,
+          "say": "Check the remote is set to cool mode, not fan, dry or auto.",
+          "target": "the display screen of the AC remote control",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Set the temperature a few degrees below the room temperature, and the fan speed to high.",
+          "target": "the display screen of the AC remote control",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Close the doors and windows, and draw the curtains if the sun comes in.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "Make sure no furniture or curtains block the air going in or out of the indoor unit.",
+          "target": "the wall-mounted indoor AC unit and the space around it",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "If it's still not cold after thirty minutes, switch the AC off with the remote and at the wall.",
+          "target": "the wall switch or plug that powers the AC",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 6,
+          "say": "Open the front cover of the indoor unit, or the front grille of a window AC.",
+          "target": "the front cover panel of the indoor AC unit",
+          "verify": null,
+          "caution": "Make sure the AC is switched off at the wall first."
+        },
+        {
+          "n": 7,
+          "say": "Slide out the mesh air filters from behind the cover.",
+          "target": "the plastic mesh air filter behind the front cover of the AC",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 8,
+          "say": "Rinse the filters under running water, or vacuum off the dust if they're only dusty.",
+          "target": "the plastic mesh air filter",
+          "verify": null,
+          "caution": "Never use hot water. A little mild soap is fine for heavy dirt."
+        },
+        {
+          "n": 9,
+          "say": "Let the filters dry fully in the shade, not in direct sun.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 10,
+          "say": "Put the dry filters back, close the cover, and switch on. Cooling can take three minutes to start.",
+          "target": "the front cover panel of the indoor AC unit",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 11,
+          "say": "Outside, check nothing blocks the outdoor unit, or the back of a window AC.",
+          "target": "the outdoor AC unit with the round fan grille",
+          "verify": null,
+          "caution": "Don't reach into the fan or touch the metal fins."
+        },
+        {
+          "n": 12,
+          "say": "If it still isn't cooling after all this, it may need gas or a repair. Please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
       ],
       "source": "LG India help library (AC less cooling; filter cleaning) + Daikin India troubleshooting page + Daikin FTXM operation manual p.41-43 + Samsung India optimum cooling and filter pages + Panasonic CS-C18HKD operating instructions p.6-7 + US DOE Energy Saver 101 (home cooling); checked 2026-09-27"
     },
@@ -109,27 +166,76 @@
         "Switch the AC off, then turn off its wall switch or breaker before you touch it."
       ],
       "steps": [
-        {"n": 1, "say": "Water dripping from the outdoor unit or its pipe outside is normal. Only drips indoors are a problem.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 2, "say": "Move anything water could damage from under the indoor unit, and put a bowl or towel there.",
-         "target": "the floor area directly under the wall-mounted indoor AC unit", "verify": null, "caution": null},
-        {"n": 3, "say": "Open the front cover of the indoor unit and slide out the air filters.",
-         "target": "the front cover panel of the indoor AC unit", "verify": null,
-         "caution": "Use a sturdy stool or ladder, not a chair."},
-        {"n": 4, "say": "Rinse the filters under running water, then let them dry fully in the shade.",
-         "target": "the plastic mesh air filter", "verify": null, "caution": "Never use hot water on the filters."},
-        {"n": 5, "say": "Put the dry filters back and close the cover.",
-         "target": "the front cover panel of the indoor AC unit", "verify": null, "caution": null},
-        {"n": 6, "say": "Outside, find the thin drain pipe that carries water away from the indoor unit.",
-         "target": "the thin plastic drain pipe coming out of the wall below the indoor AC unit", "verify": null, "caution": null},
-        {"n": 7, "say": "Make sure it slopes downward all the way and isn't blocked or squashed.",
-         "target": "the thin plastic drain pipe of the AC", "verify": null, "caution": null},
-        {"n": 8, "say": "Keep the doors and windows closed while the AC runs.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 9, "say": "Switch the AC back on. If water still drips inside, switch it off and please call a technician.",
-         "target": null, "verify": null, "caution": null}
+        {
+          "n": 1,
+          "say": "Water dripping from the outdoor unit or its pipe outside is normal. Only drips indoors are a problem.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Move anything water could damage from under the indoor unit, and put a bowl or towel there.",
+          "target": "the floor area directly under the wall-mounted indoor AC unit",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Open the front cover of the indoor unit and slide out the air filters.",
+          "target": "the front cover panel of the indoor AC unit",
+          "verify": null,
+          "caution": "Use a sturdy stool or ladder, not a chair."
+        },
+        {
+          "n": 4,
+          "say": "Rinse the filters under running water, then let them dry fully in the shade.",
+          "target": "the plastic mesh air filter",
+          "verify": null,
+          "caution": "Never use hot water on the filters."
+        },
+        {
+          "n": 5,
+          "say": "Put the dry filters back and close the cover.",
+          "target": "the front cover panel of the indoor AC unit",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 6,
+          "say": "Outside, find the thin drain pipe that carries water away from the indoor unit.",
+          "target": "the thin plastic drain pipe coming out of the wall below the indoor AC unit",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 7,
+          "say": "Make sure it slopes downward all the way and isn't blocked or squashed.",
+          "target": "the thin plastic drain pipe of the AC",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 8,
+          "say": "Keep the doors and windows closed while the AC runs.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 9,
+          "say": "Switch the AC back on. If water still drips inside, switch it off and please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
       ],
-      "source": "LG India help library (water leaks or drips from split AC; outdoor unit dripping) + Samsung Gulf and Saudi water-leakage pages + Daikin FTXM operation manual p.3, 40, 43 + Daikin India troubleshooting page + Panasonic CS-C18HKD operating instructions p.6-7; checked 2026-09-27"
+      "source": "LG India help library (water leaks or drips from split AC; outdoor unit dripping) + Samsung Gulf and Saudi water-leakage pages + Daikin FTXM operation manual p.3, 40, 43 + Daikin India troubleshooting page + Panasonic CS-C18HKD operating instructions p.6-7; checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "switch_off"
+        }
+      ]
     },
     {
       "id": "air_conditioner_remote_not_working",
@@ -169,30 +275,83 @@
         "Keep the remote's small batteries away from young children."
       ],
       "steps": [
-        {"n": 1, "say": "Look at the remote's screen. If it's blank or faint, the batteries are weak.",
-         "target": "the display screen of the AC remote control", "verify": null, "caution": null},
-        {"n": 2, "say": "Take the batteries out and put them back, matching the plus and minus marks.",
-         "target": "the battery cover on the back of the AC remote control", "verify": null, "caution": null},
-        {"n": 3, "say": "If the screen is still faint, replace both batteries with new ones of the same type.",
-         "target": "the battery cover on the back of the AC remote control", "verify": null, "caution": null},
-        {"n": 4, "say": "Point the remote straight at the indoor unit, with nothing like a curtain in between.",
-         "target": "the wall-mounted indoor AC unit", "verify": null, "caution": null},
-        {"n": 5, "say": "Wipe the small receiver window on the indoor unit, and make sure nothing covers it.",
-         "target": "the small dark signal receiver window on the front of the indoor AC unit", "verify": null, "caution": null},
-        {"n": 6, "say": "Switch off nearby tube lights or neon lights, then try the remote again.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 7, "say": "Test the remote with your phone camera. Aim it at the lens, press a button, and look for light.",
-         "target": "the small bulb at the front tip of the AC remote control", "verify": null,
-         "caution": "Some phones, like iPhones, can't show this light."},
-        {"n": 8, "say": "If there's no light even with new batteries, the remote is faulty and needs replacing.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 9, "say": "If the remote does light up but the AC won't respond, check the AC's breaker or wall switch is on.",
-         "target": "the wall switch or plug that powers the AC", "verify": null, "caution": null},
-        {"n": 10, "say": "Meanwhile, you can run the AC with the small on off button on the indoor unit.",
-         "target": "the small on/off button on the indoor AC unit", "verify": null,
-         "caution": "Where it sits differs by model, so check your manual."},
-        {"n": 11, "say": "If the AC still won't start from either one, please call a technician.",
-         "target": null, "verify": null, "caution": null}
+        {
+          "n": 1,
+          "say": "Look at the remote's screen. If it's blank or faint, the batteries are weak.",
+          "target": "the display screen of the AC remote control",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Take the batteries out and put them back, matching the plus and minus marks.",
+          "target": "the battery cover on the back of the AC remote control",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "If the screen is still faint, replace both batteries with new ones of the same type.",
+          "target": "the battery cover on the back of the AC remote control",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "Point the remote straight at the indoor unit, with nothing like a curtain in between.",
+          "target": "the wall-mounted indoor AC unit",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "Wipe the small receiver window on the indoor unit, and make sure nothing covers it.",
+          "target": "the small dark signal receiver window on the front of the indoor AC unit",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 6,
+          "say": "Switch off nearby tube lights or neon lights, then try the remote again.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 7,
+          "say": "Test the remote with your phone camera. Aim it at the lens, press a button, and look for light.",
+          "target": "the small bulb at the front tip of the AC remote control",
+          "verify": null,
+          "caution": "Some phones, like iPhones, can't show this light."
+        },
+        {
+          "n": 8,
+          "say": "If there's no light even with new batteries, the remote is faulty and needs replacing.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 9,
+          "say": "If the remote does light up but the AC won't respond, check the AC's breaker or wall switch is on.",
+          "target": "the wall switch or plug that powers the AC",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 10,
+          "say": "Meanwhile, you can run the AC with the small on off button on the indoor unit.",
+          "target": "the small on/off button on the indoor AC unit",
+          "verify": null,
+          "caution": "Where it sits differs by model, so check your manual."
+        },
+        {
+          "n": 11,
+          "say": "If the AC still won't start from either one, please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
       ],
       "source": "LG India help library (AC remote control not working) + Samsung India remote not working page + Daikin India troubleshooting page + Daikin FTXM operation manual p.3, 10, 42 + Panasonic CS-C18HKD operating instructions p.1, 3, 7; checked 2026-09-27"
     },
@@ -235,22 +394,62 @@
         "Use a sturdy stool or ladder, not a chair, to reach the indoor unit."
       ],
       "steps": [
-        {"n": 1, "say": "Open the front cover of the indoor unit, and slide out the air filters.",
-         "target": "the front cover panel of the indoor AC unit", "verify": null, "caution": null},
-        {"n": 2, "say": "Wash the filters under running water to clear the dust.",
-         "target": "the plastic mesh air filter", "verify": null, "caution": "Never use hot water on the filters."},
-        {"n": 3, "say": "Let them dry completely in the shade before you put them back.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 4, "say": "Put the filters back, close the cover, and switch the AC on again.",
-         "target": "the front cover panel of the indoor AC unit", "verify": null, "caution": null},
-        {"n": 5, "say": "Run the AC in fan only mode for a few hours to dry out the inside.",
-         "target": "the display screen of the AC remote control", "verify": null, "caution": null},
-        {"n": 6, "say": "Look for smells nearby, like a bin, shoes or damp clothes, and move them away from the AC.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 7, "say": "If it still smells, the inside needs a deep clean. Please call a technician to service it.",
-         "target": null, "verify": null, "caution": null}
+        {
+          "n": 1,
+          "say": "Open the front cover of the indoor unit, and slide out the air filters.",
+          "target": "the front cover panel of the indoor AC unit",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Wash the filters under running water to clear the dust.",
+          "target": "the plastic mesh air filter",
+          "verify": null,
+          "caution": "Never use hot water on the filters."
+        },
+        {
+          "n": 3,
+          "say": "Let them dry completely in the shade before you put them back.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "Put the filters back, close the cover, and switch the AC on again.",
+          "target": "the front cover panel of the indoor AC unit",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "Run the AC in fan only mode for a few hours to dry out the inside.",
+          "target": "the display screen of the AC remote control",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 6,
+          "say": "Look for smells nearby, like a bin, shoes or damp clothes, and move them away from the AC.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 7,
+          "say": "If it still smells, the inside needs a deep clean. Please call a technician to service it.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
       ],
-      "source": "LG India help library (AC suddenly smells awful) + Samsung Singapore AC bad smell page + Samsung India filter cleaning page + Daikin FTXM operation manual p.42 + Daikin India troubleshooting page + Panasonic CS-C18HKD operating instructions p.7; checked 2026-09-27"
+      "source": "LG India help library (AC suddenly smells awful) + Samsung Singapore AC bad smell page + Samsung India filter cleaning page + Daikin FTXM operation manual p.42 + Daikin India troubleshooting page + Panasonic CS-C18HKD operating instructions p.7; checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "switch_off"
+        }
+      ]
     },
     {
       "id": "air_conditioner_gas_or_compressor_fault",
@@ -259,15 +458,79 @@
       "error_code": null,
       "code_aliases": [],
       "brand_codes": [
-        {"brand": "LG",
-         "codes": ["CH05", "CH10", "CH38", "CH53", "CH54", "CH66", "CH67", "CH90", "CH91", "CH93", "E6", "EF", "F4"],
-         "spoken": ["c h 05", "c h 5", "c h zero five", "c h five", "c h 10", "c h ten", "c h 38", "c h thirty eight",
-                    "ch thirty eight", "c h 53", "c h fifty three", "c h 54", "c h fifty four", "c h 66",
-                    "c h sixty six", "c h 67", "c h sixty seven", "c h 90", "c h ninety", "c h 91", "c h ninety one",
-                    "c h 93", "c h ninety three", "e six", "f four"]},
-        {"brand": "Daikin",
-         "codes": ["U0", "U2", "U4", "UA", "E1", "E5", "E6", "E7", "E8", "F6", "L5"],
-         "spoken": ["u zero", "u two", "u four", "e one", "e five", "e six", "e seven", "e eight", "f six", "l five"]}
+        {
+          "brand": "LG",
+          "codes": [
+            "CH05",
+            "CH10",
+            "CH38",
+            "CH53",
+            "CH54",
+            "CH66",
+            "CH67",
+            "CH90",
+            "CH91",
+            "CH93",
+            "E6",
+            "EF",
+            "F4"
+          ],
+          "spoken": [
+            "c h 05",
+            "c h 5",
+            "c h zero five",
+            "c h five",
+            "c h 10",
+            "c h ten",
+            "c h 38",
+            "c h thirty eight",
+            "ch thirty eight",
+            "c h 53",
+            "c h fifty three",
+            "c h 54",
+            "c h fifty four",
+            "c h 66",
+            "c h sixty six",
+            "c h 67",
+            "c h sixty seven",
+            "c h 90",
+            "c h ninety",
+            "c h 91",
+            "c h ninety one",
+            "c h 93",
+            "c h ninety three",
+            "e six",
+            "f four"
+          ]
+        },
+        {
+          "brand": "Daikin",
+          "codes": [
+            "U0",
+            "U2",
+            "U4",
+            "UA",
+            "E1",
+            "E5",
+            "E6",
+            "E7",
+            "E8",
+            "F6",
+            "L5"
+          ],
+          "spoken": [
+            "u zero",
+            "u two",
+            "u four",
+            "e one",
+            "e five",
+            "e six",
+            "e seven",
+            "e eight",
+            "f six",
+            "l five"
+          ]
+        }
       ],
       "title": "AC fault that needs a technician",
       "meaning": "This needs a trained AC technician. Please switch the AC off and don't use it until it's checked.",
@@ -306,24 +569,81 @@
     }
   ],
   "test_queries": [
-    {"q": "my AC is not cooling", "expect": "air_conditioner_not_cooling"},
-    {"q": "the air conditioner is blowing hot air", "expect": "air_conditioner_not_cooling"},
-    {"q": "how do I clean my AC filter", "expect": "air_conditioner_not_cooling"},
-    {"q": "my window AC isn't cooling the room", "expect": "air_conditioner_not_cooling"},
-    {"q": "water is dripping from my AC", "expect": "air_conditioner_water_dripping"},
-    {"q": "the AC indoor unit is leaking water on the wall", "expect": "air_conditioner_water_dripping"},
-    {"q": "my split AC keeps dripping", "expect": "air_conditioner_water_dripping"},
-    {"q": "my AC remote is not working", "expect": "air_conditioner_remote_not_working"},
-    {"q": "the AC isn't responding to the remote", "expect": "air_conditioner_remote_not_working"},
-    {"q": "my AC won't switch on", "expect": "air_conditioner_remote_not_working"},
-    {"q": "my AC smells bad", "expect": "air_conditioner_bad_smell"},
-    {"q": "there's a musty smell from the air conditioner", "expect": "air_conditioner_bad_smell"},
-    {"q": "the AC stinks when I turn it on", "expect": "air_conditioner_bad_smell"},
-    {"q": "I think my AC has a gas leak", "expect": "air_conditioner_gas_or_compressor_fault"},
-    {"q": "there's a burning smell from my AC", "expect": "air_conditioner_gas_or_compressor_fault"},
-    {"q": "my LG AC is showing CH38", "expect": "air_conditioner_gas_or_compressor_fault"},
-    {"q": "Daikin AC error U4", "expect": "air_conditioner_gas_or_compressor_fault"},
-    {"q": "how do I install a new AC", "expect": "NONE"},
-    {"q": "what temperature should I keep my AC at to save electricity", "expect": "NONE"}
+    {
+      "q": "my AC is not cooling",
+      "expect": "air_conditioner_not_cooling"
+    },
+    {
+      "q": "the air conditioner is blowing hot air",
+      "expect": "air_conditioner_not_cooling"
+    },
+    {
+      "q": "how do I clean my AC filter",
+      "expect": "air_conditioner_not_cooling"
+    },
+    {
+      "q": "my window AC isn't cooling the room",
+      "expect": "air_conditioner_not_cooling"
+    },
+    {
+      "q": "water is dripping from my AC",
+      "expect": "air_conditioner_water_dripping"
+    },
+    {
+      "q": "the AC indoor unit is leaking water on the wall",
+      "expect": "air_conditioner_water_dripping"
+    },
+    {
+      "q": "my split AC keeps dripping",
+      "expect": "air_conditioner_water_dripping"
+    },
+    {
+      "q": "my AC remote is not working",
+      "expect": "air_conditioner_remote_not_working"
+    },
+    {
+      "q": "the AC isn't responding to the remote",
+      "expect": "air_conditioner_remote_not_working"
+    },
+    {
+      "q": "my AC won't switch on",
+      "expect": "air_conditioner_remote_not_working"
+    },
+    {
+      "q": "my AC smells bad",
+      "expect": "air_conditioner_bad_smell"
+    },
+    {
+      "q": "there's a musty smell from the air conditioner",
+      "expect": "air_conditioner_bad_smell"
+    },
+    {
+      "q": "the AC stinks when I turn it on",
+      "expect": "air_conditioner_bad_smell"
+    },
+    {
+      "q": "I think my AC has a gas leak",
+      "expect": "air_conditioner_gas_or_compressor_fault"
+    },
+    {
+      "q": "there's a burning smell from my AC",
+      "expect": "air_conditioner_gas_or_compressor_fault"
+    },
+    {
+      "q": "my LG AC is showing CH38",
+      "expect": "air_conditioner_gas_or_compressor_fault"
+    },
+    {
+      "q": "Daikin AC error U4",
+      "expect": "air_conditioner_gas_or_compressor_fault"
+    },
+    {
+      "q": "how do I install a new AC",
+      "expect": "NONE"
+    },
+    {
+      "q": "what temperature should I keep my AC at to save electricity",
+      "expect": "NONE"
+    }
   ]
 }

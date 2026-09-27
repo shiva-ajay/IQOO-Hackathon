@@ -25,6 +25,8 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.togetherWith
@@ -32,6 +34,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -80,6 +83,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -100,6 +104,14 @@ import com.fixlens.app.FixLensViewModel
 import com.fixlens.app.Phase
 import com.fixlens.app.TAG
 import com.fixlens.app.UiState
+import com.fixlens.ir.RemotePanel
+import com.fixlens.ui.remote.BrandSheet
+import com.fixlens.ui.remote.KeyPressStack
+import com.fixlens.ui.remote.PairingPanel
+import com.fixlens.ui.remote.PanelActions
+import com.fixlens.ui.remote.RemoteBadge
+import com.fixlens.ui.remote.RemoteMenu
+import com.fixlens.ui.remote.RemotePad
 import com.fixlens.session.Turn
 import com.fixlens.ui.fx.OrbState
 import com.fixlens.ui.fx.ThinkingOrb
@@ -121,19 +133,68 @@ fun CameraScreen(viewModel: FixLensViewModel, onBack: () -> Unit) {
     val analysisSize by viewModel.analysisSize.collectAsStateWithLifecycle()
     val motion = rememberMarkerMotion(marker)
 
+    // "Fixy takes the remote" (ir/RemoteController): badge, pairing card, brand sheet, pad, badge menu.
+    val remote by viewModel.remoteUi.collectAsStateWithLifecycle()
+    var showRemoteMenu by remember { mutableStateOf(false) }
+    val remoteMenuOpen = showRemoteMenu && remote.profile != null
+    // The last card shown, so it can still animate out after the controller clears it.
+    var lastPanel by remember { mutableStateOf<RemotePanel?>(null) }
+    remote.panel?.let { lastPanel = it }
+    val panelActions = remember(viewModel) {
+        PanelActions(
+            onTake = viewModel::remoteConfirmBrand,
+            onChangeBrand = viewModel::remoteChangeBrand,
+            onStart = viewModel::remoteStartScan,
+            onPause = viewModel::remotePauseScan,
+            onSend = viewModel::remoteSendTest,
+            onAnswer = viewModel::remoteAnswer,
+            onTryCommon = viewModel::remoteTryCommon,
+            onOneByOne = viewModel::remoteOneByOne,
+            onClose = viewModel::remoteCancel,
+        )
+    }
+
     Box(Modifier.fillMaxSize().background(Ink)) {
         CameraPreview(viewModel)
         MarkerOverlay(marker, motion, analysisSize, state.debugTestBox, state.frozen)
         Scrims()
+        // How to do the guided step: a small card up top, and a cue on the tracked part (turn, pull, pour…).
+        StepCueLayer(state.guide, marker, motion)
 
         val level by viewModel.micLevel.collectAsStateWithLifecycle()
         VoiceGlow(level = level, active = state.talking, modifier = Modifier.fillMaxSize())
 
         Column(Modifier.align(Alignment.TopCenter), horizontalAlignment = Alignment.CenterHorizontally) {
-            TopBar(title = state.session?.title.orEmpty(), onBack = onBack)
+            TopBar(
+                title = state.session?.title.orEmpty(),
+                onBack = onBack,
+                badge = if (remote.badge != null) {
+                    { RemoteBadge(remote, onClick = { showRemoteMenu = !showRemoteMenu }) }
+                } else {
+                    null
+                },
+            )
             AnimatedVisibility(visible = state.hint != null, enter = fadeIn(tween(200)), exit = fadeOut(tween(150))) {
                 HintChip(state.hint.orEmpty())
             }
+        }
+
+        // The pairing card sits mid-screen over a light dim, so the device stays visible for aiming.
+        AnimatedVisibility(visible = remote.panel != null, enter = fadeIn(tween(200)), exit = fadeOut(tween(260))) {
+            Box(Modifier.fillMaxSize().background(Ink.copy(alpha = 0.35f)))
+        }
+        AnimatedVisibility(
+            visible = remote.panel != null,
+            enter = fadeIn(tween(220)) + scaleIn(tween(220), initialScale = 0.96f),
+            // After "Paired" the card shrinks toward the badge, so the user sees where the remote now lives.
+            exit = if (lastPanel is RemotePanel.Paired) {
+                fadeOut(tween(320)) + scaleOut(tween(360), targetScale = 0.12f, transformOrigin = TransformOrigin(1f, 0f))
+            } else {
+                fadeOut(tween(180))
+            },
+            modifier = Modifier.align(Alignment.Center).padding(bottom = 110.dp),
+        ) {
+            lastPanel?.let { PairingPanel(it, panelActions) }
         }
 
         Column(
@@ -156,8 +217,26 @@ fun CameraScreen(viewModel: FixLensViewModel, onBack: () -> Unit) {
                 state.error != null -> ErrorCard(state.error.orEmpty())
                 !state.engineReady -> LoadingCard(state.loadingStep)
                 else -> Column {
-                    state.guide?.let { StepBanner(it) }
-                    ConversationCard(state, orbModifier = Modifier.markerLaunchPad(motion))
+                    val picker = remote.picker
+                    when {
+                        picker != null -> BrandSheet(
+                            picker = picker,
+                            onKind = viewModel::remotePickerKind,
+                            onPick = { viewModel.remotePickBrand(it) },
+                            onClose = viewModel::remoteClosePicker,
+                        )
+                        remote.padOpen -> RemotePad(
+                            ui = remote,
+                            onCommand = viewModel::remoteCommand,
+                            onClose = { viewModel.remotePad(false) },
+                        )
+                        // The pairing card says what's happening; the conversation card steps aside.
+                        remote.panel != null -> Unit
+                        else -> {
+                            state.guide?.let { StepBanner(it) }
+                            ConversationCard(state, orbModifier = Modifier.markerLaunchPad(motion))
+                        }
+                    }
                 }
             }
             Spacer(Modifier.height(16.dp))
@@ -185,8 +264,40 @@ fun CameraScreen(viewModel: FixLensViewModel, onBack: () -> Unit) {
         }
         // Over the cards: comets fly from Fixy's orb in the card up to the parts.
         HandoffLayer(marker, motion)
+
+        // Every key the remote sends drops out from under the badge, so the user sees what Fixy pressed.
+        if (!remoteMenuOpen) {
+            KeyPressStack(
+                presses = remote.presses,
+                modifier = Modifier.align(Alignment.TopEnd).statusBarsPadding().padding(top = 62.dp, end = 12.dp),
+            )
+        }
+
+        if (remoteMenuOpen) {
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null) { showRemoteMenu = false },
+            )
+            RemoteMenu(
+                ui = remote,
+                onPad = { showRemoteMenu = false; viewModel.remotePad(true) },
+                onPairAgain = { showRemoteMenu = false; viewModel.remotePairAgain() },
+                onRelease = { showRemoteMenu = false; viewModel.remoteRelease() },
+                modifier = Modifier.align(Alignment.TopEnd).statusBarsPadding().padding(top = 62.dp, end = 12.dp),
+            )
+        }
     }
     BackHandler(enabled = state.typing) { viewModel.setTyping(false) }
+    // Back closes the remote's layers one at a time before leaving the session.
+    BackHandler(enabled = !state.typing && (remoteMenuOpen || remote.padOpen || remote.picker != null || remote.panel != null)) {
+        when {
+            remoteMenuOpen -> showRemoteMenu = false
+            remote.padOpen -> viewModel.remotePad(false)
+            remote.picker != null -> viewModel.remoteClosePicker()
+            else -> viewModel.remoteCancel()
+        }
+    }
 }
 
 /** Typed question input: auto-focuses so the keyboard opens at once; the mic button returns to voice. */
@@ -331,7 +442,7 @@ private fun Scrims() {
 }
 
 @Composable
-private fun TopBar(title: String, onBack: () -> Unit, modifier: Modifier = Modifier) {
+private fun TopBar(title: String, onBack: () -> Unit, modifier: Modifier = Modifier, badge: (@Composable () -> Unit)? = null) {
     Row(
         modifier.fillMaxWidth().statusBarsPadding().padding(horizontal = 12.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -365,17 +476,25 @@ private fun TopBar(title: String, onBack: () -> Unit, modifier: Modifier = Modif
             )
         }
         Spacer(Modifier.width(12.dp))
+        if (badge != null) {
+            badge()
+            Spacer(Modifier.width(8.dp))
+        }
+        // With the remote badge up, "On-device" folds to its green dot so the title keeps its room.
         Row(
             Modifier
                 .clip(RoundedCornerShape(50))
                 .background(Ink.copy(alpha = 0.55f))
                 .border(1.dp, Hairline, RoundedCornerShape(50))
-                .padding(horizontal = 12.dp, vertical = 6.dp),
+                .semantics { contentDescription = "Running on-device" }
+                .padding(horizontal = if (badge != null) 9.dp else 12.dp, vertical = if (badge != null) 9.dp else 6.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Box(Modifier.size(6.dp).clip(CircleShape).background(Online))
-            Spacer(Modifier.width(8.dp))
-            Text("On-device", color = Paper, style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Medium))
+            if (badge == null) {
+                Spacer(Modifier.width(8.dp))
+                Text("On-device", color = Paper, style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Medium))
+            }
         }
     }
 }

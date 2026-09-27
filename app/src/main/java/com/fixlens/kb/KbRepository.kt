@@ -44,6 +44,9 @@ object KbRepository {
                 if (words(s.say) > MAX_SAY_WORDS) out += "$at: step ${s.n} is ${words(s.say)} words (max $MAX_SAY_WORDS)"
                 if (s.target != null && s.target.isBlank()) out += "$at: step ${s.n} has a blank target"
             }
+            if (e.safetyAnim.size > e.safety.size) out += "$at: safety_anim has more items than safety"
+            e.safetyAnim.forEachIndexed { i, a -> a?.let { animProblem(it, e.safety[minOf(i, e.safety.lastIndex)]) }?.let { out += "$at: safety ${i + 1} $it" } }
+            e.steps.forEach { s -> s.anim?.let { animProblem(it, s.say) }?.let { out += "$at: step ${s.n} $it" } }
             if (e.source.isBlank()) out += "$at: no source"
             e.brandCodes.filter { it.brand.isBlank() || it.codes.isEmpty() }.forEach { out += "$at: a brand_codes item needs a brand and codes" }
             for ((brand, forms) in e.codeForms()) for (code in forms.filter { !it.contains(' ') }) {
@@ -58,6 +61,29 @@ object KbRepository {
     }
 
     private fun words(s: String) = s.split(Regex("""\s+""")).count { it.isNotEmpty() }
+
+    /**
+     * A wrong turning direction is worse than none, so a `turn` must say its direction and the step's own words must
+     * say the same ("unscrew", "anticlockwise" / "screw it back on", "tighten", "clockwise").
+     */
+    private fun animProblem(a: StepAnim, say: String): String? {
+        val t = say.lowercase()
+        return when (a.kind) {
+            AnimKind.Turn -> when (a.dir) {
+                AnimDir.Ccw -> if (OPEN_WORDS.containsMatchIn(t) && !CLOSE_WORDS.containsMatchIn(t)) null
+                    else "turns anticlockwise but its words don't say only unscrew or anticlockwise"
+                AnimDir.Cw -> if (CLOSE_WORDS.containsMatchIn(t) && !OPEN_WORDS.containsMatchIn(t)) null
+                    else "turns clockwise but its words don't say only tighten, screw on or clockwise"
+                else -> "turn needs dir ccw or cw"
+            }
+            AnimKind.Pull, AnimKind.Push ->
+                if (a.dir == AnimDir.Ccw || a.dir == AnimDir.Cw) "${a.kind.name.lowercase()} moves up, down, left or right" else null
+            else -> if (a.dir != null) "${a.kind.name.lowercase()} takes no dir" else null
+        }
+    }
+
+    private val OPEN_WORDS = Regex("""unscrew|anti-?clockwise|counter-?clockwise|loosen""")
+    private val CLOSE_WORDS = Regex("""(?<!anti)(?<!anti-)(?<!counter)(?<!counter-)clockwise|tighten|\bscrew (\w+ )*(back )?(on|in)\b""")
 
     /** CLAUDE.md §7 / kb-collection-plan.md: one action per step, speakable in one breath. */
     const val MAX_SAY_WORDS = 20

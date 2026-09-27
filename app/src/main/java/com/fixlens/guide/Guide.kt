@@ -3,6 +3,7 @@ package com.fixlens.guide
 import com.fixlens.kb.KbEntry
 import com.fixlens.kb.Retriever
 import com.fixlens.kb.Severity
+import com.fixlens.kb.StepAnim
 
 /**
  * A guided repair from one KB entry (CLAUDE.md §5, §7): its safety lines first, each confirmed with "done",
@@ -28,6 +29,8 @@ data class Instruction(
     /** "Safety first · 1 of 2", "Step 3 of 6". */
     val progress: String?,
     val caution: String?,
+    /** How to do it, as a small animation; from the KB. */
+    val anim: StepAnim? = null,
 )
 
 enum class Command { Done, Next, Back, Repeat, Stop }
@@ -42,6 +45,8 @@ data class GuideView(
     /** What the user can do next ("Say “done” once it's safe"), or null. */
     val prompt: String?,
     val technician: Boolean,
+    /** The step's animation, for the how-to card and the cue on the pointed part. */
+    val anim: StepAnim? = null,
 )
 
 /** The entry a guide state belongs to (null when idle). */
@@ -105,7 +110,7 @@ object Guide {
             is GuideState.Step -> if (ins.verify != null) "Say “done”, or I'll see when it's done" else "Say “done” for the next step"
             else -> null
         }
-        return GuideView(entry.id, entry.title, ins.progress.orEmpty(), ins.caution, prompt, state is GuideState.Escalate)
+        return GuideView(entry.id, entry.title, ins.progress.orEmpty(), ins.caution, prompt, state is GuideState.Escalate, ins.anim)
     }
 
     fun instruction(state: GuideState): Instruction? = when (state) {
@@ -118,10 +123,11 @@ object Guide {
                 target = null, verify = null,
                 progress = "Safety first · ${state.index + 1} of ${state.entry.safety.size}",
                 caution = null,
+                anim = state.entry.safetyAnim.getOrNull(state.index),
             )
         }
         is GuideState.Step -> state.entry.steps[state.index].let { s ->
-            Instruction(s.say, s.target, s.verify, "Step ${state.index + 1} of ${state.entry.steps.size}", s.caution)
+            Instruction(s.say, s.target, s.verify, "Step ${state.index + 1} of ${state.entry.steps.size}", s.caution, s.anim)
         }
         is GuideState.Done -> Instruction(ALL_DONE, null, null, "Done", null)
         is GuideState.Escalate -> Instruction(

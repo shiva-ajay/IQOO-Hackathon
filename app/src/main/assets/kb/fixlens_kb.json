@@ -1,146 +1,5375 @@
 {
-  "kb_version": "2026-09-27.draft1",
+  "kb_version": "2026-09-27.generic2",
   "entries": [
     {
-      "id": "car_check_engine_oil",
-      "appliance": "car_engine_bay",
+      "id": "air_conditioner_not_cooling",
+      "appliance": "air_conditioner",
       "brand": "generic",
       "error_code": null,
-      "title": "Check and top up engine oil",
-      "meaning": "Let's check the engine oil level, and top it up if it's low.",
-      "symptoms": ["oil warning light", "low oil", "oil light"],
-      "aliases": ["how do I check the oil", "check engine oil", "engine oil level", "dipstick", "add engine oil",
-                  "top up the oil", "pour engine oil", "put oil in the engine", "where does the oil go"],
+      "code_aliases": [],
+      "brand_codes": [],
+      "title": "AC not cooling",
+      "meaning": "Let's find out why your AC isn't cooling the room.",
+      "symptoms": [
+        "not cooling",
+        "weak cooling",
+        "blowing warm air",
+        "no cold air",
+        "room not getting cold",
+        "cooling is less"
+      ],
+      "aliases": [
+        "ac not cooling",
+        "air conditioner not cooling",
+        "ac not cold",
+        "ac blowing hot air",
+        "blowing hot air",
+        "ac cooling less",
+        "ac not cooling properly",
+        "window ac not cooling",
+        "clean the ac filter",
+        "how do I clean my ac filter"
+      ],
       "severity": "diy",
-      "escalate_if": ["oil light stays on while driving", "burning smell", "oil leak under the car", "milky oil"],
+      "escalate_if": [
+        "burning smell",
+        "sparks",
+        "smoke",
+        "breaker keeps tripping",
+        "power cord hot"
+      ],
       "safety": [
-        "Park on level ground and switch the engine off.",
-        "Wait at least ten minutes so the engine cools and the oil settles."
+        "Use a sturdy stool or ladder, not a chair, when you reach up to the indoor unit."
       ],
       "steps": [
-        {"n": 1, "say": "Open the bonnet and look at the engine.",
-         "target": "the engine under the open bonnet", "verify": null, "caution": null},
-        {"n": 2, "say": "Find the dipstick. It has a yellow ring handle.",
-         "target": "yellow ring handle of the engine oil dipstick", "verify": null, "caution": null},
-        {"n": 3, "say": "Pull the dipstick out and wipe it clean with a cloth.",
-         "target": "yellow ring handle of the engine oil dipstick", "verify": null, "caution": null},
-        {"n": 4, "say": "Push it all the way back in, then pull it out again.",
-         "target": "yellow ring handle of the engine oil dipstick", "verify": null, "caution": null},
-        {"n": 5, "say": "The oil line should be between the two marks near the tip.",
-         "target": null, "verify": null, "caution": null},
-        {"n": 6, "say": "If it's below the low mark, unscrew the oil filler cap with the oil can symbol.",
-         "target": "engine oil filler cap with the oil can symbol",
-         "verify": "the engine oil filler cap is removed and the round filler opening is visible", "caution": null},
-        {"n": 7, "say": "Pour in a little oil at a time, then wait a minute and check the dipstick again.",
-         "target": "round engine oil filler opening", "verify": null,
-         "caution": "Use the oil grade from your owner's manual, and don't overfill."},
-        {"n": 8, "say": "Screw the filler cap back on tightly and put the dipstick all the way in.",
-         "target": "engine oil filler cap", "verify": null, "caution": null}
+        {
+          "n": 1,
+          "say": "Check the remote is set to cool mode, not fan, dry or auto.",
+          "target": "the display screen of the AC remote control",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Set the temperature a few degrees below the room temperature, and the fan speed to high.",
+          "target": "the display screen of the AC remote control",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Close the doors and windows, and draw the curtains if the sun comes in.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "Make sure no furniture or curtains block the air going in or out of the indoor unit.",
+          "target": "the wall-mounted indoor AC unit and the space around it",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "If it's still not cold after thirty minutes, switch the AC off with the remote and at the wall.",
+          "target": "the wall switch or plug that powers the AC",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 6,
+          "say": "Open the front cover of the indoor unit, or the front grille of a window AC.",
+          "target": "the front cover panel of the indoor AC unit",
+          "verify": null,
+          "caution": "Make sure the AC is switched off at the wall first."
+        },
+        {
+          "n": 7,
+          "say": "Slide out the mesh air filters from behind the cover.",
+          "target": "the plastic mesh air filter behind the front cover of the AC",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 8,
+          "say": "Rinse the filters under running water, or vacuum off the dust if they're only dusty.",
+          "target": "the plastic mesh air filter",
+          "verify": null,
+          "caution": "Never use hot water. A little mild soap is fine for heavy dirt."
+        },
+        {
+          "n": 9,
+          "say": "Let the filters dry fully in the shade, not in direct sun.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 10,
+          "say": "Put the dry filters back, close the cover, and switch on. Cooling can take three minutes to start.",
+          "target": "the front cover panel of the indoor AC unit",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 11,
+          "say": "Outside, check nothing blocks the outdoor unit, or the back of a window AC.",
+          "target": "the outdoor AC unit with the round fan grille",
+          "verify": null,
+          "caution": "Don't reach into the fan or touch the metal fins."
+        },
+        {
+          "n": 12,
+          "say": "If it still isn't cooling after all this, it may need gas or a repair. Please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
       ],
-      "source": "DRAFT, not yet verified: generic owner's-manual procedure. Check against the demo car's manual (docs/kb-collection-plan.md §5)."
+      "source": "LG India help library (AC less cooling; filter cleaning) + Daikin India troubleshooting page + Daikin FTXM operation manual p.41-43 + Samsung India optimum cooling and filter pages + Panasonic CS-C18HKD operating instructions p.6-7 + US DOE Energy Saver 101 (home cooling); checked 2026-09-27"
     },
     {
-      "id": "car_check_coolant",
-      "appliance": "car_engine_bay",
+      "id": "air_conditioner_water_dripping",
+      "appliance": "air_conditioner",
       "brand": "generic",
       "error_code": null,
-      "title": "Check the engine coolant",
-      "meaning": "Let's check the coolant level in the see-through tank.",
-      "symptoms": ["temperature warning light", "engine running hot", "coolant low"],
-      "aliases": ["check coolant", "coolant level", "add coolant", "top up coolant", "radiator water",
-                  "where does the coolant go", "coolant tank"],
+      "code_aliases": [],
+      "brand_codes": [],
+      "title": "Water dripping from the AC indoor unit",
+      "meaning": "Let's find out why water is dripping from the indoor unit.",
+      "symptoms": [
+        "water dripping",
+        "water coming out of the ac",
+        "water falling from the ac",
+        "wet wall under the ac",
+        "water on the floor under the ac"
+      ],
+      "aliases": [
+        "ac leaking water",
+        "water leaking from ac",
+        "water dripping from ac",
+        "ac dripping",
+        "ac drips water",
+        "indoor unit leaking",
+        "ac water leakage",
+        "air conditioner leaking water"
+      ],
       "severity": "caution",
-      "escalate_if": ["coolant keeps dropping", "steam from the engine", "temperature gauge in the red", "coolant leak"],
+      "escalate_if": [
+        "water near socket",
+        "water near plug",
+        "burning smell",
+        "sparks"
+      ],
       "safety": [
-        "Only check the coolant when the engine is completely cold.",
-        "Never open the coolant cap on a hot engine. Hot coolant can burn you."
+        "Switch the AC off, then turn off its wall switch or breaker before you touch it."
       ],
       "steps": [
-        {"n": 1, "say": "Find the see-through coolant tank with MIN and MAX marks.",
-         "target": "translucent coolant reservoir with MIN and MAX marks", "verify": null, "caution": null},
-        {"n": 2, "say": "Look at the side of the tank. The coolant should be between MIN and MAX.",
-         "target": "translucent coolant reservoir with MIN and MAX marks", "verify": null, "caution": null},
-        {"n": 3, "say": "If it's below MIN and the engine is cold, slowly open the tank cap.",
-         "target": "cap of the coolant reservoir", "verify": "the coolant reservoir cap is off", "caution": null},
-        {"n": 4, "say": "Top up with the coolant from your manual until it reaches MAX.",
-         "target": "open coolant reservoir", "verify": null, "caution": "Don't mix different coolant types."},
-        {"n": 5, "say": "Close the cap tightly.",
-         "target": "cap of the coolant reservoir", "verify": null, "caution": null}
+        {
+          "n": 1,
+          "say": "Water dripping from the outdoor unit or its pipe outside is normal. Only drips indoors are a problem.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Move anything water could damage from under the indoor unit, and put a bowl or towel there.",
+          "target": "the floor area directly under the wall-mounted indoor AC unit",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Open the front cover of the indoor unit and slide out the air filters.",
+          "target": "the front cover panel of the indoor AC unit",
+          "verify": null,
+          "caution": "Use a sturdy stool or ladder, not a chair."
+        },
+        {
+          "n": 4,
+          "say": "Rinse the filters under running water, then let them dry fully in the shade.",
+          "target": "the plastic mesh air filter",
+          "verify": null,
+          "caution": "Never use hot water on the filters."
+        },
+        {
+          "n": 5,
+          "say": "Put the dry filters back and close the cover.",
+          "target": "the front cover panel of the indoor AC unit",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 6,
+          "say": "Outside, find the thin drain pipe that carries water away from the indoor unit.",
+          "target": "the thin plastic drain pipe coming out of the wall below the indoor AC unit",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 7,
+          "say": "Make sure it slopes downward all the way and isn't blocked or squashed.",
+          "target": "the thin plastic drain pipe of the AC",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 8,
+          "say": "Keep the doors and windows closed while the AC runs.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 9,
+          "say": "Switch the AC back on. If water still drips inside, switch it off and please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
       ],
-      "source": "DRAFT, not yet verified: generic owner's-manual procedure. Check against the demo car's manual (docs/kb-collection-plan.md §5)."
+      "source": "LG India help library (water leaks or drips from split AC; outdoor unit dripping) + Samsung Gulf and Saudi water-leakage pages + Daikin FTXM operation manual p.3, 40, 43 + Daikin India troubleshooting page + Panasonic CS-C18HKD operating instructions p.6-7; checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "switch_off"
+        }
+      ]
     },
     {
-      "id": "car_top_up_washer_fluid",
-      "appliance": "car_engine_bay",
+      "id": "air_conditioner_remote_not_working",
+      "appliance": "air_conditioner",
       "brand": "generic",
       "error_code": null,
-      "title": "Top up windscreen washer fluid",
-      "meaning": "Let's fill up the windscreen washer fluid.",
-      "symptoms": ["wipers spray nothing", "washer not spraying"],
-      "aliases": ["washer fluid", "wiper fluid", "windscreen water", "windshield washer", "fill the wiper water",
-                  "top up washer fluid"],
+      "code_aliases": [],
+      "brand_codes": [],
+      "title": "AC remote not working",
+      "meaning": "Let's get your AC and its remote talking again.",
+      "symptoms": [
+        "remote not working",
+        "remote not responding",
+        "ac not responding to remote",
+        "remote display blank",
+        "no beep from the ac",
+        "ac not turning on"
+      ],
+      "aliases": [
+        "ac remote not working",
+        "air conditioner remote not working",
+        "ac remote dead",
+        "change the remote batteries",
+        "remote battery",
+        "lost the ac remote",
+        "ac won't switch on",
+        "ac not starting"
+      ],
       "severity": "diy",
-      "escalate_if": ["washer tank is cracked", "pump makes noise but nothing sprays"],
-      "safety": ["Switch the engine off before you reach into the engine bay."],
-      "steps": [
-        {"n": 1, "say": "Find the washer fluid cap. It has a windscreen and water spray symbol.",
-         "target": "cap of the windshield washer fluid reservoir with the wiper symbol", "verify": null, "caution": null},
-        {"n": 2, "say": "Flip or twist the cap open.",
-         "target": "cap of the windshield washer fluid reservoir with the wiper symbol",
-         "verify": "the windshield washer fluid cap is open", "caution": null},
-        {"n": 3, "say": "Pour in washer fluid or clean water until it's nearly full.",
-         "target": "open windshield washer fluid filler neck", "verify": null, "caution": null},
-        {"n": 4, "say": "Close the cap until it clicks.",
-         "target": "cap of the windshield washer fluid reservoir", "verify": null, "caution": null}
+      "escalate_if": [
+        "burning smell",
+        "sparks",
+        "breaker keeps tripping",
+        "remote got wet"
       ],
-      "source": "DRAFT, not yet verified: generic owner's-manual procedure. Check against the demo car's manual (docs/kb-collection-plan.md §5)."
+      "safety": [
+        "Keep the remote's small batteries away from young children."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Look at the remote's screen. If it's blank or faint, the batteries are weak.",
+          "target": "the display screen of the AC remote control",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Take the batteries out and put them back, matching the plus and minus marks.",
+          "target": "the battery cover on the back of the AC remote control",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "If the screen is still faint, replace both batteries with new ones of the same type.",
+          "target": "the battery cover on the back of the AC remote control",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "Point the remote straight at the indoor unit, with nothing like a curtain in between.",
+          "target": "the wall-mounted indoor AC unit",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "Wipe the small receiver window on the indoor unit, and make sure nothing covers it.",
+          "target": "the small dark signal receiver window on the front of the indoor AC unit",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 6,
+          "say": "Switch off nearby tube lights or neon lights, then try the remote again.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 7,
+          "say": "Test the remote with your phone camera. Aim it at the lens, press a button, and look for light.",
+          "target": "the small bulb at the front tip of the AC remote control",
+          "verify": null,
+          "caution": "Some phones, like iPhones, can't show this light."
+        },
+        {
+          "n": 8,
+          "say": "If there's no light even with new batteries, the remote is faulty and needs replacing.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 9,
+          "say": "If the remote does light up but the AC won't respond, check the AC's breaker or wall switch is on.",
+          "target": "the wall switch or plug that powers the AC",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 10,
+          "say": "Meanwhile, you can run the AC with the small on off button on the indoor unit.",
+          "target": "the small on/off button on the indoor AC unit",
+          "verify": null,
+          "caution": "Where it sits differs by model, so check your manual."
+        },
+        {
+          "n": 11,
+          "say": "If the AC still won't start from either one, please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "LG India help library (AC remote control not working) + Samsung India remote not working page + Daikin India troubleshooting page + Daikin FTXM operation manual p.3, 10, 42 + Panasonic CS-C18HKD operating instructions p.1, 3, 7; checked 2026-09-27"
     },
     {
-      "id": "car_electrical_wiring",
-      "appliance": "car_engine_bay",
+      "id": "air_conditioner_bad_smell",
+      "appliance": "air_conditioner",
       "brand": "generic",
       "error_code": null,
-      "title": "Car electrical wiring",
-      "meaning": "Wiring, battery cables and airbag circuits can hurt you or damage the car.",
-      "symptoms": ["short circuit", "sparks", "electrical problem"],
-      "aliases": ["wiring", "fix the wiring", "rewire", "cut the wire", "connect the wires", "loose wire",
-                  "electrical wires"],
+      "code_aliases": [],
+      "brand_codes": [],
+      "title": "Bad smell from the AC",
+      "meaning": "Let's clear out the smell coming from your AC.",
+      "symptoms": [
+        "bad smell",
+        "musty smell",
+        "damp smell",
+        "foul smell",
+        "smells like mould",
+        "stinky air"
+      ],
+      "aliases": [
+        "ac smells bad",
+        "bad smell from ac",
+        "ac stinks",
+        "smelly ac",
+        "ac bad odour",
+        "ac bad odor",
+        "air conditioner smells bad",
+        "ac smells musty"
+      ],
+      "severity": "diy",
+      "escalate_if": [
+        "burning smell",
+        "electrical smell",
+        "smoke",
+        "sparks"
+      ],
+      "safety": [
+        "Switch the AC off, then turn off its wall switch or breaker.",
+        "Use a sturdy stool or ladder, not a chair, to reach the indoor unit."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Open the front cover of the indoor unit, and slide out the air filters.",
+          "target": "the front cover panel of the indoor AC unit",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Wash the filters under running water to clear the dust.",
+          "target": "the plastic mesh air filter",
+          "verify": null,
+          "caution": "Never use hot water on the filters."
+        },
+        {
+          "n": 3,
+          "say": "Let them dry completely in the shade before you put them back.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "Put the filters back, close the cover, and switch the AC on again.",
+          "target": "the front cover panel of the indoor AC unit",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "Run the AC in fan only mode for a few hours to dry out the inside.",
+          "target": "the display screen of the AC remote control",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 6,
+          "say": "Look for smells nearby, like a bin, shoes or damp clothes, and move them away from the AC.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 7,
+          "say": "If it still smells, the inside needs a deep clean. Please call a technician to service it.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "LG India help library (AC suddenly smells awful) + Samsung Singapore AC bad smell page + Samsung India filter cleaning page + Daikin FTXM operation manual p.42 + Daikin India troubleshooting page + Panasonic CS-C18HKD operating instructions p.7; checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "switch_off"
+        }
+      ]
+    },
+    {
+      "id": "air_conditioner_gas_or_compressor_fault",
+      "appliance": "air_conditioner",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "brand_codes": [
+        {
+          "brand": "LG",
+          "codes": [
+            "CH05",
+            "CH10",
+            "CH38",
+            "CH53",
+            "CH54",
+            "CH66",
+            "CH67",
+            "CH90",
+            "CH91",
+            "CH93",
+            "E6",
+            "EF",
+            "F4"
+          ],
+          "spoken": [
+            "c h 05",
+            "c h 5",
+            "c h zero five",
+            "c h five",
+            "c h 10",
+            "c h ten",
+            "c h 38",
+            "c h thirty eight",
+            "ch thirty eight",
+            "c h 53",
+            "c h fifty three",
+            "c h 54",
+            "c h fifty four",
+            "c h 66",
+            "c h sixty six",
+            "c h 67",
+            "c h sixty seven",
+            "c h 90",
+            "c h ninety",
+            "c h 91",
+            "c h ninety one",
+            "c h 93",
+            "c h ninety three",
+            "e six",
+            "f four"
+          ]
+        },
+        {
+          "brand": "Daikin",
+          "codes": [
+            "U0",
+            "U2",
+            "U4",
+            "UA",
+            "E1",
+            "E5",
+            "E6",
+            "E7",
+            "E8",
+            "F6",
+            "L5"
+          ],
+          "spoken": [
+            "u zero",
+            "u two",
+            "u four",
+            "e one",
+            "e five",
+            "e six",
+            "e seven",
+            "e eight",
+            "f six",
+            "l five"
+          ]
+        }
+      ],
+      "title": "AC fault that needs a technician",
+      "meaning": "This needs a trained AC technician. Please switch the AC off and don't use it until it's checked.",
+      "symptoms": [
+        "gas leak",
+        "gas refill",
+        "compressor not starting",
+        "outdoor unit not running",
+        "burning smell",
+        "smoke",
+        "sparks",
+        "breaker keeps tripping",
+        "power cord hot"
+      ],
+      "aliases": [
+        "ac gas leak",
+        "ac needs gas refill",
+        "ac gas filling",
+        "compressor problem",
+        "compressor not working",
+        "ac burning smell",
+        "ac smoking",
+        "outdoor fan not spinning",
+        "ac error code",
+        "ac wiring"
+      ],
+      "severity": "call_technician",
+      "escalate_if": [
+        "burning smell",
+        "smoke",
+        "sparks"
+      ],
+      "safety": [],
+      "steps": [],
+      "source": "LG India help library (AC guide to error codes; CH05) + Daikin India error codes page + Daikin FTXM operation manual p.2-3, 43-44 + Samsung India AC gas-smell page + Panasonic CS-C18HKD operating instructions p.1, 6 + US DOE Energy Saver 101 (common AC problems); checked 2026-09-27"
+    },
+    {
+      "id": "bike_engine_oil_check",
+      "appliance": "bike",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Check the engine oil on a bike or scooter",
+      "meaning": "Let's check your engine oil level, and top it up if it's low.",
+      "symptoms": [
+        "low engine oil",
+        "oil level low",
+        "oil looks low",
+        "oil running low",
+        "oil light on",
+        "engine oil low"
+      ],
+      "aliases": [
+        "check engine oil",
+        "check the oil",
+        "engine oil level",
+        "oil dipstick",
+        "top up engine oil",
+        "add engine oil",
+        "bike engine oil",
+        "scooter engine oil",
+        "motorcycle oil check",
+        "oil level window"
+      ],
+      "severity": "diy",
+      "escalate_if": [
+        "oil leak",
+        "burning smell",
+        "smoke from engine",
+        "oil light stays on"
+      ],
+      "safety": [
+        "Put the bike on its centre stand on firm, level ground.",
+        "Warm a cold engine for a few minutes, then switch it off and wait a few minutes."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Look low on the right side of the engine for an oil window or an oil filler cap.",
+          "target": "the oil level window or oil filler cap low on the right side of the engine",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "If there's a window, the oil should sit between the upper and lower marks next to it.",
+          "target": "the oil level window low on the right side of the engine",
+          "verify": null,
+          "caution": null,
+          "anim": {
+            "kind": "level"
+          }
+        },
+        {
+          "n": 3,
+          "say": "If there's a filler cap, unscrew it and wipe the dipstick on it clean.",
+          "target": "the oil filler cap with a dipstick low on the right side of the engine",
+          "verify": null,
+          "caution": "The engine and exhaust may be hot, so don't touch them.",
+          "anim": {
+            "kind": "turn",
+            "dir": "ccw"
+          }
+        },
+        {
+          "n": 4,
+          "say": "Rest the dipstick back in the hole without screwing it in, then pull it out again.",
+          "target": "the oil filler hole low on the right side of the engine",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "The oil should reach between the upper and lower marks on the dipstick.",
+          "target": null,
+          "verify": null,
+          "caution": null,
+          "anim": {
+            "kind": "level"
+          }
+        },
+        {
+          "n": 6,
+          "say": "If it's at or near the lower mark, add a little oil of your manual's grade through the filler.",
+          "target": "the open oil filler hole low on the right side of the engine",
+          "verify": null,
+          "caution": "Don't fill above the upper mark.",
+          "anim": {
+            "kind": "pour"
+          }
+        },
+        {
+          "n": 7,
+          "say": "Recheck the level, then screw the filler cap back on firmly and wipe up any spills.",
+          "target": "the oil filler cap low on the right side of the engine",
+          "verify": null,
+          "caution": null,
+          "anim": {
+            "kind": "turn",
+            "dir": "cw"
+          }
+        }
+      ],
+      "source": "Honda Activa 6G OM PDF p.63-64 + Honda Shine OM PDF p.56-57 + TVS Jupiter OM PDF p.58 + Bajaj Pulsar 150 OM PDF p.28 + Royal Enfield Classic 350 OM PDF p.27; checked 2026-09-27"
+    },
+    {
+      "id": "bike_chain_slack_lube",
+      "appliance": "bike",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Check and lube a motorcycle drive chain",
+      "meaning": "Let's check how loose your motorcycle chain is, then clean and lube it.",
+      "symptoms": [
+        "chain loose",
+        "chain slack",
+        "chain noise",
+        "chain making noise",
+        "chain dry",
+        "rusty chain"
+      ],
+      "aliases": [
+        "check chain slack",
+        "chain tension",
+        "lube the chain",
+        "oil the chain",
+        "chain lubrication",
+        "chain lube",
+        "drive chain",
+        "bike chain",
+        "motorcycle chain",
+        "chain adjustment"
+      ],
+      "severity": "diy",
+      "escalate_if": [
+        "chain came off",
+        "kinked links",
+        "chain stiff",
+        "sprocket teeth worn"
+      ],
+      "safety": [
+        "Switch the engine off, take out the key and shift into neutral.",
+        "Put the motorcycle on its centre stand on firm, level ground."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Find the drive chain that runs from the engine to the rear wheel.",
+          "target": "the drive chain running from the engine to the rear wheel sprocket",
+          "verify": null,
+          "caution": "Some chains are fully covered. Your manual shows how to see them."
+        },
+        {
+          "n": 2,
+          "say": "Halfway along the chain, move it up and down with your finger and see how far it travels.",
+          "target": "the middle of the drive chain between the two sprockets",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "That up and down movement should be within the slack range in your owner's manual.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "Turn the rear wheel slowly by hand. The chain should move smoothly, with no tight or stiff spots.",
+          "target": "the rear wheel of the motorcycle",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "Wipe the chain clean with a dry cloth while you turn the rear wheel.",
+          "target": "the drive chain running from the engine to the rear wheel sprocket",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 6,
+          "say": "Spray or drip chain lube onto the chain as you turn the wheel, then wipe off the extra.",
+          "target": "the drive chain running from the engine to the rear wheel sprocket",
+          "verify": null,
+          "caution": "Use the chain lube your manual names, and keep it off the tyres and brakes."
+        },
+        {
+          "n": 7,
+          "say": "If the slack is outside the range or the chain is kinked, have a mechanic adjust it.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "Honda Shine OM PDF p.44, 73-75 + TVS Apache RTR 160 OM PDF p.75-76 + Bajaj Pulsar N160 OM PDF p.35-36 + Royal Enfield Classic 350 OM PDF p.27, 32; checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "engine_off"
+        }
+      ]
+    },
+    {
+      "id": "bike_wont_start",
+      "appliance": "bike",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Bike or scooter won't start",
+      "meaning": "Let's go through the simple checks for why it won't start.",
+      "symptoms": [
+        "engine not starting",
+        "won't start",
+        "self start not working",
+        "starter not working",
+        "engine cranks but won't start",
+        "doesn't start"
+      ],
+      "aliases": [
+        "bike won't start",
+        "scooter won't start",
+        "scooty not starting",
+        "motorcycle won't start",
+        "two wheeler not starting",
+        "engine won't turn on",
+        "starting problem",
+        "how to kick start"
+      ],
+      "severity": "diy",
+      "escalate_if": [
+        "petrol smell",
+        "fuel leak",
+        "burning smell",
+        "engine warning light"
+      ],
+      "safety": [
+        "Move the bike off the road and stand it on firm, level ground."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "If there's an engine stop switch on the right handlebar, make sure it's set to run.",
+          "target": "the engine stop switch on the right handlebar switch block",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Push the side stand fully up. Many bikes won't start with it down.",
+          "target": "the side stand on the left side of the bike",
+          "verify": "the side stand is folded up",
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "On a motorcycle, shift into neutral, or hold the clutch lever in.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "On a scooter, squeeze a brake lever while you press the start button.",
+          "target": "the brake lever on the left handlebar of the scooter",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "Keep the throttle closed and press start for no more than five seconds at a time.",
+          "target": "the start button on the right handlebar",
+          "verify": null,
+          "caution": "Wait ten to fifteen seconds between tries to rest the battery."
+        },
+        {
+          "n": 6,
+          "say": "Check there's enough petrol. On older bikes, turn the fuel tap to on or reserve.",
+          "target": "the fuel gauge on the instrument cluster",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 7,
+          "say": "On older bikes with a choke, pull it on for a cold start, then off once warm.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 8,
+          "say": "If the lights are dim or the starter won't turn, use the kick starter if there is one.",
+          "target": "the folding kick start lever low on the side of the bike",
+          "verify": null,
+          "caution": "Kick firmly from the top, and never kick while the engine is running."
+        },
+        {
+          "n": 9,
+          "say": "If the engine warning light stays on, or it still won't start, please call a mechanic.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "Honda Activa 6G OM PDF p.27-31, 78 + Honda Shine OM PDF p.23, 26-28, 85 + TVS Jupiter 125 OM PDF p.33, 74 + TVS Jupiter OM PDF p.29 + Bajaj Pulsar N160 OM PDF p.27-29 + Bajaj Pulsar 150/180 (2018) OM PDF p.18 + Royal Enfield Classic 350 OM PDF p.20, 39; checked 2026-09-27"
+    },
+    {
+      "id": "bike_tyre_pressure_check",
+      "appliance": "bike",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Check tyre pressure and tyre condition",
+      "meaning": "Let's check your tyre pressure and look the tyres over for damage.",
+      "symptoms": [
+        "flat tyre",
+        "flat tire",
+        "puncture",
+        "punctured tyre",
+        "tyre low on air",
+        "tire low on air",
+        "soft tyre",
+        "losing air"
+      ],
+      "aliases": [
+        "tyre pressure",
+        "tire pressure",
+        "check tyre pressure",
+        "check tire pressure",
+        "air in tyres",
+        "air in tires",
+        "fill air",
+        "bike tyre",
+        "scooter tyre",
+        "motorcycle tire"
+      ],
+      "severity": "diy",
+      "escalate_if": [
+        "tyre bulge",
+        "tire bulge",
+        "cut sidewall",
+        "tread worn"
+      ],
+      "safety": [
+        "Park on firm, level ground, switch the engine off and take out the key."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Check the pressure while the tyres are cold, before riding or after a very short ride.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Look up the right front and rear pressures in your owner's manual.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Take off the valve cap and press a tyre pressure gauge firmly onto the valve.",
+          "target": "the tyre valve stem on the wheel rim",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "Add air until it matches your manual, then screw the valve cap back on.",
+          "target": "the tyre valve stem on the wheel rim",
+          "verify": null,
+          "caution": null,
+          "anim": null
+        },
+        {
+          "n": 5,
+          "say": "Look around each tyre for cuts, cracks, bulges, or nails stuck in the tread.",
+          "target": "the tread and sidewall of the tyre",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 6,
+          "say": "Find the small tread wear marks. If the tread has worn down to them, the tyre needs replacing.",
+          "target": "the small tread wear indicator mark on the tyre sidewall",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 7,
+          "say": "If it's punctured, damaged, or keeps losing air, get it fixed at a tyre repair shop.",
+          "target": null,
+          "verify": null,
+          "caution": "With a puncture, ride slowly and only as far as the nearest repair shop."
+        }
+      ],
+      "source": "Honda Activa 6G OM PDF p.51, 80 + Honda Shine OM PDF p.45 + TVS Jupiter 125 OM PDF p.92 + TVS Apache RTR 160 OM PDF p.74 + Bajaj Pulsar 150 OM PDF p.29 + Royal Enfield Classic 350 OM PDF p.17, 28; checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "engine_off"
+        }
+      ]
+    },
+    {
+      "id": "bike_brake_fluid_check",
+      "appliance": "bike",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Check brake fluid and brake lever feel",
+      "meaning": "Let's check the brake fluid level and how the brakes feel. Just a check, no repairs.",
+      "symptoms": [
+        "brake fluid low",
+        "brake lever loose",
+        "brake lever goes too far",
+        "brakes feel loose",
+        "brake oil low"
+      ],
+      "aliases": [
+        "check brake fluid",
+        "brake fluid level",
+        "brake oil",
+        "check the brakes",
+        "check my brakes",
+        "brake check",
+        "disc brake fluid",
+        "bike brake check",
+        "scooter brake fluid"
+      ],
+      "severity": "caution",
+      "escalate_if": [
+        "spongy brake",
+        "spongy brakes",
+        "fluid leak",
+        "brakes not working",
+        "fluid below mark"
+      ],
+      "safety": [
+        "Switch the engine off and park upright on firm, level ground with the handlebar straight."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Find the small brake fluid window on the right handlebar, next to the front brake lever.",
+          "target": "the small brake fluid reservoir with a window on the right handlebar next to the front brake lever",
+          "verify": null,
+          "caution": "Drum brakes have no fluid window. If so, skip to the lever check."
+        },
+        {
+          "n": 2,
+          "say": "The fluid should be above the lower or MIN mark in the window.",
+          "target": "the small brake fluid reservoir with a window on the right handlebar next to the front brake lever",
+          "verify": null,
+          "caution": "Don't open the cap. Brake fluid damages paint and plastic."
+        },
+        {
+          "n": 3,
+          "say": "If the rear brake is a disc, check its fluid level on the right side the same way.",
+          "target": "the small rear brake fluid reservoir on the right side near the rear footrest",
+          "verify": null,
+          "caution": "It may sit behind a side cover. Your manual shows where."
+        },
+        {
+          "n": 4,
+          "say": "Squeeze each brake lever, and press the pedal if there is one. Each should firm up, not feel spongy.",
+          "target": "the front brake lever on the right handlebar",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "The lever should travel only a short way before the brake bites, within the range in your manual.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 6,
+          "say": "If the fluid is low or a brake feels spongy or weak, don't ride. Please call a mechanic.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "Honda Shine OM PDF p.43, 60 + Honda Activa 6G OM PDF p.67 + TVS Apache RTR 160 OM PDF p.68-69 + TVS Jupiter 125 OM PDF p.89 + Bajaj Pulsar 150 OM PDF p.30 + Bajaj Pulsar N160 OM PDF p.37 + Royal Enfield Classic 350 OM PDF p.17; checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "engine_off"
+        }
+      ]
+    },
+    {
+      "id": "bike_battery_terminals",
+      "appliance": "bike",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Check and clean the battery terminals",
+      "meaning": "Let's check that your battery terminals are clean and tight.",
+      "symptoms": [
+        "battery terminals corroded",
+        "white powder on battery",
+        "loose battery wire",
+        "battery connection loose",
+        "battery weak",
+        "battery dead",
+        "rusty battery terminal"
+      ],
+      "aliases": [
+        "battery terminals",
+        "clean battery terminals",
+        "check the battery",
+        "bike battery",
+        "scooter battery",
+        "battery cable",
+        "battery connection"
+      ],
+      "severity": "caution",
+      "escalate_if": [
+        "battery swollen",
+        "battery leaking",
+        "burning smell",
+        "sparks"
+      ],
+      "safety": [
+        "Switch the ignition off and take out the key.",
+        "Keep flames and sparks away. Battery acid burns, so wear safety glasses if you can."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Open the battery cover. Your manual shows where, often behind a side panel or under a floor lid.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Look at both terminals. The cables should be tight, with no white crust.",
+          "target": "the two battery terminals with cables bolted on",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "If they need cleaning, undo the minus cable first, then the plus cable.",
+          "target": "the negative minus terminal of the battery",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "Clean the terminals and cable ends with a dry cloth, or a small wire brush for heavy crust.",
+          "target": "the two battery terminals",
+          "verify": null,
+          "caution": "Keep water out of the battery."
+        },
+        {
+          "n": 5,
+          "say": "Refit the plus cable first, then the minus cable, and tighten both.",
+          "target": "the positive plus terminal of the battery",
+          "verify": null,
+          "caution": null,
+          "anim": null
+        },
+        {
+          "n": 6,
+          "say": "Smear a thin layer of petroleum jelly over both terminals.",
+          "target": "the two battery terminals",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 7,
+          "say": "Close the cover. If the battery still seems weak, have it charged or checked by a mechanic.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "Honda Activa 6G OM PDF p.10, 46-48, 55-56 + Honda Shine OM PDF p.49 + Bajaj Pulsar 150 OM PDF p.31, 48 + Royal Enfield Classic 350 OM PDF p.33 + TVS Jupiter OM PDF p.55 + TVS Jupiter 125 OM PDF p.83; checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "engine_off"
+        }
+      ]
+    },
+    {
+      "id": "bike_brakes_fuel_wiring_danger",
+      "appliance": "bike",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Brake failure, fuel leak, wiring fault or smoke",
+      "meaning": "Brake, fuel, wiring or smoke problems aren't safe to ride with. Please switch off and park it.",
+      "symptoms": [
+        "brakes not working",
+        "brake failure",
+        "spongy brakes",
+        "brake feels spongy",
+        "petrol leaking",
+        "fuel leak",
+        "smoke from the bike",
+        "burning smell",
+        "wires melted",
+        "sparks from the wiring"
+      ],
+      "aliases": [
+        "brake fluid leaking",
+        "no brakes",
+        "petrol smell",
+        "wiring problem",
+        "fix the wiring",
+        "electrical short",
+        "fuse keeps blowing",
+        "smoke coming out",
+        "scooter smoking",
+        "motorcycle smoking"
+      ],
       "severity": "call_technician",
       "escalate_if": [],
       "safety": [],
       "steps": [],
-      "source": "FixLens policy: no wiring guidance (CLAUDE.md §3)."
+      "source": "TVS Apache RTR 160 OM PDF p.68-69 + TVS Jupiter 125 OM PDF p.89 + Honda Shine OM PDF p.30, 43, 60 + TVS Jupiter OM PDF p.56 + Royal Enfield Classic 350 OM PDF p.39; FixLens rule AUTHORING.md principle 5; checked 2026-09-27"
+    },
+    {
+      "id": "car_check_engine_oil",
+      "appliance": "car",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Check and top up engine oil",
+      "meaning": "Let's check your engine oil on the dipstick, and top it up if it's low.",
+      "symptoms": [
+        "low engine oil",
+        "oil level low",
+        "need to add oil"
+      ],
+      "aliases": [
+        "check the engine oil",
+        "check the oil",
+        "engine oil level",
+        "dipstick",
+        "add engine oil",
+        "top up the oil",
+        "put oil in the engine"
+      ],
+      "severity": "diy",
+      "escalate_if": [
+        "oil leaking",
+        "burning smell",
+        "oil light stays on"
+      ],
+      "safety": [
+        "Park on level ground and switch the engine off.",
+        "Wait about five minutes for the oil to settle. Some engine parts may still be hot."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Open the bonnet and prop it up with its support rod.",
+          "target": null,
+          "verify": null,
+          "caution": "The rod can be hot after driving. Hold it by its grip."
+        },
+        {
+          "n": 2,
+          "say": "Find the dipstick. Its handle is a bright ring or loop, usually yellow or orange.",
+          "target": "the engine oil dipstick handle, a brightly coloured ring or loop, usually yellow or orange",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Pull the dipstick all the way out and wipe it clean with a cloth.",
+          "target": "the engine oil dipstick handle, a brightly coloured ring or loop, usually yellow or orange",
+          "verify": null,
+          "caution": null,
+          "anim": {
+            "kind": "pull"
+          }
+        },
+        {
+          "n": 4,
+          "say": "Push it back in fully, then pull it out again.",
+          "target": "the engine oil dipstick handle, a brightly coloured ring or loop, usually yellow or orange",
+          "verify": null,
+          "caution": null,
+          "anim": {
+            "kind": "push"
+          }
+        },
+        {
+          "n": 5,
+          "say": "The oil should be between the two marks near the tip.",
+          "target": "the end of the oil dipstick with its two level marks",
+          "verify": null,
+          "caution": null,
+          "anim": {
+            "kind": "level"
+          }
+        },
+        {
+          "n": 6,
+          "say": "If it's near or below the lower mark, unscrew the oil filler cap on top of the engine.",
+          "target": "the round engine oil filler cap on top of the engine, marked with an oil can symbol or the words engine oil",
+          "verify": "the engine oil filler cap is off and the round filler opening is visible",
+          "caution": null,
+          "anim": {
+            "kind": "turn",
+            "dir": "ccw"
+          }
+        },
+        {
+          "n": 7,
+          "say": "Slowly pour in a little of the oil your manual recommends.",
+          "target": "the open round engine oil filler hole on top of the engine",
+          "verify": null,
+          "caution": "Don't fill above the upper mark. Too much oil is as bad as too little.",
+          "anim": {
+            "kind": "pour"
+          }
+        },
+        {
+          "n": 8,
+          "say": "Screw the filler cap back on tightly, wait a few minutes, then check the dipstick again.",
+          "target": "the round engine oil filler cap on top of the engine",
+          "verify": null,
+          "caution": null,
+          "anim": {
+            "kind": "turn",
+            "dir": "cw"
+          }
+        },
+        {
+          "n": 9,
+          "say": "When the oil is between the marks, push the dipstick back in fully.",
+          "target": "the engine oil dipstick handle, a brightly coloured ring or loop, usually yellow or orange",
+          "verify": null,
+          "caution": null,
+          "anim": {
+            "kind": "push"
+          }
+        }
+      ],
+      "source": "Maruti Swift OM 99011M75T08-74W p.9-8 + Honda City 2022 OM pp.263, 268-270 + Hyundai Creta 2019 OM p.9-29, 9-30 + Tata Nexon BS-VI OM p.176-177; checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "engine_off"
+        }
+      ]
+    },
+    {
+      "id": "car_check_coolant",
+      "appliance": "car",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Check and top up the engine coolant",
+      "meaning": "Let's check the coolant in the see-through tank. The engine must be cold.",
+      "symptoms": [
+        "coolant low",
+        "coolant tank empty"
+      ],
+      "aliases": [
+        "check coolant",
+        "coolant level",
+        "add coolant",
+        "top up coolant",
+        "where does the coolant go",
+        "coolant reservoir",
+        "radiator water"
+      ],
+      "severity": "caution",
+      "escalate_if": [
+        "coolant keeps dropping",
+        "coolant leaking",
+        "steam coming out",
+        "temperature light on"
+      ],
+      "safety": [
+        "Only do this when the engine is completely cold.",
+        "Never open the radiator cap or coolant cap on a hot engine. Hot coolant can scald you."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Open the bonnet and prop it up with its support rod.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Find the see-through plastic coolant tank with level marks on its side.",
+          "target": "the see-through plastic engine coolant reservoir tank with MIN and MAX or LOW and FULL marks on its side",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Check the coolant is between the lower and upper marks.",
+          "target": "the see-through plastic engine coolant reservoir tank with MIN and MAX or LOW and FULL marks on its side",
+          "verify": null,
+          "caution": null,
+          "anim": {
+            "kind": "level"
+          }
+        },
+        {
+          "n": 4,
+          "say": "If it's below the lower mark, slowly open the tank's cap. Don't open the radiator cap.",
+          "target": "the cap of the see-through plastic coolant reservoir tank",
+          "verify": "the coolant reservoir cap is off",
+          "caution": "Only open it when the engine is cold."
+        },
+        {
+          "n": 5,
+          "say": "Add the coolant type your manual says until it reaches the upper mark.",
+          "target": "the open see-through plastic coolant reservoir tank",
+          "verify": null,
+          "caution": "Don't mix different coolant types, and don't fill above the upper mark.",
+          "anim": {
+            "kind": "pour"
+          }
+        },
+        {
+          "n": 6,
+          "say": "Put the cap back on and close it firmly.",
+          "target": "the cap of the see-through plastic coolant reservoir tank",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 7,
+          "say": "If you need to top up often, please have the cooling system checked for leaks.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "Maruti Swift OM p.9-9, 9-10 + Honda City 2022 OM pp.271-273 + Hyundai Creta 2019 OM pp.9-32 to 9-34 + Tata Nexon BS-VI OM p.178; checked 2026-09-27"
+    },
+    {
+      "id": "car_top_up_washer_fluid",
+      "appliance": "car",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Top up windscreen washer fluid",
+      "meaning": "Let's fill up the windscreen washer fluid.",
+      "symptoms": [
+        "washer not spraying",
+        "wipers spray nothing",
+        "washer tank empty"
+      ],
+      "aliases": [
+        "washer fluid",
+        "wiper fluid",
+        "wiper water",
+        "windscreen water",
+        "windshield washer fluid"
+      ],
+      "severity": "diy",
+      "escalate_if": [
+        "still not spraying",
+        "washer tank leaking"
+      ],
+      "safety": [
+        "Switch the engine off and let it cool first. Washer fluid can catch fire on a hot engine."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Open the bonnet and prop it up with its support rod.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Find the washer fluid cap. It often shows a windscreen and water spray symbol.",
+          "target": "the windscreen washer fluid reservoir cap, often blue, with a windscreen and water spray symbol",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Open the cap.",
+          "target": "the windscreen washer fluid reservoir cap, often blue, with a windscreen and water spray symbol",
+          "verify": "the washer fluid cap is open",
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "Pour in windscreen washer fluid, mixed with water as the bottle says.",
+          "target": "the open windscreen washer fluid filler neck",
+          "verify": null,
+          "caution": "Never put radiator coolant or antifreeze in the washer tank.",
+          "anim": {
+            "kind": "pour"
+          }
+        },
+        {
+          "n": 5,
+          "say": "Stop before it overflows, then close the cap firmly.",
+          "target": "the windscreen washer fluid reservoir cap",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 6,
+          "say": "If it still doesn't spray once it's full, please have it checked at a workshop.",
+          "target": null,
+          "verify": null,
+          "caution": "Don't keep running the washer with an empty tank. It can damage the pump."
+        }
+      ],
+      "source": "Maruti Swift OM p.9-40 + Honda City 2022 OM pp.263, 276 + Hyundai Creta 2019 OM p.9-37 + Tata Nexon BS-VI OM p.179; checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "engine_off"
+        }
+      ]
+    },
+    {
+      "id": "car_electrical_wiring",
+      "appliance": "car",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Car electrical wiring",
+      "meaning": "Wiring and electrical faults can hurt you or damage the car, so they need a technician.",
+      "symptoms": [
+        "short circuit",
+        "sparks from the wires",
+        "electrical problem"
+      ],
+      "aliases": [
+        "wiring",
+        "rewire",
+        "cut the wire",
+        "connect the wires",
+        "loose wire",
+        "electrical wires"
+      ],
+      "severity": "call_technician",
+      "escalate_if": [],
+      "safety": [],
+      "steps": [],
+      "source": "FixLens policy (CLAUDE.md §3) + Maruti Swift OM p.10-16 (major electrical problem: workshop) + Hyundai Creta 2019 OM p.9-6, 9-47 (disconnect the battery before touching wiring; high-voltage ignition); checked 2026-09-27"
+    },
+    {
+      "id": "car_battery_terminals",
+      "appliance": "car",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Check the battery terminals for corrosion",
+      "meaning": "Let's look at your battery terminals for corrosion or loose clamps.",
+      "symptoms": [
+        "white powder on the battery",
+        "corroded battery terminals",
+        "crusty battery terminals",
+        "battery clamp loose"
+      ],
+      "aliases": [
+        "battery terminals",
+        "battery corrosion",
+        "clean the battery terminals",
+        "check the battery",
+        "battery clamps"
+      ],
+      "severity": "caution",
+      "escalate_if": [
+        "battery leaking",
+        "battery cracked",
+        "acid spilled"
+      ],
+      "safety": [
+        "Switch the engine off and keep flames, sparks and cigarettes away. Batteries give off explosive gas.",
+        "Battery acid burns skin and eyes, so wear eye protection and don't lean over the battery."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Open the bonnet and prop it up with its support rod.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Find the battery. It's a box with two metal posts marked plus and minus.",
+          "target": "the car battery, a rectangular box with two metal terminal posts marked plus and minus",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Without touching them, look at both posts and clamps for white or yellowish crusty powder.",
+          "target": "the two battery terminal posts and their cable clamps on top of the car battery",
+          "verify": null,
+          "caution": "Never let a metal tool touch both posts, or a post and the car body."
+        },
+        {
+          "n": 4,
+          "say": "Check that both cable clamps look tight on their posts.",
+          "target": "the two battery terminal posts and their cable clamps on top of the car battery",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "If you see powder or a loose clamp, please have a mechanic clean and tighten the terminals.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "Maruti Swift OM p.9-20 + Honda City 2022 OM pp.253, 303-304 + Hyundai Creta 2019 OM pp.9-45 to 9-48 + Tata Nexon BS-VI OM pp.179-181; checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "engine_off"
+        }
+      ]
+    },
+    {
+      "id": "car_check_brake_fluid",
+      "appliance": "car",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Check the brake fluid level",
+      "meaning": "Let's check the brake fluid level. We'll only look, not top it up.",
+      "symptoms": [
+        "brake fluid low",
+        "brake oil low"
+      ],
+      "aliases": [
+        "brake fluid",
+        "brake fluid level",
+        "brake oil",
+        "brake fluid reservoir",
+        "brake fluid tank"
+      ],
+      "severity": "caution",
+      "escalate_if": [
+        "below minimum",
+        "fluid leaking",
+        "soft pedal"
+      ],
+      "safety": [
+        "Park on level ground, set the parking brake and switch the engine off.",
+        "Keep the cap closed. Brake fluid harms skin, eyes and paint."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Open the bonnet and prop it up with its support rod.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Find the small brake fluid tank, usually at the back of the engine bay on the driver's side.",
+          "target": "the small see-through brake fluid reservoir with MAX and MIN marks, near the back of the engine bay on the driver's side",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Without opening it, look at the fluid level through the side of the tank.",
+          "target": "the small see-through brake fluid reservoir with MAX and MIN marks, near the back of the engine bay on the driver's side",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "The level should be between the MAX and MIN marks.",
+          "target": "the MAX and MIN marks on the side of the brake fluid reservoir",
+          "verify": null,
+          "caution": null,
+          "anim": {
+            "kind": "level"
+          }
+        },
+        {
+          "n": 5,
+          "say": "If it's at or near MIN, don't top it up. Please have the brakes checked soon.",
+          "target": null,
+          "verify": null,
+          "caution": "If the level drops quickly, there may be a leak. Don't drive until it's checked."
+        }
+      ],
+      "source": "Maruti Swift OM p.9-13, 9-14 + Honda City 2022 OM pp.253-254, 263, 275 + Hyundai Creta 2019 OM p.9-35, 9-36 + Tata Nexon BS-VI OM p.177; checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "engine_off"
+        }
+      ]
+    },
+    {
+      "id": "car_check_air_filter",
+      "appliance": "car",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Check the engine air filter",
+      "meaning": "Let's open the air filter box and see if the filter is dirty.",
+      "symptoms": [
+        "dirty air filter",
+        "clogged air filter"
+      ],
+      "aliases": [
+        "air filter",
+        "engine air filter",
+        "air cleaner",
+        "air filter box"
+      ],
+      "severity": "diy",
+      "escalate_if": [
+        "clip is broken",
+        "filter is torn"
+      ],
+      "safety": [
+        "Switch the engine off and let it cool before you reach in."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Open the bonnet and prop it up with its support rod.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Find the air filter box. It's a large plastic box with clips around its lid.",
+          "target": "the large plastic engine air filter box with clips around its lid, joined to a wide air intake hose",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Undo the clips on the lid.",
+          "target": "the clips on the lid of the engine air filter box",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "Lift the lid and take out the filter.",
+          "target": "the lid of the engine air filter box",
+          "verify": "the air filter box lid is open",
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "If it looks very dirty or clogged with dust, it needs a new filter of the right type.",
+          "target": "the engine air filter element",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 6,
+          "say": "Put the filter back the same way, close the lid, and snap all the clips shut.",
+          "target": "the clips on the lid of the engine air filter box",
+          "verify": null,
+          "caution": "Don't drive with the filter out, and don't let dirt fall into the box."
+        }
+      ],
+      "source": "Maruti Swift OM p.9-11 + Hyundai Creta 2019 OM p.9-39; Honda City 2022 lists it for the dealer only; checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "engine_off"
+        }
+      ]
+    },
+    {
+      "id": "car_wont_start",
+      "appliance": "car",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Car engine won't start",
+      "meaning": "Let's find out why the car won't start, beginning with the battery and fuel.",
+      "symptoms": [
+        "won't start",
+        "starter turns slowly",
+        "nothing happens when I turn the key",
+        "flat battery"
+      ],
+      "aliases": [
+        "won't crank",
+        "engine won't turn over",
+        "battery is dead",
+        "starter problem"
+      ],
+      "severity": "diy",
+      "escalate_if": [
+        "fuel smell",
+        "burning smell",
+        "battery keeps dying"
+      ],
+      "safety": [
+        "Set the parking brake firmly. If you're near traffic, turn on the hazard lights."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Make sure the gear is in P or neutral, and press the brake or clutch fully.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Switch on the headlights or the inside light, then try to start the engine.",
+          "target": null,
+          "verify": null,
+          "caution": "Don't crank for more than about ten seconds at a time."
+        },
+        {
+          "n": 3,
+          "say": "If the lights went very dim or off, the battery is flat or its terminals are loose.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "In that case, check the battery terminals look clean and tight.",
+          "target": "the two battery terminal posts and their cable clamps on top of the car battery",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "If they look fine, the battery needs a jump start or a charge. Just ask me about jump starting.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 6,
+          "say": "If the lights stayed bright, check the fuel gauge isn't on empty.",
+          "target": "the fuel gauge on the instrument cluster",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 7,
+          "say": "If it still won't start, please don't push-start it. Call a mechanic or roadside help.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "Maruti Swift OM p.10-15, 10-16 + Honda City 2022 OM pp.206, 329-330 + Hyundai Creta 2019 OM p.8-4 + Tata Nexon BS-VI OM pp.119, 122 (starting); checked 2026-09-27"
+    },
+    {
+      "id": "car_jump_start",
+      "appliance": "car",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Jump start a flat battery",
+      "meaning": "Let's jump start your car from another car's battery, connecting the leads in the safe order.",
+      "symptoms": [
+        "need a jump start",
+        "jump the battery",
+        "need a boost"
+      ],
+      "aliases": [
+        "jump start",
+        "jump start the car",
+        "jumper cables",
+        "jump leads",
+        "connect the jumper cables",
+        "boost the battery"
+      ],
+      "severity": "caution",
+      "escalate_if": [
+        "battery cracked",
+        "battery leaking",
+        "sparks flying",
+        "burning smell"
+      ],
+      "safety": [
+        "Keep flames, sparks and cigarettes away. Batteries give off explosive gas.",
+        "Don't jump start a battery that's cracked, leaking or frozen."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Park the other car close, but not touching yours. Both engines off, parking brakes on.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Switch off the AC, music and any lights you don't need.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Clip one end of the first lead to the plus terminal of your flat battery.",
+          "target": "the plus terminal of the car battery, marked with a plus sign, often under a red cover",
+          "verify": null,
+          "caution": "Some cars have a separate jump point. Check your manual."
+        },
+        {
+          "n": 4,
+          "say": "Clip the other end of that lead to the plus terminal of the good battery.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "Clip the second lead to the minus terminal of the good battery.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 6,
+          "say": "Clip its other end to bare, unpainted metal on your engine, such as an engine mounting bolt.",
+          "target": "a bare unpainted metal bolt on the engine, away from the battery",
+          "verify": null,
+          "caution": "Never clip it to the minus terminal of the flat battery. It could explode."
+        },
+        {
+          "n": 7,
+          "say": "Start the other car and let it run a little above idle for a few minutes.",
+          "target": null,
+          "verify": null,
+          "caution": "Keep hands and leads away from fans and belts."
+        },
+        {
+          "n": 8,
+          "say": "Now start your car.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 9,
+          "say": "Remove the leads in the exact reverse order you connected them.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 10,
+          "say": "If it won't start after a few tries, or keeps going flat, please call a mechanic.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "Maruti Swift OM p.10-14, 10-15 + Honda City 2022 OM pp.333-336 + Hyundai Creta 2019 OM pp.8-5 to 8-7 + Tata Nexon BS-VI OM pp.160-161; checked 2026-09-27"
+    },
+    {
+      "id": "car_oil_pressure_light",
+      "appliance": "car",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Oil pressure warning light",
+      "meaning": "The oil light means the oil pressure is low. Let's stop and check the oil.",
+      "symptoms": [
+        "oil light on",
+        "oil warning light",
+        "oil pressure light",
+        "red oil can light",
+        "low oil pressure",
+        "oil symbol on the dashboard"
+      ],
+      "aliases": [
+        "oil light",
+        "oil lamp",
+        "oil pressure warning",
+        "oil can light on the dashboard"
+      ],
+      "severity": "caution",
+      "escalate_if": [
+        "light stays on",
+        "oil leaking",
+        "burning smell"
+      ],
+      "safety": [
+        "Pull over somewhere safe and level, and switch the engine off straight away."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Wait a few minutes for the oil to settle.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Open the bonnet and prop it up with its support rod.",
+          "target": null,
+          "verify": null,
+          "caution": "The engine and the rod may be hot. Hold the rod by its grip."
+        },
+        {
+          "n": 3,
+          "say": "Pull out the dipstick, wipe it, push it back in fully, and pull it out again.",
+          "target": "the engine oil dipstick handle, a brightly coloured ring or loop, usually yellow or orange",
+          "verify": null,
+          "caution": null,
+          "anim": null
+        },
+        {
+          "n": 4,
+          "say": "If the oil is below the lower mark, add the oil your manual recommends up to the upper mark.",
+          "target": "the round engine oil filler cap on top of the engine, marked with an oil can symbol or the words engine oil",
+          "verify": null,
+          "caution": "Don't fill above the upper mark.",
+          "anim": {
+            "kind": "pour"
+          }
+        },
+        {
+          "n": 5,
+          "say": "If the oil level was already fine, don't drive. Please call a workshop.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 6,
+          "say": "If you added oil, start the engine. If the light stays on, switch off and call a workshop.",
+          "target": "the red oil can warning light on the instrument cluster",
+          "verify": null,
+          "caution": "Running the engine with this light on can badly damage it."
+        }
+      ],
+      "source": "Maruti Swift OM p.4-41 + Honda City 2022 OM pp.340-341 + Hyundai Creta 2019 OM p.5-59 + Tata Nexon BS-VI OM p.63; checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "engine_off"
+        }
+      ]
+    },
+    {
+      "id": "car_overheating",
+      "appliance": "car",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Engine overheating or temperature warning light",
+      "meaning": "The engine is running too hot. Let's cool it down safely.",
+      "symptoms": [
+        "temperature warning light",
+        "running hot",
+        "temperature gauge in the red",
+        "steam"
+      ],
+      "aliases": [
+        "overheating",
+        "hot engine",
+        "temperature light",
+        "coolant temperature light",
+        "high temperature warning"
+      ],
+      "severity": "caution",
+      "escalate_if": [
+        "coolant leaking",
+        "overheats again"
+      ],
+      "safety": [
+        "Pull over somewhere safe, park, and switch the AC off.",
+        "Don't open the bonnet while steam is coming out, and never open the radiator cap hot."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "If you see or hear steam, switch the engine off and wait until it stops.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "If there's no steam, leave the engine idling for a few minutes to cool down.",
+          "target": "the temperature warning light or temperature gauge on the instrument cluster",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Open the bonnet and check the radiator fan is spinning. If not, switch the engine off.",
+          "target": "the radiator cooling fan behind the radiator at the front of the engine bay",
+          "verify": null,
+          "caution": "Keep hands and clothes away from the fan and belts. The fan can start by itself."
+        },
+        {
+          "n": 4,
+          "say": "When the temperature is back to normal, switch the engine off and let it cool.",
+          "target": "the temperature warning light or temperature gauge on the instrument cluster",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "Look for coolant leaking from the radiator, the hoses, or under the car.",
+          "target": "the radiator and the rubber coolant hoses at the front of the engine bay",
+          "verify": null,
+          "caution": "Clear water dripping from the AC under the car is normal."
+        },
+        {
+          "n": 6,
+          "say": "If coolant is leaking, don't drive on. Please call a workshop or roadside help.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 7,
+          "say": "Once it's cool, check the coolant tank. If it's low, slowly add coolant, never above MAX.",
+          "target": "the see-through plastic engine coolant reservoir tank with MIN and MAX or LOW and FULL marks on its side",
+          "verify": null,
+          "caution": "Open only the plastic tank's cap, never the radiator cap.",
+          "anim": {
+            "kind": "pour"
+          }
+        },
+        {
+          "n": 8,
+          "say": "Restart and watch the temperature. If it overheats again, please call a workshop.",
+          "target": "the temperature warning light or temperature gauge on the instrument cluster",
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "Maruti Swift OM p.4-39, 10-17 + Honda City 2022 OM pp.338-339 + Hyundai Creta 2019 OM p.5-44, 8-8, 8-9 + Tata Nexon BS-VI OM p.64; checked 2026-09-27"
+    },
+    {
+      "id": "car_battery_charge_light",
+      "appliance": "car",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Battery charging warning light",
+      "meaning": "The battery light means the battery isn't being charged. Let's save power and get it checked.",
+      "symptoms": [
+        "battery warning light",
+        "battery symbol on the dashboard",
+        "battery not charging"
+      ],
+      "aliases": [
+        "battery light",
+        "charging light",
+        "charge light",
+        "alternator light",
+        "battery lamp"
+      ],
+      "severity": "caution",
+      "escalate_if": [
+        "burning smell",
+        "lights going dim",
+        "engine stalls"
+      ],
+      "safety": [
+        "If you need to stop, pull over somewhere safe, away from traffic."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "It's normal for this light to glow briefly at start-up, then go out.",
+          "target": "the red battery-shaped warning light on the instrument cluster",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "If it stays on while the engine runs, switch off the AC and anything electrical you don't need.",
+          "target": "the red battery-shaped warning light on the instrument cluster",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Please get the charging system checked at a workshop right away. The battery may soon run flat.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "Maruti Swift OM p.4-41 + Honda City 2022 OM p.342 + Hyundai Creta 2019 OM p.5-58 + Tata Nexon BS-VI OM p.63; checked 2026-09-27"
+    },
+    {
+      "id": "car_check_engine_light",
+      "appliance": "car",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Check engine light",
+      "meaning": "The engine light means a fault in the engine or emissions system. Let's see how urgent it is.",
+      "symptoms": [
+        "check engine light",
+        "engine warning light",
+        "engine symbol on the dashboard",
+        "engine light blinking",
+        "engine light flashing"
+      ],
+      "aliases": [
+        "engine light",
+        "check engine lamp",
+        "malfunction indicator light",
+        "engine management light"
+      ],
+      "severity": "caution",
+      "escalate_if": [
+        "blinks again",
+        "burning smell",
+        "power loss"
+      ],
+      "safety": [
+        "If you stop, don't park on dry grass or leaves. A hot exhaust can start a fire."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "It's normal for the engine light to glow at start-up and go out once the engine runs.",
+          "target": "the amber engine-shaped warning light on the instrument cluster",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "If it's blinking, slow down and pull over somewhere safe, away from dry grass.",
+          "target": "the amber engine-shaped warning light on the instrument cluster",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Switch the engine off and let it cool for a while.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "If you must move the car, drive slowly and gently straight to a workshop.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "If the light is steady, not blinking, avoid high speeds and get the engine checked soon.",
+          "target": "the amber engine-shaped warning light on the instrument cluster",
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "Maruti Swift OM p.4-39, 4-40 + Honda City 2022 OM p.343 + Hyundai Creta 2019 OM p.5-57, 5-58 + Tata Nexon BS-VI OM p.62; checked 2026-09-27"
+    },
+    {
+      "id": "car_brake_warning_light",
+      "appliance": "car",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Brake warning light",
+      "meaning": "The red brake light means the parking brake is on, brake fluid is low, or a brake fault.",
+      "symptoms": [
+        "brake warning light",
+        "brake symbol on the dashboard",
+        "exclamation mark light",
+        "parking brake light won't go off",
+        "handbrake light stays on"
+      ],
+      "aliases": [
+        "brake warning",
+        "brake system light",
+        "handbrake warning light",
+        "brake light on the dashboard"
+      ],
+      "severity": "caution",
+      "escalate_if": [
+        "soft pedal",
+        "brakes not working",
+        "fluid leaking",
+        "light stays on"
+      ],
+      "safety": [
+        "If it came on while driving, slow down gently and stop somewhere safe. You may need to brake harder."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "First, make sure the parking brake is fully released.",
+          "target": "the parking brake lever or button next to the driver's seat",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "If the light stays on with the parking brake off, the brake fluid may be low.",
+          "target": "the red brake warning light on the instrument cluster, often a circle with an exclamation mark or the word BRAKE",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "With the engine off, open the bonnet and look at the brake fluid tank's level.",
+          "target": "the small see-through brake fluid reservoir with MAX and MIN marks, near the back of the engine bay on the driver's side",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "If it's at or below MIN, it isn't safe to drive. Please call a workshop or roadside help.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "If the level looks fine but the light stays on, please have the brakes checked right away.",
+          "target": null,
+          "verify": null,
+          "caution": "If the brake light and the ABS light are both on, get it checked immediately."
+        }
+      ],
+      "source": "Maruti Swift OM p.4-36, 4-37, 9-13 + Honda City 2022 OM p.343 + Hyundai Creta 2019 OM p.5-55, 5-56 + Tata Nexon BS-VI OM p.64; checked 2026-09-27"
+    },
+    {
+      "id": "inverter_no_backup",
+      "appliance": "inverter",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Inverter giving no backup or short backup",
+      "meaning": "Let's find out why your inverter backup is short or not working.",
+      "symptoms": [
+        "no backup during power cut",
+        "backup finishes quickly",
+        "short backup",
+        "inverter not giving backup",
+        "lights go off in a power cut",
+        "battery drains fast",
+        "backup time is less"
+      ],
+      "aliases": [
+        "inverter not working",
+        "UPS not working in power cut",
+        "inverter backup low",
+        "battery backup reduced",
+        "inverter battery not charging",
+        "home UPS no backup",
+        "inverter battery water level",
+        "top up inverter battery"
+      ],
+      "severity": "caution",
+      "escalate_if": [
+        "burning smell",
+        "battery swelling",
+        "acid leaking",
+        "sparks at battery",
+        "keeps tripping"
+      ],
+      "safety": [
+        "Don't open the inverter's cover. There's high voltage inside, even when it's switched off."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Check the inverter's front switch is on, and its plug is firmly in a working socket.",
+          "target": "the power switch on the front panel of the inverter",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Look at the small breaker on the back. If it has tripped, switch it back on once.",
+          "target": "the small circuit breaker switch or button on the back of the inverter",
+          "verify": null,
+          "caution": "If it trips again, leave it and call a technician."
+        },
+        {
+          "n": 3,
+          "say": "In a power cut, switch off heavy appliances you don't need. Too much load drains the battery fast.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "After a long power cut, let the battery recharge on mains power for several hours.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "If your battery has water level indicators on top, switch the inverter off and unplug it first.",
+          "target": "the water level indicators on top of the inverter battery",
+          "verify": null,
+          "caution": "Sealed maintenance-free batteries don't need water."
+        },
+        {
+          "n": 6,
+          "say": "Check the indicators. If any shows low, top up slowly with distilled water, only to the max mark.",
+          "target": "the water level indicators on top of the inverter battery",
+          "verify": null,
+          "caution": "Wear gloves; battery acid burns. Never use tap or drinking water, and keep flames away.",
+          "anim": {
+            "kind": "pour"
+          }
+        },
+        {
+          "n": 7,
+          "say": "Close the caps firmly, wipe any spills, then plug the inverter back in and switch it on.",
+          "target": "the vent caps on top of the inverter battery",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 8,
+          "say": "If backup is still short, the battery may be worn out. Please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "Microtek Heavy Duty VTurbo SW UPS OM p.3-4, 6-7 + Livfast Smart Flash UPS OM p.2-3, 5, 8-9 + Luminous battery water and maintenance guides (luminousindia.com) + Genus battery top-up guide + Livguard LGS1100i product FAQ; checked 2026-09-27"
+    },
+    {
+      "id": "inverter_beeping_overload",
+      "appliance": "inverter",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Inverter beeping or showing overload",
+      "meaning": "Let's find out why the inverter is beeping.",
+      "symptoms": [
+        "inverter beeping",
+        "inverter making a beep sound",
+        "overload warning",
+        "overload light on",
+        "UPS alarm sound",
+        "continuous beeping",
+        "battery low warning"
+      ],
+      "aliases": [
+        "inverter beep",
+        "UPS beeping",
+        "inverter alarm",
+        "overload on inverter",
+        "inverter overload trip",
+        "red light on inverter",
+        "stop the inverter beeping"
+      ],
+      "severity": "diy",
+      "escalate_if": [
+        "still beeping",
+        "burning smell",
+        "short circuit",
+        "battery swelling"
+      ],
+      "safety": [
+        "Don't open the inverter's cover. There's high voltage inside, even when it's switched off."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Look at the inverter's display or lights. They show whether it's overload or battery low.",
+          "target": "the display and indicator lights on the front of the inverter",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "For overload, switch off heavy appliances until the warning stops.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Then reset it: switch the inverter off at its front switch, and back on.",
+          "target": "the power switch on the front panel of the inverter",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "For battery low in a power cut, switch off what you don't need. It recharges when power returns.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "If it keeps beeping with little load, or shows a fault or short circuit, please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "Microtek Heavy Duty VTurbo SW UPS OM p.3-4, 6 + Livfast Smart Flash UPS OM p.2-3, 5, 9-10 + Luminous inverter battery maintenance guide (luminousindia.com); checked 2026-09-27"
+    },
+    {
+      "id": "inverter_battery_danger",
+      "appliance": "inverter",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Inverter or battery burning smell, swelling, acid leak or sparks",
+      "meaning": "Don't touch the battery. If it's safe, switch the inverter off and unplug it, then call a technician.",
+      "symptoms": [
+        "burning smell from the inverter",
+        "battery swelling",
+        "battery bulging",
+        "acid leaking from the battery",
+        "sparks at the battery terminals",
+        "smoke from the inverter",
+        "heavy corrosion on battery terminals"
+      ],
+      "aliases": [
+        "inverter burning smell",
+        "inverter smoke",
+        "battery leaking acid",
+        "swollen inverter battery",
+        "battery terminal sparking",
+        "replace inverter battery",
+        "open the inverter",
+        "repair the inverter",
+        "inverter wiring"
+      ],
+      "severity": "call_technician",
+      "escalate_if": [],
+      "safety": [],
+      "steps": [],
+      "source": "Microtek Heavy Duty VTurbo SW UPS OM p.6 + Livfast Smart Flash UPS OM p.2 + Luminous inverter battery maintenance guide (luminousindia.com) + Exide Industries battery tips + CPSC Pub 513 p.3; checked 2026-09-27"
     },
     {
       "id": "laptop_open_bottom_cover",
       "appliance": "laptop",
       "brand": "generic",
       "error_code": null,
+      "code_aliases": [],
       "title": "Open a laptop's bottom cover for cleaning",
       "meaning": "Let's take the bottom cover off so you can clean the dust out.",
-      "symptoms": ["laptop overheating", "fan is loud", "dusty vents"],
-      "aliases": ["open this laptop", "open the laptop", "clean the laptop", "clean the fan", "remove the bottom cover",
-                  "open the back of the laptop", "laptop screws"],
+      "symptoms": [
+        "dust inside the laptop",
+        "fan full of dust",
+        "dust in the fan",
+        "fan clogged with dust",
+        "clean inside the laptop"
+      ],
+      "aliases": [
+        "open this laptop",
+        "open the laptop",
+        "clean the fan",
+        "clean the laptop fan",
+        "remove the bottom cover",
+        "take off the back cover",
+        "open the back of the laptop",
+        "unscrew the bottom panel",
+        "laptop screws"
+      ],
       "severity": "caution",
-      "escalate_if": ["swollen battery", "burning smell", "cracked battery", "liquid inside"],
+      "escalate_if": [
+        "swollen battery",
+        "battery puffed up",
+        "cracked battery",
+        "burning smell",
+        "liquid inside"
+      ],
       "safety": [
-        "Shut the laptop down and unplug the charger.",
-        "Work on a soft cloth, and touch something metal first to discharge static."
+        "Shut the laptop down fully, unplug the charger, and remove any cables and cards.",
+        "Work on a clean, flat, dry table, and touch bare metal first to discharge static."
       ],
       "steps": [
-        {"n": 1, "say": "Close the lid and turn the laptop over.",
-         "target": "the bottom cover of the laptop", "verify": null, "caution": null},
-        {"n": 2, "say": "Remove every small screw around the bottom cover and keep them in a cup.",
-         "target": "the edge area of the bottom cover where its screws are", "verify": null,
-         "caution": "Some screws may be hidden under the rubber feet or labels."},
-        {"n": 3, "say": "Gently pry the cover up from a corner with a plastic card, never a metal tool.",
-         "target": "a corner of the bottom cover", "verify": "the laptop bottom cover is lifted off", "caution": null},
-        {"n": 4, "say": "Blow the dust out of the fan with short puffs of air, holding the fan still.",
-         "target": "the cooling fan", "verify": null, "caution": "Don't touch the battery or the circuit board."},
-        {"n": 5, "say": "Put the cover back and screw every screw back in its hole.",
-         "target": "the bottom cover of the laptop", "verify": null, "caution": null}
+        {
+          "n": 1,
+          "say": "Check your laptop's manual first; on many models, opening the cover can void the warranty.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Close the lid and turn the laptop upside down on the table.",
+          "target": "the bottom cover of the laptop",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Remove every screw from the bottom cover, and keep track of where each one goes.",
+          "target": "the small screws around the edge of the laptop's bottom cover",
+          "verify": null,
+          "caution": "Some screws stay in the cover, and some hide under rubber feet. Check your manual."
+        },
+        {
+          "n": 4,
+          "say": "Gently pry the cover loose with a plastic pry tool, working around the edge.",
+          "target": "the seam along the edge of the laptop's bottom cover",
+          "verify": null,
+          "caution": "Don't force it; clips broken by force aren't covered by warranty."
+        },
+        {
+          "n": 5,
+          "say": "Lift the cover off and set it aside.",
+          "target": "the laptop's bottom cover",
+          "verify": "the laptop bottom cover is lifted off",
+          "caution": null
+        },
+        {
+          "n": 6,
+          "say": "Unplug the battery cable from the board by pulling its connector, never the wires.",
+          "target": "the battery cable connector where the flat battery's wires plug into the circuit board",
+          "verify": null,
+          "caution": "If the battery looks swollen or puffed up, stop and call a technician."
+        },
+        {
+          "n": 7,
+          "say": "Blow the dust out of the fan and vents with short puffs of compressed air.",
+          "target": "the round cooling fan and the metal fins next to it",
+          "verify": null,
+          "caution": "Hold the fan still and the can upright. Don't use a vacuum cleaner."
+        },
+        {
+          "n": 8,
+          "say": "Plug the battery cable back in until it sits fully in its socket.",
+          "target": "the battery cable connector on the circuit board",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 9,
+          "say": "Snap the cover back on and put every screw back in its own hole.",
+          "target": "the bottom cover of the laptop",
+          "verify": null,
+          "caution": "Make sure no screw is left loose inside before you switch it on.",
+          "anim": null
+        }
       ],
-      "source": "DRAFT, not yet verified: generic laptop cleaning procedure. Check against the laptop maker's service manual."
+      "source": "Dell Inspiron 15 3520 Service Manual (2023): before working inside, safety, removing/installing the base cover, swollen batteries; HP 15 Laptop PC Maintenance and Service Guide (L58964-001): preparation, bottom cover; Lenovo IdeaPad Gaming 3 HMM (2022): general guidelines, remove the lower case, battery; Dell blog 'How to clean a laptop fan safely'; HP Tech Takes 'How to clean your laptop'; checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "unplug"
+        }
+      ]
+    },
+    {
+      "id": "laptop_not_charging",
+      "appliance": "laptop",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Laptop not charging",
+      "meaning": "Let's find out why the laptop isn't charging.",
+      "symptoms": [
+        "battery not charging",
+        "plugged in not charging",
+        "charging light is off",
+        "charger not working",
+        "battery stuck at 80 percent",
+        "battery stops at 60 percent"
+      ],
+      "aliases": [
+        "not charging",
+        "won't charge",
+        "laptop not charging",
+        "battery won't charge",
+        "doesn't charge",
+        "charging problem",
+        "stops charging at 80"
+      ],
+      "severity": "diy",
+      "escalate_if": [
+        "swollen battery",
+        "burning smell",
+        "charger buzzing",
+        "sparks",
+        "still not charging"
+      ],
+      "safety": [
+        "If the charger or its cable is damaged or buzzing, unplug it and don't use it."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Unplug the charger from both the wall socket and the laptop.",
+          "target": "the charger plug in the side of the laptop",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Check the cable and plugs for fraying, kinks, or bent pins.",
+          "target": "the laptop charger's cable and power brick",
+          "verify": null,
+          "caution": "If anything is damaged, stop and get a replacement charger from the maker."
+        },
+        {
+          "n": 3,
+          "say": "Look inside the laptop's charging port for dust or lint, and gently clear it.",
+          "target": "the charging port on the side of the laptop",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "Plug the charger firmly into the laptop, then into a wall socket you know works.",
+          "target": "the charging port on the side of the laptop",
+          "verify": null,
+          "caution": "On USB-C laptops, only some ports can charge. Check your manual."
+        },
+        {
+          "n": 5,
+          "say": "Check that the charging light next to the charging port comes on.",
+          "target": "the small charging light next to the laptop's charging port",
+          "verify": null,
+          "caution": "Where the light is differs by model."
+        },
+        {
+          "n": 6,
+          "say": "If it stops at sixty or eighty percent, a battery-saving setting may be on; check the maker's app.",
+          "target": null,
+          "verify": null,
+          "caution": "Stopping just short of full is normal; it protects the battery."
+        },
+        {
+          "n": 7,
+          "say": "If it still won't charge, please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "Dell 'Laptop battery not charging: resolve AC adapter issues' + Dell KB 000123069 battery issues; HP Tech Takes 'Laptop not charging? 10 easy solutions'; ASUS FAQ 1012793 battery not charging; Lenovo IdeaPad Slim 3 User Guide (charging light, conservation mode); checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "unplug"
+        }
+      ]
+    },
+    {
+      "id": "laptop_overheating",
+      "appliance": "laptop",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Laptop overheating or fan too loud",
+      "meaning": "Let's find out why the laptop is running hot.",
+      "symptoms": [
+        "laptop overheating",
+        "laptop getting hot",
+        "fan is loud",
+        "fan noise",
+        "laptop too hot",
+        "shuts down when hot",
+        "laptop heating"
+      ],
+      "aliases": [
+        "overheating",
+        "running hot",
+        "loud fan",
+        "fan too loud",
+        "fan keeps running",
+        "gets very hot",
+        "heating up",
+        "hot laptop",
+        "clean the vents"
+      ],
+      "severity": "caution",
+      "escalate_if": [
+        "burning smell",
+        "swollen battery",
+        "keeps shutting down",
+        "fan stopped spinning",
+        "still overheating"
+      ],
+      "safety": [
+        "If it's too hot to hold, shut it down, unplug it, and let it cool."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Put the laptop on a hard, flat table, not a bed, sofa, cushion, or your lap.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Make sure nothing is covering the air vents on the sides, back, or bottom.",
+          "target": "the slotted air vents on the side or back edge of the laptop",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Close programs you aren't using; Task Manager shows which ones work hardest.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "Shut it down and unplug the charger before cleaning the vents.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "Blow short puffs of compressed air into the vents to clear the dust.",
+          "target": "the slotted air vents on the side or back edge of the laptop",
+          "verify": null,
+          "caution": "Hold the can upright, and don't use a vacuum or an air compressor."
+        },
+        {
+          "n": 6,
+          "say": "If it still runs hot, the fan may need cleaning inside; please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "HP 15 Maintenance and Service Guide safety warning notice; HP Tech Takes 'How to fix overheating issues in HP laptops'; Dell 'How to prevent overheating'; ASUS FAQ 1015064 overheating and fan issues; Lenovo 'Heat and product ventilation' safety notice + Lenovo 'Laptop fan' glossary + IdeaPad Slim 3 User Guide; checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "unplug"
+        }
+      ]
+    },
+    {
+      "id": "laptop_swollen_battery",
+      "appliance": "laptop",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Laptop battery swollen",
+      "meaning": "Please stop using the laptop and unplug the charger. Don't press, puncture, or try to remove a swollen battery.",
+      "symptoms": [
+        "swollen battery",
+        "battery bulging",
+        "bottom case bulging",
+        "touchpad lifting up",
+        "case not closing properly",
+        "laptop rocks on the table"
+      ],
+      "aliases": [
+        "battery swelling",
+        "bloated battery",
+        "puffy battery",
+        "battery expanded",
+        "battery puffed up",
+        "case popping open"
+      ],
+      "severity": "call_technician",
+      "escalate_if": [
+        "burning smell",
+        "smoke",
+        "battery very hot"
+      ],
+      "safety": [
+        "Stop using it and unplug the charger; don't charge a swollen battery.",
+        "Don't press, bend, puncture, or pry the battery, and keep it away from heat."
+      ],
+      "steps": [],
+      "source": "Dell Inspiron 15 3520 Service Manual 'Handling swollen rechargeable Li-ion batteries'; Microsoft Support 'Caring for your Surface battery'; HP Tech Takes 'Laptop not charging' (stop charging a swollen battery); checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "unplug"
+        }
+      ]
+    },
+    {
+      "id": "microwave_not_heating",
+      "appliance": "microwave",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Microwave not starting or not heating",
+      "meaning": "Let's find out why the microwave won't start or heat.",
+      "symptoms": [
+        "microwave not heating",
+        "microwave won't start",
+        "food stays cold",
+        "buttons not working",
+        "display on but not heating",
+        "microwave dead",
+        "nothing happens when I press start"
+      ],
+      "aliases": [
+        "microwave not working",
+        "oven not heating food",
+        "microwave not turning on",
+        "start button not working",
+        "microwave stopped working",
+        "microwave keypad locked",
+        "microwave shows lock"
+      ],
+      "severity": "diy",
+      "escalate_if": [
+        "burning smell",
+        "sparks inside",
+        "smoke coming out",
+        "door damaged",
+        "keeps tripping"
+      ],
+      "safety": [
+        "Never open the microwave's outer casing. There's high voltage inside."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Check the plug is pushed fully into the socket and the socket switch is on.",
+          "target": "the microwave's power plug in the wall socket",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Check the breaker or fuse for that socket hasn't tripped. Test the socket with another appliance.",
+          "target": null,
+          "verify": null,
+          "caution": "If the breaker keeps tripping, call an electrician."
+        },
+        {
+          "n": 3,
+          "say": "Wipe any food off the door edges, then close the door firmly.",
+          "target": "the edge of the microwave door and the front frame where it closes",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "If the display shows a lock sign, child lock is on. Check your manual to unlock it.",
+          "target": "the display on the microwave's control panel",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "Set a cooking time, then press Start.",
+          "target": "the Start button on the microwave's control panel",
+          "verify": null,
+          "caution": "Never run it empty. Always put food inside first."
+        },
+        {
+          "n": 6,
+          "say": "If it still won't start or heat, please call a technician. Don't try to repair it.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "IFB 24PM2B OM p.3, 5, 7, 14 + LG microwave OM (MH63/MH65 series) p.4, 18, 31-32 + Samsung MS23J5133AG OM p.3, 7, 21, 24-26 + Panasonic NN-ST23QM OM p.7, 12, 17, 45; checked 2026-09-27"
+    },
+    {
+      "id": "microwave_sparks",
+      "appliance": "microwave",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Sparks or arcing inside the microwave",
+      "meaning": "Sparks usually mean there's metal inside. Let's stop it and find the cause.",
+      "symptoms": [
+        "sparks inside the microwave",
+        "microwave sparking",
+        "flashes inside the microwave",
+        "crackling and sparks",
+        "arcing in the microwave",
+        "lightning inside the oven"
+      ],
+      "aliases": [
+        "microwave sparks",
+        "sparking while heating",
+        "blue sparks in microwave",
+        "sparks from the plate",
+        "microwave arcing"
+      ],
+      "severity": "caution",
+      "escalate_if": [
+        "still sparking",
+        "burning smell",
+        "smoke coming out",
+        "flames inside"
+      ],
+      "safety": [
+        "Press Stop straight away.",
+        "If you see smoke or flames, keep the door shut and unplug the microwave."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Take out any foil, metal spoon, twist tie or metal container.",
+          "target": "the inside of the microwave oven",
+          "verify": null,
+          "caution": "The dish and food may be hot. Use oven gloves."
+        },
+        {
+          "n": 2,
+          "say": "Don't use plates or cups with a gold or silver rim or a painted pattern.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Check the glass tray and its roller ring are sitting properly in place.",
+          "target": "the round glass turntable tray inside the microwave",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "Never run the microwave empty. There should always be food inside.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "If it still sparks with nothing metal inside, stop using it and call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "Samsung MS23J5133AG OM p.4, 19, 25-26 + Samsung Gulf support page on microwave sparking + LG microwave OM p.5-6, 28, 31-32 + IFB 24PM2B OM p.3-8 + Panasonic NN-ST23QM OM p.5, 7, 12; checked 2026-09-27",
+      "safety_anim": [
+        null,
+        {
+          "kind": "unplug"
+        }
+      ]
+    },
+    {
+      "id": "microwave_internal_danger",
+      "appliance": "microwave",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Microwave smoke, burning smell, damaged door or internal repair",
+      "meaning": "Please stop using it. Keep the door shut, unplug it, and call a technician. Never open the casing.",
+      "symptoms": [
+        "smoke from the microwave",
+        "burning smell from the microwave",
+        "fire in the microwave",
+        "microwave door broken",
+        "door not closing properly",
+        "door glass cracked",
+        "microwave hinge broken",
+        "strange noise from the microwave"
+      ],
+      "aliases": [
+        "open the microwave",
+        "repair microwave inside",
+        "replace microwave fuse",
+        "microwave capacitor",
+        "microwave magnetron",
+        "replace microwave light bulb",
+        "microwave power cord damaged"
+      ],
+      "severity": "call_technician",
+      "escalate_if": [],
+      "safety": [],
+      "steps": [],
+      "source": "Samsung MS23J5133AG OM p.3-5, 7 + LG microwave OM p.4, 6 + IFB 24PM2B OM p.3-5 + Panasonic NN-ST23QM OM p.5, 7; checked 2026-09-27"
+    },
+    {
+      "id": "refrigerator_not_cooling",
+      "appliance": "refrigerator",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "brand_codes": [],
+      "title": "Fridge not cooling",
+      "meaning": "Let's find out why your fridge isn't cooling properly.",
+      "symptoms": [
+        "not cooling",
+        "not cold enough",
+        "food spoiling quickly",
+        "warm inside",
+        "freezer not freezing",
+        "ice cream is soft",
+        "cooling is less"
+      ],
+      "aliases": [
+        "fridge not cooling",
+        "refrigerator not cooling",
+        "fridge not cold",
+        "fridge warm inside",
+        "freezer not cold",
+        "fridge stopped cooling",
+        "fridge cooling less",
+        "milk going bad in the fridge"
+      ],
+      "severity": "diy",
+      "escalate_if": [
+        "burning smell",
+        "sparks",
+        "smoke",
+        "seal torn"
+      ],
+      "safety": [
+        "Don't open or unscrew any cover at the back of the fridge. There are gas pipes behind it."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Check the fridge is plugged in firmly and the wall switch is on.",
+          "target": "the fridge's power plug in the wall socket",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "If the inside light and display stay off, test that socket with another appliance.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Turn the temperature knob one step colder, or set the fridge to about three degrees.",
+          "target": "the temperature control knob or display of the fridge",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "If it was just switched on or loaded with food, give it a few hours to cool.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "Make sure the door shuts fully, with no shelf, drawer or bottle stopping it.",
+          "target": "the edge of the fridge door where it meets the cabinet",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 6,
+          "say": "Wipe the rubber door seal clean with a damp cloth so it seals tightly.",
+          "target": "the rubber door seal around the edge of the fridge door",
+          "verify": null,
+          "caution": "If the seal is torn or leaves a gap, it needs replacing."
+        },
+        {
+          "n": 7,
+          "say": "Don't overpack it. Leave gaps between the food so cold air can flow.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 8,
+          "say": "Move any food that's blocking the cold air vents inside.",
+          "target": "the cold air vent slots on the back wall inside the fridge",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 9,
+          "say": "Leave about a hand's width of space between the fridge and the walls behind and beside it.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 10,
+          "say": "Keep it out of direct sun and away from the stove or other heat.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 11,
+          "say": "Unplug it, vacuum the dust off the grille at the lower back, then plug it back in.",
+          "target": "the ventilation grille at the lower back of the fridge",
+          "verify": null,
+          "caution": "Only clean the outside. Don't remove any cover."
+        },
+        {
+          "n": 12,
+          "say": "If it's still not cold after a few hours, please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "LG India help library (fridge not cooling properly; not cool enough) + Samsung UK fridge isn't cooling page + Godrej direct cool user manual p.3, 5, 8 + Haier India fridge compartment does not work page + ENERGY STAR refrigerator tips; checked 2026-09-27"
+    },
+    {
+      "id": "refrigerator_water_leak",
+      "appliance": "refrigerator",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "brand_codes": [],
+      "title": "Water inside or under the fridge",
+      "meaning": "Let's find out where the water in your fridge is coming from.",
+      "symptoms": [
+        "water inside the fridge",
+        "water under the fridge",
+        "puddle under the fridge",
+        "water on the floor near the fridge",
+        "water under the vegetable tray",
+        "water at the bottom of the fridge"
+      ],
+      "aliases": [
+        "fridge leaking water",
+        "refrigerator leaking water",
+        "water leaking from fridge",
+        "water collecting in the fridge",
+        "water dripping inside the fridge",
+        "fridge dripping",
+        "fridge water leakage"
+      ],
+      "severity": "caution",
+      "escalate_if": [
+        "water near socket",
+        "water near plug",
+        "burning smell",
+        "sparks"
+      ],
+      "safety": [
+        "If water is near the plug or socket, switch off at the wall before you touch anything."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "A few drops inside after the door's been open are normal. Bigger puddles are what we're fixing.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Make sure the door closes fully every time, so warm damp air can't get in.",
+          "target": "the edge of the fridge door where it meets the cabinet",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Let hot food cool to room temperature before you put it in.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "Keep food and drinks covered or in closed containers, so nothing spills.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "Look for the small drain hole or channel on the back wall inside, and clear any food bits.",
+          "target": "the small drain hole or channel on the back wall inside the fridge compartment",
+          "verify": null,
+          "caution": "Don't pour hot water into it."
+        },
+        {
+          "n": 6,
+          "say": "If there's a drip tray under the freezer box, empty it and set it back straight.",
+          "target": "the plastic drip tray under the freezer box",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 7,
+          "say": "In a single door fridge, defrost every few days so melting ice doesn't overflow.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 8,
+          "say": "If water still collects, please unplug the fridge and call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "LG India help library (water on the floor; top-freezer water leak) + Samsung India water leakage in refrigerator page + Godrej direct cool user manual p.5, 8, 9 + LG India direct cool defrost page; checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "switch_off"
+        }
+      ]
+    },
+    {
+      "id": "refrigerator_ice_build_up",
+      "appliance": "refrigerator",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "brand_codes": [],
+      "title": "Too much ice or frost in the fridge",
+      "meaning": "Let's clear the extra ice and stop it building up again.",
+      "symptoms": [
+        "too much ice",
+        "ice build up",
+        "frost build up",
+        "thick frost",
+        "freezer full of ice",
+        "freezer iced up",
+        "ice on the freezer walls"
+      ],
+      "aliases": [
+        "how to defrost my fridge",
+        "defrost the fridge",
+        "defrost button",
+        "ice forming in the freezer",
+        "fridge full of ice",
+        "freezer box frozen",
+        "ice in the freezer"
+      ],
+      "severity": "diy",
+      "escalate_if": [
+        "button stuck",
+        "burning smell",
+        "sparks"
+      ],
+      "safety": [
+        "Never chip the ice with a knife or anything sharp. It can damage the fridge."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Make sure the fridge door and the freezer door close fully, with nothing sticking out.",
+          "target": "the freezer door",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Wipe the rubber door seal clean, and check it isn't torn or loose.",
+          "target": "the rubber door seal around the edge of the fridge door",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "If your fridge has a defrost button, take the food out of the freezer box first.",
+          "target": "the freezer box at the top inside the fridge",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "Check the drip tray is in place under the freezer box to catch the water.",
+          "target": "the plastic drip tray under the freezer box",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "Press the defrost button, usually in the middle of the temperature knob.",
+          "target": "the defrost button in the centre of the round temperature knob inside the fridge",
+          "verify": null,
+          "caution": "On some models the button is inside the freezer box."
+        },
+        {
+          "n": 6,
+          "say": "Keep the door closed. When the ice has melted, the button pops out and cooling restarts.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 7,
+          "say": "From now on, let hot food cool before it goes in, and open the door less often.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 8,
+          "say": "Defrost every few days, before the ice gets thicker than about half a centimetre.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 9,
+          "say": "If a fridge without a defrost button keeps icing up, or the button won't pop out, call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "LG India help library (manual defrost in single door direct cool; defrosting video page) + Samsung India excess ice in direct cool refrigerator page + Godrej direct cool user manual p.5, 11 + LG US frost build-up page; checked 2026-09-27"
+    },
+    {
+      "id": "refrigerator_noisy",
+      "appliance": "refrigerator",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "brand_codes": [],
+      "title": "Noisy fridge",
+      "meaning": "Let's find out what's making the noise. Many fridge sounds are normal.",
+      "symptoms": [
+        "loud noise",
+        "noisy",
+        "rattling",
+        "rattling noise",
+        "humming sound",
+        "buzzing noise",
+        "vibrating",
+        "clicking sound",
+        "gurgling sound",
+        "strange sound"
+      ],
+      "aliases": [
+        "fridge making noise",
+        "fridge is noisy",
+        "noisy fridge",
+        "refrigerator making noise",
+        "fridge rattling",
+        "fridge vibrating",
+        "fridge humming",
+        "compressor noise",
+        "motor noise"
+      ],
+      "severity": "diy",
+      "escalate_if": [
+        "grinding noise",
+        "burning smell",
+        "sparks",
+        "smoke"
+      ],
+      "safety": [
+        "Unplug the fridge before you move it or turn its feet."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Soft humming, gurgling, cracking, or a click when the motor starts or stops is normal.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "A new fridge, or one that was just moved or switched on, runs louder at first.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Take anything off the top of the fridge.",
+          "target": "the top surface of the fridge",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "Pull the fridge slightly out so its back and sides don't touch the wall or cabinets.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "Check it stands firm. If it rocks, turn the front feet until it's level and steady.",
+          "target": "the adjustable levelling feet at the bottom front corners of the fridge",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 6,
+          "say": "Make sure no food or ice is pressing against the fan at the back of the freezer.",
+          "target": "the fan cover on the back wall inside the freezer",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 7,
+          "say": "Wait about ten minutes, then plug the fridge back in and listen again.",
+          "target": "the fridge's power plug in the wall socket",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 8,
+          "say": "If it still grinds, bangs or rattles loudly, please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "LG Levant help library (loud noise from refrigerator) + LG US help library (noise during operation; hissing, gurgling, cracking; rattling) + Samsung India abnormal noise page + Godrej direct cool user manual p.3, 9; checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "unplug"
+        }
+      ]
+    },
+    {
+      "id": "refrigerator_gas_or_compressor_fault",
+      "appliance": "refrigerator",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "brand_codes": [
+        {
+          "brand": "Haier",
+          "codes": [
+            "F1",
+            "F2",
+            "F3",
+            "F4",
+            "F5",
+            "F6",
+            "F7",
+            "F8",
+            "F9",
+            "E0",
+            "E1",
+            "E2",
+            "E6",
+            "E9",
+            "Ec",
+            "Fd"
+          ],
+          "spoken": [
+            "f one",
+            "f two",
+            "f three",
+            "f four",
+            "f five",
+            "f six",
+            "f seven",
+            "f eight",
+            "f nine",
+            "e zero",
+            "e one",
+            "e two",
+            "e six",
+            "e nine"
+          ]
+        }
+      ],
+      "title": "Fridge fault that needs a technician",
+      "meaning": "This needs a trained technician. If you smell burning or see smoke, unplug the fridge now.",
+      "symptoms": [
+        "gas leak",
+        "gas refill",
+        "compressor not working",
+        "compressor not starting",
+        "burning smell",
+        "smoke",
+        "sparks",
+        "fridge error code"
+      ],
+      "aliases": [
+        "fridge gas leak",
+        "fridge needs gas refill",
+        "fridge gas filling",
+        "refrigerant leak",
+        "fridge compressor problem",
+        "fridge motor not working",
+        "fridge burning smell",
+        "fridge showing an error code",
+        "fridge wiring"
+      ],
+      "severity": "call_technician",
+      "escalate_if": [
+        "burning smell",
+        "smoke",
+        "sparks"
+      ],
+      "safety": [],
+      "steps": [],
+      "source": "Haier India refrigerator error code page + LG India help library (not cool enough: back cover warning) + Godrej direct cool user manual p.9, 12 + Samsung Dacor DRF425300AP user manual safety section; checked 2026-09-27"
+    },
+    {
+      "id": "television_no_power",
+      "appliance": "television",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "TV won't turn on",
+      "meaning": "Let's find out why the TV won't turn on.",
+      "symptoms": [
+        "tv won't turn on",
+        "no power",
+        "tv is dead",
+        "standby light is off",
+        "red light not on",
+        "nothing happens when I press power"
+      ],
+      "aliases": [
+        "won't turn on",
+        "not turning on",
+        "won't switch on",
+        "tv not switching on",
+        "no power on the tv",
+        "tv completely dead",
+        "power not coming"
+      ],
+      "severity": "diy",
+      "escalate_if": [
+        "light blinking",
+        "light flashing",
+        "burning smell",
+        "sparks",
+        "cord damaged"
+      ],
+      "safety": [
+        "Keep your hands dry, and pull plugs out by the plug, never by the cord."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Look at the small standby light on the TV's bottom edge. Is it on, off, or blinking?",
+          "target": "the small standby light on the bottom edge of the TV, usually under the logo",
+          "verify": null,
+          "caution": "A blinking light usually means a fault inside the TV."
+        },
+        {
+          "n": 2,
+          "say": "Press the power button on the TV itself, not on the remote.",
+          "target": "the power button on the TV, usually under the logo at the bottom edge",
+          "verify": null,
+          "caution": "On some models it's on the back or side. If the TV turns on, the remote is the problem."
+        },
+        {
+          "n": 3,
+          "say": "Push the power cord firmly into the back of the TV and into the wall socket.",
+          "target": "the power cord where it plugs into the back of the TV",
+          "verify": null,
+          "caution": "If the cord is cut, crushed or scorched, don't plug it in."
+        },
+        {
+          "n": 4,
+          "say": "Plug a lamp or phone charger into the same socket to check the socket works.",
+          "target": "the wall socket the TV is plugged into",
+          "verify": null,
+          "caution": "If the TV is on a power strip or extension, plug it straight into the wall."
+        },
+        {
+          "n": 5,
+          "say": "Unplug the TV, wait two minutes, then plug it back in and press power.",
+          "target": null,
+          "verify": null,
+          "caution": "After plugging in, give it up to twenty seconds to start."
+        },
+        {
+          "n": 6,
+          "say": "If the standby light stays off or keeps blinking, please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "Samsung India 'TV is not turning on' + Samsung 2025 TV Simple User Guide (BN68-20833E) troubleshooting; LG SG help library 'If Your LG TV Won't Turn On'; TCL 'Troubleshoot a TV that will not power on'; Sony TV Help Guide 'The TV does not turn on'; LG + Samsung manual safety sections; checked 2026-09-27"
+    },
+    {
+      "id": "television_sound_no_picture",
+      "appliance": "television",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "TV has sound but no picture",
+      "meaning": "Let's find out why you can hear the TV but the screen stays black.",
+      "symptoms": [
+        "sound but no picture",
+        "black screen with sound",
+        "screen is black",
+        "can hear it but can't see anything",
+        "audio but no video",
+        "screen went dark"
+      ],
+      "aliases": [
+        "no picture",
+        "black screen",
+        "screen stays black",
+        "picture gone",
+        "display not coming",
+        "blank screen",
+        "only sound coming"
+      ],
+      "severity": "diy",
+      "escalate_if": [
+        "burning smell",
+        "lines on the screen",
+        "cracked screen",
+        "still black screen"
+      ],
+      "safety": [
+        "Never open the back of the TV; there's dangerous voltage inside.",
+        "Switch off the TV and the set-top box before you unplug or plug in any cable."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Press Home or Menu on the remote. If a menu appears, the screen itself is working.",
+          "target": "the Home or Menu button on the TV remote",
+          "verify": null,
+          "caution": "A picture-off or screen-off setting also wakes up when you press a button."
+        },
+        {
+          "n": 2,
+          "say": "Press Input or Source on the remote and pick the input your set-top box uses.",
+          "target": "the Input or Source button on the TV remote",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Make sure the set-top box or other device is switched on.",
+          "target": "the set-top box or device connected to the TV",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "With both switched off, pull out the HDMI cable at both ends and push it back firmly.",
+          "target": "the HDMI cable plugged into the back or side of the TV",
+          "verify": null,
+          "caution": "If you have a spare HDMI cable or a free HDMI socket, try that too."
+        },
+        {
+          "n": 5,
+          "say": "Unplug the TV and the set-top box for a minute, then plug both back in.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 6,
+          "say": "If no menu ever appears, or the picture stays black, please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "LG UK help library 'LG TV has sound but no picture' + LG SG 'Won't Turn On' FAQ; Samsung US 'no picture or black screen' + Samsung Gulf 'powers on but black screen'; TCL 'My TV is on, but there is no picture or sound' + TCL Roku 'has power but no video'; Sony help guides (Picture off, no picture from connected equipment); LG + Samsung manual safety; checked 2026-09-27",
+      "safety_anim": []
+    },
+    {
+      "id": "television_no_signal",
+      "appliance": "television",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "TV shows no signal",
+      "meaning": "Let's get a signal back to your TV.",
+      "symptoms": [
+        "no signal",
+        "says no signal",
+        "check signal cable",
+        "set-top box not showing",
+        "channels not coming",
+        "hdmi not detected"
+      ],
+      "aliases": [
+        "no signal on tv",
+        "signal not coming",
+        "weak signal",
+        "tata play not showing",
+        "dth not working",
+        "cable channels not showing",
+        "input not detected"
+      ],
+      "severity": "diy",
+      "escalate_if": [
+        "burning smell",
+        "cable damaged",
+        "still no signal"
+      ],
+      "safety": [
+        "Switch off the TV and the set-top box before you unplug or plug in any cable."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Press Input or Source on the remote and choose the input your device is plugged into.",
+          "target": "the Input or Source button on the TV remote",
+          "verify": null,
+          "caution": "If the box is in the HDMI 1 socket, choose HDMI 1."
+        },
+        {
+          "n": 2,
+          "say": "Make sure the set-top box or other device is switched on.",
+          "target": "the set-top box or device connected to the TV",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "With both switched off, pull out the HDMI cable at both ends and push it back firmly.",
+          "target": "the HDMI cable plugged into the back or side of the TV",
+          "verify": null,
+          "caution": "Try another HDMI socket or a spare cable too, then pick that input."
+        },
+        {
+          "n": 4,
+          "say": "If you use an antenna or cable wire, push it firmly into its socket on the TV.",
+          "target": "the round antenna or cable socket on the back of the TV",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "Switch the set-top box off at the wall for thirty seconds, then back on.",
+          "target": "the set-top box connected to the TV",
+          "verify": null,
+          "caution": "Give the box a minute or two to start up."
+        },
+        {
+          "n": 6,
+          "say": "If it still says no signal, please call your set-top box provider or a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "Samsung 'My TV doesn't detect a device connected via HDMI' + Samsung US 'no picture or black screen'; LG UK 'has sound but no picture' (HDMI + set-top box reset); TCL Fire TV 'Troubleshooting common screen issues' (No Signal) + TCL 'no picture or sound'; Sony i-Manual 'Picture' troubleshooting; checked 2026-09-27",
+      "safety_anim": []
+    },
+    {
+      "id": "television_remote_not_working",
+      "appliance": "television",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "TV remote not working",
+      "meaning": "Let's find out why the remote isn't working.",
+      "symptoms": [
+        "remote not working",
+        "remote does nothing",
+        "tv not responding to remote",
+        "buttons on the remote don't work",
+        "remote stopped working"
+      ],
+      "aliases": [
+        "tv remote not working",
+        "remote dead",
+        "remote not responding",
+        "remote batteries",
+        "change remote batteries",
+        "remote control problem"
+      ],
+      "severity": "diy",
+      "escalate_if": [
+        "battery leaking",
+        "remote got wet",
+        "still not working"
+      ],
+      "safety": [
+        "Keep batteries away from small children, and don't mix old and new ones."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Press the power button on the TV itself to check the TV is working.",
+          "target": "the power button on the TV, usually under the logo at the bottom edge",
+          "verify": null,
+          "caution": "On some models it's on the back or side."
+        },
+        {
+          "n": 2,
+          "say": "Move anything blocking the space between the remote and the front of the TV.",
+          "target": "the remote sensor window on the bottom front edge of the TV",
+          "verify": null,
+          "caution": "A soundbar in front of the TV can block the sensor."
+        },
+        {
+          "n": 3,
+          "say": "Take out the batteries, hold the remote's power button for eight seconds, then fit new ones.",
+          "target": "the battery cover on the back of the TV remote",
+          "verify": null,
+          "caution": "Match the plus and minus marks inside the cover."
+        },
+        {
+          "n": 4,
+          "say": "Point the remote straight at the bottom front of the TV and press power.",
+          "target": "the remote sensor window on the bottom front edge of the TV",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "Point the remote at this phone's camera and press a button. Look for a flashing light at its tip.",
+          "target": "the small dark window at the front tip of the TV remote",
+          "verify": null,
+          "caution": "This camera test doesn't work on every phone."
+        },
+        {
+          "n": 6,
+          "say": "No flashing light means the remote needs replacing. If it flashes but the TV ignores it, please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "Samsung US 'Samsung remote is not working' + Samsung 2025 TV Simple User Guide; LG SG 'If Your LG TV Won't Turn On' (phone camera test) + LG TV Safety and Reference manual; TCL Android TV remote troubleshooting; Sony TV Help Guide 'The remote control does not operate'; checked 2026-09-27"
+    },
+    {
+      "id": "television_damage_or_burning_smell",
+      "appliance": "television",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "TV damaged, smoking or showing lines",
+      "meaning": "Please don't open the TV's back; there's dangerous voltage inside. If you see smoke or smell burning, unplug it.",
+      "symptoms": [
+        "cracked screen",
+        "lines on the screen",
+        "burning smell from the tv",
+        "smoke from the tv",
+        "sparks",
+        "water inside the tv",
+        "tv fell over",
+        "buzzing or crackling inside"
+      ],
+      "aliases": [
+        "broken screen",
+        "screen cracked",
+        "lines on tv",
+        "vertical lines",
+        "horizontal lines",
+        "open the back of the tv",
+        "open the tv",
+        "replace the backlight",
+        "repair the tv board",
+        "tv smells burnt"
+      ],
+      "severity": "call_technician",
+      "escalate_if": [
+        "smoke",
+        "sparks",
+        "burning smell"
+      ],
+      "safety": [
+        "Unplug the TV right away if you see smoke or sparks, or smell burning.",
+        "Don't open the back cover; there are no parts inside you can fix yourself."
+      ],
+      "steps": [],
+      "source": "LG TV Safety and Reference owner's manual (MFL71040005) + Samsung 2025 TV Simple User Guide safety ('do not remove cover (or back)', unplug on smoke/odour); TCL Roku 'has power but no video' (unplug on smoke, sparks, burning smell, cracked screen; lines = contact support); checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "unplug"
+        }
+      ]
+    },
+    {
+      "id": "washing_machine_not_draining",
+      "appliance": "washing_machine",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "brand_codes": [
+        {
+          "brand": "LG",
+          "codes": [
+            "OE"
+          ],
+          "spoken": [
+            "oh e",
+            "zero e"
+          ]
+        },
+        {
+          "brand": "Samsung",
+          "codes": [
+            "5C",
+            "5E",
+            "SE",
+            "nd",
+            "LC",
+            "LC1"
+          ],
+          "spoken": [
+            "five c",
+            "five e"
+          ]
+        },
+        {
+          "brand": "Bosch",
+          "codes": [
+            "E18",
+            "F18",
+            "d02"
+          ],
+          "spoken": [
+            "e eighteen",
+            "f eighteen"
+          ]
+        },
+        {
+          "brand": "IFB",
+          "codes": [
+            "dPEr"
+          ],
+          "spoken": [
+            "d p e r"
+          ]
+        },
+        {
+          "brand": "Whirlpool",
+          "codes": [
+            "F9E1",
+            "drn"
+          ],
+          "spoken": [
+            "f nine e one",
+            "d r n"
+          ]
+        }
+      ],
+      "title": "Washing machine not draining",
+      "meaning": "Let's find out why the water isn't draining.",
+      "symptoms": [
+        "water left in the drum",
+        "slow draining",
+        "drain hose blocked",
+        "filter clogged",
+        "drum full of water",
+        "washer full of water"
+      ],
+      "aliases": [
+        "not draining",
+        "won't drain",
+        "water not going out",
+        "water stuck in the drum",
+        "drain filter",
+        "clean the drain filter",
+        "drain pump filter",
+        "debris filter",
+        "drain error",
+        "washing machine not draining"
+      ],
+      "severity": "caution",
+      "escalate_if": [
+        "burning smell",
+        "smoke",
+        "sparks",
+        "still showing",
+        "same error"
+      ],
+      "safety": [
+        "Switch the machine off and unplug it.",
+        "If it just ran a hot wash, let the water cool for about an hour first."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Check the drain hose behind the machine isn't bent, squashed or blocked.",
+          "target": "the ribbed drain hose coming out of the back of the washing machine",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Check the end of the drain hose sits in the drain the way your manual shows.",
+          "target": "the end of the drain hose where it goes into the drain pipe or floor outlet",
+          "verify": null,
+          "caution": "The right height differs by model."
+        },
+        {
+          "n": 3,
+          "say": "On a front-loader, open the small flap at the bottom front. No flap? Say next until the last step.",
+          "target": "the small square flap at the bottom front corner of the washing machine",
+          "verify": "the small flap at the bottom front corner of the washing machine is open",
+          "caution": "Some flaps need a coin to open."
+        },
+        {
+          "n": 4,
+          "say": "Put a wide, shallow tray and an old towel on the floor below the flap.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "Pull out the small drain tube, open its cap, and let the water run into the tray.",
+          "target": "the small drain tube with a cap behind the bottom front flap",
+          "verify": null,
+          "caution": "There can be a lot of water. Cap the tube to empty the tray."
+        },
+        {
+          "n": 6,
+          "say": "When it stops, cap the tube and slowly unscrew the round filter anticlockwise.",
+          "target": "the round filter cap with a grip handle behind the bottom front flap",
+          "verify": null,
+          "caution": "A little more water will come out.",
+          "anim": {
+            "kind": "turn",
+            "dir": "ccw"
+          }
+        },
+        {
+          "n": 7,
+          "say": "Clear out lint, coins and hair, and rinse the filter under the tap.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 8,
+          "say": "Check the opening is clear and the small propeller inside it can turn.",
+          "target": "the round opening behind the filter at the bottom front of the washing machine",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 9,
+          "say": "Screw the filter back in firmly, clockwise, and close the flap.",
+          "target": "the round filter opening behind the bottom front flap",
+          "verify": null,
+          "caution": "A loose filter will leak.",
+          "anim": {
+            "kind": "turn",
+            "dir": "cw"
+          }
+        },
+        {
+          "n": 10,
+          "say": "Plug it in and run a spin-only or drain cycle. If it still won't drain, please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": "Watch the filter for drips."
+        }
+      ],
+      "source": "Samsung WW70T4020EE manual pp.10,45,48,51-52,55 + Samsung India 4E/5E page + LG help library OE (UAE) and drain pump filter (US) + Bosch India E18 page + IFB Senator Plus manual pp.60,67,75 + Whirlpool product help F9E1 and drain pump filter; checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "unplug"
+        }
+      ]
+    },
+    {
+      "id": "washing_machine_not_filling",
+      "appliance": "washing_machine",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "brand_codes": [
+        {
+          "brand": "Samsung",
+          "codes": [
+            "4C",
+            "4E",
+            "nF"
+          ],
+          "spoken": [
+            "four c",
+            "four e"
+          ]
+        },
+        {
+          "brand": "LG",
+          "codes": [
+            "IE"
+          ],
+          "spoken": [
+            "i e"
+          ]
+        },
+        {
+          "brand": "Bosch",
+          "codes": [
+            "E17",
+            "F17"
+          ],
+          "spoken": [
+            "e seventeen",
+            "f seventeen"
+          ]
+        },
+        {
+          "brand": "Whirlpool",
+          "codes": [
+            "F8E1",
+            "LF",
+            "LoFL"
+          ],
+          "spoken": [
+            "f eight e one"
+          ]
+        }
+      ],
+      "title": "Washing machine not filling with water",
+      "meaning": "Let's find out why water isn't coming into the machine.",
+      "symptoms": [
+        "drum stays dry",
+        "no water in the drum",
+        "low water pressure",
+        "tap error",
+        "showing tap"
+      ],
+      "aliases": [
+        "not filling",
+        "won't fill",
+        "no water coming in",
+        "water not coming in",
+        "not taking water",
+        "water supply error",
+        "water inlet error",
+        "inlet filter",
+        "mesh filter",
+        "inlet hose"
+      ],
+      "severity": "diy",
+      "escalate_if": [
+        "damaged hose",
+        "cracked hose",
+        "burning smell",
+        "still showing",
+        "same error"
+      ],
+      "safety": [
+        "Switch the machine off and unplug it before touching the hoses."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Make sure the water tap feeding the machine is turned fully on.",
+          "target": "the water tap on the wall that the washing machine's inlet hose is connected to",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Check other taps in the house have water. If the supply's off, wait for it to return.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Follow the inlet hose from the tap to the machine and straighten any kinks.",
+          "target": "the inlet water hose running from the tap to the back of the washing machine",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "Shut the door, or the lid on a top-loader, firmly. Many machines won't fill with it open.",
+          "target": "the washing machine door",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "Turn the tap off, then unscrew the inlet hose from the back of the machine.",
+          "target": "the point where the inlet hose screws onto the back of the washing machine",
+          "verify": null,
+          "caution": "Hold a cloth over it; a little water will come out.",
+          "anim": {
+            "kind": "turn",
+            "dir": "ccw"
+          }
+        },
+        {
+          "n": 6,
+          "say": "Gently pull out the small mesh filter with pliers and rinse it clean under the tap.",
+          "target": "the water inlet connector on the back of the washing machine",
+          "verify": null,
+          "caution": "It sits in the machine's inlet or in the hose end, depending on the model."
+        },
+        {
+          "n": 7,
+          "say": "Push the filter back in, screw the hose on, and open the tap. Check for drips.",
+          "target": "the point where the inlet hose screws onto the back of the washing machine",
+          "verify": null,
+          "caution": null,
+          "anim": {
+            "kind": "turn",
+            "dir": "cw"
+          }
+        },
+        {
+          "n": 8,
+          "say": "Plug it in and start the cycle again. If it still won't fill, please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "Samsung WW70T4020EE manual pp.47,51,55 + Samsung India 4E/5E page + LG help library IE (UAE) + Bosch India E17 page + IFB Senator Plus manual pp.59,65,74 + Whirlpool product help F8E1; checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "unplug"
+        }
+      ]
+    },
+    {
+      "id": "washing_machine_door_problem",
+      "appliance": "washing_machine",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "brand_codes": [
+        {
+          "brand": "Samsung",
+          "codes": [
+            "dC",
+            "dE",
+            "dC1"
+          ]
+        },
+        {
+          "brand": "LG",
+          "codes": [
+            "dE",
+            "dE1",
+            "dE2"
+          ]
+        },
+        {
+          "brand": "Bosch",
+          "codes": [
+            "E16",
+            "F16"
+          ],
+          "spoken": [
+            "e sixteen",
+            "f sixteen"
+          ]
+        },
+        {
+          "brand": "IFB",
+          "codes": [
+            "dLEr"
+          ],
+          "spoken": [
+            "d l e r"
+          ]
+        },
+        {
+          "brand": "Whirlpool",
+          "codes": [
+            "F5E2",
+            "LdL"
+          ],
+          "spoken": [
+            "f five e two"
+          ]
+        }
+      ],
+      "title": "Door won't open, close or lock",
+      "meaning": "Let's get the door working. It stays locked on purpose while the machine is hot, full or spinning.",
+      "symptoms": [
+        "door lock light stays on",
+        "clothes caught in the door",
+        "showing door"
+      ],
+      "aliases": [
+        "door won't open",
+        "door won't lock",
+        "door won't close",
+        "door stuck",
+        "door jammed",
+        "door locked",
+        "door error",
+        "door lock error",
+        "lid won't open",
+        "lid won't lock",
+        "can't get my clothes out"
+      ],
+      "severity": "caution",
+      "escalate_if": [
+        "broken latch",
+        "damaged door",
+        "burning smell",
+        "water leaking",
+        "still showing"
+      ],
+      "safety": [
+        "Never force the door. The water and clothes inside can be very hot."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "If a cycle is running, press Start/Pause and wait for the drum to stop.",
+          "target": "the Start/Pause button on the washing machine control panel",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "If the door's locked shut, wait a few minutes for it to click open by itself.",
+          "target": "the door lock symbol on the washing machine control panel",
+          "verify": null,
+          "caution": "After a hot wash or a power cut it can take longer."
+        },
+        {
+          "n": 3,
+          "say": "If Child Lock is on, turn it off. It's often two buttons held for three seconds.",
+          "target": "the child lock symbol on the washing machine control panel",
+          "verify": null,
+          "caution": "Your manual shows which buttons."
+        },
+        {
+          "n": 4,
+          "say": "If water is still inside, run a drain or spin-only cycle, then wait for the lock.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "Once it's open, check no clothes are caught in the rubber seal, or under a top-loader's lid.",
+          "target": "the rubber seal around the door opening of the washing machine",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 6,
+          "say": "Look at the door hook and its catch. If either is bent or broken, please call a technician.",
+          "target": "the hook on the inside edge of the washing machine door",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 7,
+          "say": "Push the door firmly shut until it clicks.",
+          "target": "the washing machine door",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 8,
+          "say": "Switch it off at the wall for a few minutes, then switch on and try again.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 9,
+          "say": "If the door still won't open or lock, please call a technician. Never force it.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "Samsung WW70T4020EE manual pp.8-9,42,52,55-56 + Samsung US error-code page + LG help library dE (UAE), door won't open (UK) and locked door (Canada) + Bosch India E16 page + IFB Senator Plus manual pp.16,39-40,64,73 + Whirlpool product help F5E2/LdL; checked 2026-09-27"
+    },
+    {
+      "id": "washing_machine_shaking_unbalanced",
+      "appliance": "washing_machine",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "brand_codes": [
+        {
+          "brand": "Samsung",
+          "codes": [
+            "Ub",
+            "U6",
+            "UE"
+          ]
+        },
+        {
+          "brand": "LG",
+          "codes": [
+            "UE"
+          ]
+        },
+        {
+          "brand": "IFB",
+          "codes": [
+            "UnbL"
+          ],
+          "spoken": [
+            "u n b l"
+          ]
+        },
+        {
+          "brand": "Whirlpool",
+          "codes": [
+            "OFb",
+            "OL"
+          ],
+          "spoken": [
+            "o f b"
+          ]
+        }
+      ],
+      "title": "Shaking or unbalanced load",
+      "meaning": "Let's calm the shaking. It's usually an uneven load or a machine that isn't level.",
+      "symptoms": [
+        "rocking",
+        "thumping during spin",
+        "load out of balance",
+        "banging during spin"
+      ],
+      "aliases": [
+        "shaking",
+        "shakes a lot",
+        "vibrating",
+        "vibration",
+        "vibrates",
+        "unbalanced load",
+        "moving across the floor",
+        "walking",
+        "jumping",
+        "not spinning",
+        "won't spin"
+      ],
+      "severity": "diy",
+      "escalate_if": [
+        "grinding noise",
+        "burning smell",
+        "smoke",
+        "still showing"
+      ],
+      "safety": [
+        "Pause the machine and wait until the drum has stopped completely."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Open the door or lid and spread the clothes evenly around the drum, untangling any knots.",
+          "target": "the clothes inside the washing machine drum",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "If it's one heavy item, like jeans or a blanket, add a few towels to balance it.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "If the drum is packed tight, take a few things out.",
+          "target": "the clothes inside the washing machine drum",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "Close the door or lid and start the spin again.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "Check the machine doesn't rock. If it does, adjust the feet so all four sit firmly.",
+          "target": "the adjustable feet at the bottom corners of the washing machine",
+          "verify": null,
+          "caution": "Your manual shows how to lock the feet afterwards."
+        },
+        {
+          "n": 6,
+          "say": "Make sure it stands on a solid, level floor, not on a carpet or rug.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 7,
+          "say": "New machine? Check the transit bolts on the back were taken out. If not, your manual shows how.",
+          "target": "the transit bolts or round plastic caps on the back panel of the washing machine",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 8,
+          "say": "If it still shakes hard or moves across the floor, please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "Samsung WW70T4020EE manual pp.18,21,51-52 + Samsung US error-code page + LG help library UE (UAE) + IFB Senator Plus manual pp.13,16,21-22,67-68,76 + Whirlpool product help OFb/OL and F7E1; checked 2026-09-27"
+    },
+    {
+      "id": "washing_machine_wont_start",
+      "appliance": "washing_machine",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "brand_codes": [
+        {
+          "brand": "LG",
+          "codes": [
+            "CL",
+            "PF"
+          ]
+        },
+        {
+          "brand": "Samsung",
+          "codes": [
+            "UC",
+            "PF",
+            "CL"
+          ]
+        },
+        {
+          "brand": "Whirlpool",
+          "codes": [
+            "LOC",
+            "PF"
+          ]
+        }
+      ],
+      "title": "Washing machine won't start",
+      "meaning": "Let's find out why it won't start, beginning with the power.",
+      "symptoms": [
+        "no lights",
+        "screen blank",
+        "panel not responding"
+      ],
+      "aliases": [
+        "won't start",
+        "not starting",
+        "won't turn on",
+        "not turning on",
+        "no power",
+        "dead",
+        "display blank",
+        "nothing happens",
+        "buttons not working",
+        "start button not working",
+        "child lock"
+      ],
+      "severity": "diy",
+      "escalate_if": [
+        "burning smell",
+        "sparks",
+        "keeps tripping",
+        "electric shock",
+        "melted plug"
+      ],
+      "safety": [
+        "Keep your hands dry when you touch the plug, socket or switches."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Check it's plugged straight into a wall socket, not an extension cord, and the switch is on.",
+          "target": "the washing machine's power plug and the wall socket switch",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Plug a lamp or phone charger into that socket to see if it has power.",
+          "target": "the wall socket the washing machine plugs into",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "If the socket's dead, check your home's MCB or fuse box for a tripped switch.",
+          "target": null,
+          "verify": null,
+          "caution": "If it trips again, call an electrician."
+        },
+        {
+          "n": 4,
+          "say": "Close the door, or the lid on a top-loader, firmly until it clicks.",
+          "target": "the washing machine door",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "Make sure the water tap is turned on.",
+          "target": "the water tap on the wall that the washing machine's inlet hose is connected to",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 6,
+          "say": "If the buttons don't respond, Child Lock may be on. Hold its buttons for about three seconds.",
+          "target": "the child lock symbol on the washing machine control panel",
+          "verify": null,
+          "caution": "Your manual shows which buttons."
+        },
+        {
+          "n": 7,
+          "say": "Choose a program, then press Start/Pause.",
+          "target": "the Start/Pause button on the washing machine control panel",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 8,
+          "say": "Check the display isn't counting down a delay start or paused in a soak.",
+          "target": "the display on the washing machine control panel",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 9,
+          "say": "If the display stays dark or it still won't start, please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "Samsung WW70T4020EE manual pp.8-9,42,51,53,56 + Samsung US error-code page + LG help library CL/PF (UAE) and power-on page (US) + IFB Senator Plus manual pp.15,39,64-65,70,73 + Whirlpool product help LOC/PF; checked 2026-09-27"
+    },
+    {
+      "id": "washing_machine_bad_smell",
+      "appliance": "washing_machine",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "brand_codes": [
+        {
+          "brand": "LG",
+          "codes": [
+            "tcL"
+          ],
+          "spoken": [
+            "t c l"
+          ]
+        }
+      ],
+      "title": "Bad smell or dirty drum",
+      "meaning": "Let's freshen it up. Musty smells usually come from leftover detergent and damp inside.",
+      "symptoms": [
+        "mould on the door seal",
+        "black gunk in the rubber seal",
+        "sour smell"
+      ],
+      "aliases": [
+        "bad smell",
+        "smells bad",
+        "stinks",
+        "stinky",
+        "musty smell",
+        "damp smell",
+        "mouldy smell",
+        "moldy smell",
+        "smelly clothes",
+        "clothes smell bad",
+        "clean the washing machine drum",
+        "drum clean",
+        "tub clean"
+      ],
+      "severity": "diy",
+      "escalate_if": [
+        "burning smell",
+        "smoke",
+        "sparks"
+      ],
+      "safety": [
+        "Switch the machine off and unplug it before you clean inside."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Take everything out of the drum. The cleaning program has to run empty.",
+          "target": "the inside of the washing machine drum",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "On a front-loader, wipe the rubber door seal with a damp cloth, including inside its folds.",
+          "target": "the rubber seal around the door opening of the washing machine",
+          "verify": null,
+          "caution": "Pick out any hair, coins or fluff you find."
+        },
+        {
+          "n": 3,
+          "say": "Slide out the detergent drawer and rinse it under warm running water with a soft brush.",
+          "target": "the detergent drawer on the front of the washing machine",
+          "verify": null,
+          "caution": "Your manual shows how it releases; some have a small lever."
+        },
+        {
+          "n": 4,
+          "say": "Wipe out the drawer's slot too, then slide the drawer back in.",
+          "target": "the empty detergent drawer slot on the front of the washing machine",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "Plug in and run the drum clean or tub clean program with the drum empty.",
+          "target": "the program dial or program buttons on the washing machine control panel",
+          "verify": null,
+          "caution": "Its name differs by model; check your manual."
+        },
+        {
+          "n": 6,
+          "say": "From now on, use only the detergent amount on the pack. Extra suds leave smelly residue.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 7,
+          "say": "After each wash, leave the door slightly open so the inside can dry.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 8,
+          "say": "If it still smells after a clean cycle, please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "Samsung WW70T4020EE manual pp.12,43,49,54 + LG help library tcL/Sud (UAE) + IFB Senator Plus manual pp.13,58,61,66 + Whirlpool product help odours, door seal and HE detergent pages; checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "unplug"
+        }
+      ]
+    },
+    {
+      "id": "washing_machine_technician_fault",
+      "appliance": "washing_machine",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "brand_codes": [
+        {
+          "brand": "Samsung",
+          "codes": [
+            "3C",
+            "HC",
+            "1C",
+            "8C",
+            "AC6",
+            "OC"
+          ],
+          "spoken": [
+            "three c",
+            "one c",
+            "eight c"
+          ]
+        },
+        {
+          "brand": "LG",
+          "codes": [
+            "CE",
+            "PE",
+            "tE",
+            "SE",
+            "FE",
+            "dHE"
+          ]
+        },
+        {
+          "brand": "Bosch",
+          "codes": [
+            "E19",
+            "F19",
+            "E20",
+            "F20",
+            "E23",
+            "F23",
+            "E25",
+            "F25",
+            "E26",
+            "F26",
+            "E27",
+            "F27",
+            "E28",
+            "F28"
+          ]
+        }
+      ],
+      "title": "Fault that needs a technician",
+      "meaning": "That's a fault inside the machine. With dry hands, switch it off at the wall and turn off its tap.",
+      "symptoms": [
+        "smoke coming out",
+        "sparking",
+        "water all over the floor",
+        "machine flooded"
+      ],
+      "aliases": [
+        "burning smell",
+        "smells of burning",
+        "smoke",
+        "smoking",
+        "sparks",
+        "electric shock",
+        "gave me a shock",
+        "strange noise",
+        "grinding noise",
+        "water on the floor",
+        "motor error",
+        "heater error",
+        "sensor error"
+      ],
+      "severity": "call_technician",
+      "escalate_if": [
+        "burning smell",
+        "smoke",
+        "sparks",
+        "electric shock"
+      ],
+      "safety": [],
+      "steps": [],
+      "source": "Samsung WW70T4020EE manual pp.8,55-56 + LG help library CE/PE/tE/SE/FE/dHE (UAE) + Bosch India E19-E28 pages; checked 2026-09-27"
+    },
+    {
+      "id": "water_heater_no_hot_water",
+      "appliance": "water_heater",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Geyser not giving hot water",
+      "meaning": "Let's find out why the geyser isn't giving you hot water.",
+      "symptoms": [
+        "no hot water",
+        "water not getting hot",
+        "geyser not heating",
+        "cold water from the geyser",
+        "water only lukewarm",
+        "geyser light not on",
+        "heating light not coming on"
+      ],
+      "aliases": [
+        "geyser not working",
+        "water heater not working",
+        "water heater not heating",
+        "geyser not turning on",
+        "geyser takes too long to heat",
+        "no hot water from geyser",
+        "geyser water is cold",
+        "hot water not coming"
+      ],
+      "severity": "diy",
+      "escalate_if": [
+        "keeps tripping",
+        "burning smell",
+        "electric shock",
+        "water leaking",
+        "smoke coming out"
+      ],
+      "safety": [
+        "Don't open the geyser's cover or touch its wiring. We'll only use the switch, the knob and the valve."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Check the geyser's switch on the wall is turned on.",
+          "target": "the wall switch next to the socket the geyser is plugged into",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Look for the power light on the geyser. It should glow when the switch is on.",
+          "target": "the small indicator lights on the front of the geyser",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "If no light glows at all, don't try to reset anything. Please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "Check the valve on the cold water pipe going into the geyser is fully open.",
+          "target": "the valve handle on the cold water pipe going into the bottom of the geyser",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "If your geyser has a temperature knob, turn it clockwise to a warmer setting.",
+          "target": "the round temperature knob on the front of the geyser",
+          "verify": null,
+          "caution": "Only use the outside knob, and don't force it past its last mark.",
+          "anim": {
+            "kind": "turn",
+            "dir": "cw"
+          }
+        },
+        {
+          "n": 6,
+          "say": "Now give it half an hour to an hour to heat up before you use it.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 7,
+          "say": "If there's still no hot water, or the switch keeps tripping, please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "V-Guard Divino OM p.5, 7 + A. O. Smith Finesse SDS OM p.10-11, 13 + Racold CDR/Buono Pro OM p.3, 8, 13 + Racold Eterno 2 NXT OM p.5 + Havells Adonia R OM p.12, 14 + Havells Monza Slim i OM p.31; checked 2026-09-27"
+    },
+    {
+      "id": "water_heater_leaking",
+      "appliance": "water_heater",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Geyser leaking or dripping water",
+      "meaning": "Let's see where the water is coming from, and whether it's normal.",
+      "symptoms": [
+        "water dripping from geyser",
+        "geyser leaking",
+        "safety valve dripping",
+        "valve under the geyser dripping",
+        "water under the geyser",
+        "drops from the pipe under the geyser"
+      ],
+      "aliases": [
+        "geyser leakage",
+        "water heater leaking",
+        "water heater dripping",
+        "pressure valve dripping",
+        "geyser dripping",
+        "leak from geyser tank",
+        "water coming out of the geyser"
+      ],
+      "severity": "caution",
+      "escalate_if": [
+        "burning smell",
+        "electric shock",
+        "socket is wet",
+        "keeps tripping"
+      ],
+      "safety": [
+        "Switch the geyser off at the wall. If that switch is wet, use the main switch instead."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Look where the water comes from: the small valve under the geyser, a pipe joint, or the tank.",
+          "target": "the pipes and valve under the bottom of the geyser",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "A few drops from the safety valve while it heats are normal. Water expands as it warms.",
+          "target": "the safety valve with a small lever on the cold water pipe under the geyser",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Never block, plug or tighten that valve to stop the drips. It protects the tank.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "If it drips all the time, not just while heating, the pressure may be high. Please call a plumber.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "If water leaks from the tank or its joints, keep the geyser off and call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "A. O. Smith Finesse SDS OM p.5, 13 + Havells Adonia R OM p.7, 14 + Racold CDR/Buono Pro OM p.4, 8, 10 + V-Guard Divino OM p.3, 7 + CPSC Pub 513 p.5; checked 2026-09-27",
+      "safety_anim": [
+        {
+          "kind": "switch_off"
+        }
+      ]
+    },
+    {
+      "id": "water_heater_electric_danger",
+      "appliance": "water_heater",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "brand_codes": [
+        {
+          "brand": "Havells",
+          "codes": [
+            "E2",
+            "E5"
+          ],
+          "spoken": [
+            "e two",
+            "e five"
+          ]
+        },
+        {
+          "brand": "V-Guard",
+          "codes": [
+            "E4"
+          ],
+          "spoken": [
+            "e four"
+          ]
+        }
+      ],
+      "title": "Geyser shock, burning smell, sparks or overheating",
+      "meaning": "That isn't safe to fix yourself. Switch the geyser off at the main switch and call a technician.",
+      "symptoms": [
+        "shock from the tap",
+        "electric shock from geyser",
+        "current in the water",
+        "burning smell from geyser",
+        "sparks from geyser",
+        "smoke from geyser",
+        "water too hot",
+        "steam from the hot tap"
+      ],
+      "aliases": [
+        "geyser giving shock",
+        "getting current from tap",
+        "tingling from the shower",
+        "geyser burning smell",
+        "geyser sparking",
+        "geyser overheating",
+        "water heater too hot",
+        "open the geyser",
+        "geyser wiring",
+        "replace heating element",
+        "reset the thermal cutout"
+      ],
+      "severity": "call_technician",
+      "escalate_if": [],
+      "safety": [],
+      "steps": [],
+      "source": "V-Guard Divino OM p.7 (shock: contact service at once; E4 over temperature) + Racold CDR/Buono Pro OM p.8 (shock: earthing) + A. O. Smith Finesse SDS OM p.13 (water too hot) + Havells Adonia R OM p.14 and Monza Slim i OM p.20, 31 (E2/E5; abnormality: switch off main power) + CPSC Pub 513 p.5; checked 2026-09-27"
+    },
+    {
+      "id": "water_heater_gas_smell",
+      "appliance": "water_heater",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Gas geyser smells of gas or burns badly",
+      "meaning": "Close the gas valve, open windows, put out flames, and don't touch switches. Then call a technician.",
+      "symptoms": [
+        "gas smell from geyser",
+        "smell of gas in the bathroom",
+        "yellow flame in the geyser",
+        "black smoke from gas geyser",
+        "gas geyser flame not steady",
+        "flame stays on after tap is closed"
+      ],
+      "aliases": [
+        "gas geyser problem",
+        "gas geyser not working",
+        "gas geyser leaking gas",
+        "LPG geyser smell",
+        "gas water heater",
+        "repair gas geyser"
+      ],
+      "severity": "call_technician",
+      "escalate_if": [],
+      "safety": [],
+      "steps": [],
+      "source": "Havells Flagro gas water heater OM p.9-10 (gas leak: shut the gas, open windows, no switching) and p.11 (abnormal flame or smell: gas valve off, call service) + PMUY LPG Consumer Guidance p.3 + Racold gas water heater OM p.6 (ventilation); checked 2026-09-27"
+    },
+    {
+      "id": "water_purifier_no_water",
+      "appliance": "water_purifier",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Water purifier giving no water or a slow flow",
+      "meaning": "Let's find out why the purifier isn't giving you enough water.",
+      "symptoms": [
+        "no water from the purifier",
+        "purifier tap not giving water",
+        "very slow flow",
+        "tank not filling",
+        "less water coming",
+        "purified water flow is low",
+        "filter change light on"
+      ],
+      "aliases": [
+        "RO not giving water",
+        "RO not working",
+        "water purifier not working",
+        "purifier stopped working",
+        "RO tank empty",
+        "purifier water very slow",
+        "low flow from RO",
+        "RO filling slowly"
+      ],
+      "severity": "diy",
+      "escalate_if": [
+        "water leaking",
+        "burning smell",
+        "smoke coming out"
+      ],
+      "safety": [
+        "Don't open the purifier's cover or pull out its filters yourself."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Check the purifier is switched on at the wall and its power light is glowing.",
+          "target": "the power indicator light on the front of the water purifier",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Make sure the tap that feeds it has water, and the overhead tank isn't empty.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Check the small valve on the pipe going into the purifier is fully open.",
+          "target": "the small valve with a lever on the thin pipe going into the water purifier",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "Low supply pressure or heavy use makes it slow. Give the tank time to refill.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 5,
+          "say": "If a filter change light is on or blinking, the filters are due. Please book a service.",
+          "target": "the indicator lights on the front panel of the water purifier",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 6,
+          "say": "If there's still little or no water, please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "A. O. Smith Z5 RO OM p.11-12 + Aquaguard Delight NXT OM p.7-8 + Livpure Pep OM p.15-17 + KENT Grand OM p.3, 5-6, 12 + KENT Maxx OM p.5-6; checked 2026-09-27"
+    },
+    {
+      "id": "water_purifier_bad_taste",
+      "appliance": "water_purifier",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Purified water tastes or smells bad",
+      "meaning": "Let's work out why the water tastes or smells odd.",
+      "symptoms": [
+        "water tastes bad",
+        "water smells bad",
+        "strange taste",
+        "bad smell from purified water",
+        "water tastes salty",
+        "water tastes bitter",
+        "funny taste in RO water"
+      ],
+      "aliases": [
+        "RO water taste changed",
+        "purifier water smells",
+        "bad taste from purifier",
+        "water tastes different",
+        "purifier water odour",
+        "medicine taste in water"
+      ],
+      "severity": "diy",
+      "escalate_if": [
+        "still tastes bad",
+        "still smells bad",
+        "water leaking"
+      ],
+      "safety": [
+        "Don't drink the water while it tastes or smells wrong.",
+        "Don't open the purifier or change its filters yourself."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "If the water sat in the tank for over two days, drain it out through the tap.",
+          "target": "the dispensing tap on the front of the water purifier",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Let it refill with fresh water, then taste it again.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "If the filter change light is on, the filters are due. Please book a service.",
+          "target": "the indicator lights on the front panel of the water purifier",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 4,
+          "say": "If it still tastes or smells odd, don't drink it. Please call a technician.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "Livpure Pep OM p.16-17 + Aquaguard Delight NXT OM p.7-8 + A. O. Smith Z5 RO OM p.11-12 + Pureit Marvella OM FAQ 11 + KENT Grand OM p.3, 6; checked 2026-09-27"
+    },
+    {
+      "id": "water_purifier_leaking",
+      "appliance": "water_purifier",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Water purifier leaking",
+      "meaning": "Let's stop the leak safely first, then see where it's coming from.",
+      "symptoms": [
+        "water leaking from purifier",
+        "purifier dripping",
+        "water on the floor under the purifier",
+        "water coming out of the top of the purifier",
+        "leak from the RO pipe"
+      ],
+      "aliases": [
+        "RO leaking",
+        "purifier leakage",
+        "water purifier leaking",
+        "leak near the purifier",
+        "RO dripping water"
+      ],
+      "severity": "caution",
+      "escalate_if": [
+        "socket is wet",
+        "burning smell",
+        "sparks from plug"
+      ],
+      "safety": [
+        "Close the small valve on the pipe that feeds the purifier.",
+        "Switch the purifier off at the wall and unplug it. If the socket is wet, use the main switch."
+      ],
+      "steps": [
+        {
+          "n": 1,
+          "say": "Wipe the area dry, then look for a loose pipe or tap joint you can see from outside.",
+          "target": "the pipe connections and the tap on the outside of the water purifier",
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 2,
+          "say": "Don't open the cover or pull pipes apart to fix it yourself.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        },
+        {
+          "n": 3,
+          "say": "Leave it off with the valve closed, and call a technician to fix the leak.",
+          "target": null,
+          "verify": null,
+          "caution": null
+        }
+      ],
+      "source": "Aquaguard Delight NXT OM p.7-8 + Livpure Pep OM p.16-17 + Pureit Marvella OM FAQ 10 + Eureka Forbes purifier troubleshooting blog + KENT Grand OM p.3 + CPSC Pub 513 p.5; checked 2026-09-27",
+      "safety_anim": [
+        null,
+        {
+          "kind": "unplug"
+        }
+      ]
     }
   ]
 }

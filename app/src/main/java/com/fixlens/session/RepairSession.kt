@@ -1,5 +1,6 @@
 package com.fixlens.session
 
+import com.fixlens.ir.RemoteProfile
 import kotlinx.serialization.Serializable
 
 /** One question and Fixy's answer. Only completed turns are stored; cancelled ones are dropped. */
@@ -44,6 +45,8 @@ data class RepairSession(
     val greeting: String? = null,
     /** The earlier session the greeting asked about; the user's first reply can mark its [Outcome]. */
     val followUpOf: String? = null,
+    /** The device Fixy holds the IR remote for in this session (ir/RemoteController), or null. */
+    val remote: RemoteProfile? = null,
 ) {
     companion object {
         const val NEW_TITLE = "New repair"

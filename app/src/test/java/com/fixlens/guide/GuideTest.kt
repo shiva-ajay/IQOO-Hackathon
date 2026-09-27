@@ -1,7 +1,10 @@
 package com.fixlens.guide
 
+import com.fixlens.kb.AnimDir
+import com.fixlens.kb.AnimKind
 import com.fixlens.kb.KbEntry
 import com.fixlens.kb.KbStep
+import com.fixlens.kb.StepAnim
 import com.fixlens.kb.Severity
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
@@ -44,6 +47,18 @@ class GuideTest {
         assertEquals("oil filler cap", i.target)
         assertEquals("the cap is off", i.verify)
         assertEquals("Step 2 of 2", i.progress)
+    }
+
+    @Test fun `animations come with their safety line or step, and technician jobs show the technician`() {
+        val unplug = StepAnim(AnimKind.Unplug)
+        val turn = StepAnim(AnimKind.Turn, AnimDir.Ccw)
+        val e = oil.copy(safetyAnim = listOf(unplug), steps = listOf(KbStep(1, "Unscrew the cap.", anim = turn)))
+        assertEquals(unplug, Guide.view(GuideState.Safety(e, 0))!!.anim)
+        assertNull(Guide.view(GuideState.Safety(e, 1))!!.anim)
+        assertEquals(turn, Guide.view(GuideState.Step(e, 0))!!.anim)
+        val tech = Guide.view(Guide.start(wiring))!!
+        assertEquals(true, tech.technician)
+        assertNull(tech.anim)
     }
 
     @Test fun `next, back, repeat and done at the end`() {

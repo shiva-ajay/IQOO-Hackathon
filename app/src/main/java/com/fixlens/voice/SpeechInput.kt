@@ -45,6 +45,12 @@ class SpeechInput(
     private val decoder = Executors.newSingleThreadExecutor { r -> Thread(r, "fixlens-stt") }
     private val partialQueued = AtomicBoolean(false)
 
+    /**
+     * Sees every block of mic samples while the stream is open, held or not (audio thread). The IR remote's beep
+     * check (ir/BeepProbe) listens here for ~1.5 s after a test code; nothing is kept or transcribed.
+     */
+    @Volatile var monitor: ((FloatArray) -> Unit)? = null
+
     fun load(): Boolean {
         val moonshine = File(sttDir, "moonshine-base-en")
         val vadModel = File(sttDir, "silero_vad.onnx")
@@ -140,6 +146,7 @@ class SpeechInput(
                 val n = record.read(pcm, 0, pcm.size)
                 if (n <= 0) continue
                 val samples = FloatArray(n) { pcm[it] / 32768f }
+                monitor?.invoke(samples)
 
                 if (holding && (!capturing || take.get() != capturedTake)) {
                     // A new take: start from the pre-roll, so a word begun as the finger lands isn't cut.
