@@ -63,6 +63,58 @@ object RemoteCommands {
         return if (kind == paired) Parsed.Command(command) else Parsed.Take(kind, command)
     }
 
+    /**
+     * "My TV remote isn't working", "the TV doesn't respond when I press mute on the remote": the user's own remote
+     * seems broken, so Fixy tests the device with its remote straight away.
+     */
+    fun remoteBroken(text: String): Boolean = clean(text).let { t ->
+        MY_REMOTE.containsMatchIn(t) && REMOTE_FAILS.containsMatchIn(t) && !FIXYS_REMOTE.containsMatchIn(t)
+    }
+
+    /**
+     * The key the user says doesn't work on their remote ("mute doesn't work" → mute), so Fixy tests that very key.
+     * Null when no key is named.
+     */
+    fun brokenKey(text: String): Button? {
+        val t = clean(text)
+        return when {
+            Regex("""\b(un)?mute\b""").containsMatchIn(t) -> Button.Mute
+            Regex("""\b(volume down|lower the volume|decrease the volume|reduce the volume|quieter)\b""").containsMatchIn(t) -> Button.VolDown
+            Regex("""\b(volume|louder|sound up)\b""").containsMatchIn(t) -> Button.VolUp
+            Regex("""\b(channel down|previous channel)\b""").containsMatchIn(t) -> Button.ChDown
+            Regex("""\bchannels?\b""").containsMatchIn(t) -> Button.ChUp
+            Regex("""\b(input|source|hdmi)\b""").containsMatchIn(t) -> Button.Input
+            Regex("""\bmenu\b""").containsMatchIn(t) -> Button.Menu
+            Regex("""\b(power|turn (it |the \w+ )?(on|off)|switch (it |the \w+ )?(on|off))\b""").containsMatchIn(t) -> Button.Power
+            else -> null
+        }
+    }
+
+    /** "Test the TV with your remote", "is it the remote or the TV?": check the device with Fixy's own remote. */
+    fun wantsRemoteTest(text: String): Boolean = TEST_WITH_REMOTE.containsMatchIn(clean(text))
+
+    /**
+     * While a "remote not working" guide is on: the user says the fix didn't help or asks for a diagnosis, so it's
+     * time to test the device with Fixy's own remote.
+     */
+    fun stillBroken(text: String): Boolean = clean(text).let {
+        STILL_BROKEN.containsMatchIn(it) || TEST_WITH_REMOTE.containsMatchIn(it) || DIAGNOSE_IT.containsMatchIn(it)
+    }
+
+    /** "Same TV" (true) or "a new one" (false) to "Is it the same TV as before?"; null if neither. */
+    fun sameDevice(text: String): Boolean? {
+        val t = clean(text)
+        return when {
+            DIFFERENT.containsMatchIn(t) -> false
+            SAME.containsMatchIn(t) || YES_START.containsMatchIn(t) -> true
+            NO.containsMatchIn(t) -> false
+            else -> null
+        }
+    }
+
+    /** "I'm pointing at it", "ready", "yes", "go": the phone is aimed. */
+    fun ready(text: String): Boolean = clean(text).let { READY.containsMatchIn(it) || YES_START.containsMatchIn(it) }
+
     /** A yes/no to "Did it respond?". */
     fun answer(text: String): Answer? {
         val t = clean(text)
@@ -217,6 +269,27 @@ object RemoteCommands {
         DeviceKind.Fan to Regex("""\b(ceiling fan|table fan|pedestal fan|tower fan|the fan|my fan|fan)\b(?! speed)(?! mode)"""),
     )
 
+    private val MY_REMOTE = Regex("""\b(remote|remote control|clicker)\b""")
+    private val REMOTE_FAILS = Regex(
+        """\b(not|isn't|is not|doesn't|does not|don't|won't|can't|cannot|stopped|no longer)\b.{0,20}\b(work|working|respond|responding|react|change|changing|do anything|doing anything)\w*\b|""" +
+            """\b(does nothing|nothing happens|dead|no response|not responding|broken)\b""",
+    )
+    /** "Your remote isn't working" is about Fixy's remote (pairing), not the user's. */
+    private val FIXYS_REMOTE = Regex("""\b(your|the phone'?s?|the digital|the app'?s?|fixy'?s?) remote\b""")
+    private val TEST_WITH_REMOTE = Regex(
+        """\b(test|check|try)\b.{0,25}\b(with|using) (your|the phone'?s?|the digital|the app'?s?|fixy'?s?) remote\b|""" +
+            """\buse (your|the digital|the phone'?s?) remote\b|\bis it the remote or the (tv|ac|projector|fan)\b|""" +
+            """\bis it the (tv|ac|projector|fan) or the remote\b""",
+    )
+    /** Only while a "remote not working" guide is on: then these mean "find out what's wrong". */
+    private val DIAGNOSE_IT = Regex("""\b(diagnose|troubleshoot|figure (it )?out|what'?s wrong|find the (problem|issue)|check it)\b""")
+    private val STILL_BROKEN = Regex(
+        """\b(still|again)\b.{0,20}\b(not|isn't|doesn't|won't|no|nothing|same)\b|\b(didn't|did not|doesn't|does not) (help|work|fix)\b|""" +
+            """\bnot working\b|\bsame problem\b|\balready (tried|changed|put)\b|\bnew batteries\b""",
+    )
+    private val SAME = Regex("""\b(same|that one|the one before|this one|it is|it's the same)\b""")
+    private val DIFFERENT = Regex("""\b(new|different|another|other one|not the same)\b""")
+    private val READY = Regex("""\b(ready|pointed|pointing|aimed|aiming|go ahead|go|done|ok|okay|press it|do it|now)\b""")
     private val DIGITS = Regex("""\b(?:channel|press|number|key|go to channel|put on channel)\s+(\d{1,4})\b""")
     private val AGENT = Regex(
         """\b(check|diagnose|troubleshoot|fix|figure out|find|look for|search for|switch to|change to|go to|get (it|the|me)|""" +

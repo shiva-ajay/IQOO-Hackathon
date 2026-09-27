@@ -205,6 +205,11 @@ data class RemoteProfile(
     val verified: Boolean = true,
     /** AC only: what was last sent (IR is one-way: the AC's real state is unknown until the camera reads it). */
     val acState: AcState? = null,
+    /** The user's own name for it on the home remote list ("Bedroom AC"), or null. */
+    val name: String? = null,
 ) {
     val label: String get() = "$brand ${kind.noun}"
+
+    /** What the saved-remotes list shows: the user's name, else "LG TV". */
+    val displayName: String get() = name?.takeIf { it.isNotBlank() } ?: label
 }

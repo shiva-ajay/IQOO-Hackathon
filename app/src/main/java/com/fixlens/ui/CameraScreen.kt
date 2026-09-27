@@ -151,6 +151,9 @@ fun CameraScreen(viewModel: FixLensViewModel, onBack: () -> Unit) {
             onTryCommon = viewModel::remoteTryCommon,
             onOneByOne = viewModel::remoteOneByOne,
             onClose = viewModel::remoteCancel,
+            onSame = viewModel::remoteSameDevice,
+            onAimReady = viewModel::remoteAimReady,
+            onAimAnswer = viewModel::remoteAimAnswer,
         )
     }
 
@@ -158,7 +161,7 @@ fun CameraScreen(viewModel: FixLensViewModel, onBack: () -> Unit) {
         CameraPreview(viewModel)
         MarkerOverlay(marker, motion, analysisSize, state.debugTestBox, state.frozen)
         Scrims()
-        // How to do the guided step: a small card up top, and a cue on the tracked part (turn, pull, pour…).
+        // How to do the guided step: a small card up top (the cue on the part itself is drawn over the cards below).
         StepCueLayer(state.guide, marker, motion)
 
         val level by viewModel.micLevel.collectAsStateWithLifecycle()
@@ -234,6 +237,8 @@ fun CameraScreen(viewModel: FixLensViewModel, onBack: () -> Unit) {
                         remote.panel != null -> Unit
                         else -> {
                             state.guide?.let { StepBanner(it) }
+                            // A technician-only job: nearby technicians to call (sample data, see TechnicianStrip).
+                            state.guide?.takeIf { it.technician }?.let { TechnicianStrip(it.appliance) }
                             ConversationCard(state, orbModifier = Modifier.markerLaunchPad(motion))
                         }
                     }
@@ -264,6 +269,8 @@ fun CameraScreen(viewModel: FixLensViewModel, onBack: () -> Unit) {
         }
         // Over the cards: comets fly from Fixy's orb in the card up to the parts.
         HandoffLayer(marker, motion)
+        // Over the cards too: how to handle the marked part (arrows round a cap, chevrons, drops, a level gauge).
+        StepPartCueLayer(state.guide, marker, motion)
 
         // Every key the remote sends drops out from under the badge, so the user sees what Fixy pressed.
         if (!remoteMenuOpen) {
@@ -505,11 +512,13 @@ private fun HintChip(text: String) {
         text,
         color = Paper,
         style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Medium),
+        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+        // Keeps a screen margin, and a long hint wraps inside a rounded card instead of running off both edges.
         modifier = Modifier
-            .padding(top = 4.dp)
-            .clip(RoundedCornerShape(50))
+            .padding(start = 16.dp, end = 16.dp, top = 4.dp)
+            .clip(RoundedCornerShape(20.dp))
             .background(Ink.copy(alpha = 0.75f))
-            .border(1.dp, Amber.copy(alpha = 0.6f), RoundedCornerShape(50))
+            .border(1.dp, Amber.copy(alpha = 0.6f), RoundedCornerShape(20.dp))
             .padding(horizontal = 16.dp, vertical = 8.dp),
     )
 }

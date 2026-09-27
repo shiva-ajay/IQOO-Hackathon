@@ -127,6 +127,10 @@
           "caution": null
         }
       ],
+      "remind": {
+        "after_days": 14,
+        "say": "Your AC filters are due for a clean. A clean filter keeps the room cool."
+      },
       "source": "LG India help library (AC less cooling; filter cleaning) + Daikin India troubleshooting page + Daikin FTXM operation manual p.41-43 + Samsung India optimum cooling and filter pages + Panasonic CS-C18HKD operating instructions p.6-7 + US DOE Energy Saver 101 (home cooling); checked 2026-09-27"
     },
     {

@@ -127,6 +127,10 @@
           "caution": null
         }
       ],
+      "remind": {
+        "after_days": 14,
+        "say": "Your AC filters are due for a clean. A clean filter keeps the room cool."
+      },
       "source": "LG India help library (AC less cooling; filter cleaning) + Daikin India troubleshooting page + Daikin FTXM operation manual p.41-43 + Samsung India optimum cooling and filter pages + Panasonic CS-C18HKD operating instructions p.6-7 + US DOE Energy Saver 101 (home cooling); checked 2026-09-27"
     },
     {
@@ -766,6 +770,10 @@
           "caution": null
         }
       ],
+      "remind": {
+        "after_days": 14,
+        "say": "Your bike chain is due for a clean and lube. Let's check its slack too."
+      },
       "source": "Honda Shine OM PDF p.44, 73-75 + TVS Apache RTR 160 OM PDF p.75-76 + Bajaj Pulsar N160 OM PDF p.35-36 + Royal Enfield Classic 350 OM PDF p.27, 32; checked 2026-09-27",
       "safety_anim": [
         {
@@ -1152,6 +1160,10 @@
           "caution": null
         }
       ],
+      "remind": {
+        "after_days": 90,
+        "say": "Time to check your bike battery terminals. Make sure they're tight and clean."
+      },
       "source": "Honda Activa 6G OM PDF p.10, 46-48, 55-56 + Honda Shine OM PDF p.49 + Bajaj Pulsar 150 OM PDF p.31, 48 + Royal Enfield Classic 350 OM PDF p.33 + TVS Jupiter OM PDF p.55 + TVS Jupiter 125 OM PDF p.83; checked 2026-09-27",
       "safety_anim": [
         {
@@ -1223,7 +1235,8 @@
       "escalate_if": [
         "oil leaking",
         "burning smell",
-        "oil light stays on"
+        "oil light stays on",
+        "smoke"
       ],
       "safety": [
         "Park on level ground and switch the engine off.",
@@ -1317,6 +1330,10 @@
           }
         }
       ],
+      "remind": {
+        "after_days": 7,
+        "say": "Time for your weekly engine oil check. It only takes a couple of minutes."
+      },
       "source": "Maruti Swift OM 99011M75T08-74W p.9-8 + Honda City 2022 OM pp.263, 268-270 + Hyundai Creta 2019 OM p.9-29, 9-30 + Tata Nexon BS-VI OM p.176-177; checked 2026-09-27",
       "safety_anim": [
         {
@@ -1350,7 +1367,8 @@
         "coolant keeps dropping",
         "coolant leaking",
         "steam coming out",
-        "temperature light on"
+        "temperature light on",
+        "smoke"
       ],
       "safety": [
         "Only do this when the engine is completely cold.",
@@ -1413,6 +1431,10 @@
           "caution": null
         }
       ],
+      "remind": {
+        "after_days": 7,
+        "say": "Time to check your coolant level. Do it with the engine cold."
+      },
       "source": "Maruti Swift OM p.9-9, 9-10 + Honda City 2022 OM pp.271-273 + Hyundai Creta 2019 OM pp.9-32 to 9-34 + Tata Nexon BS-VI OM p.178; checked 2026-09-27"
     },
     {
@@ -1438,7 +1460,8 @@
       "severity": "diy",
       "escalate_if": [
         "still not spraying",
-        "washer tank leaking"
+        "washer tank leaking",
+        "smoke"
       ],
       "safety": [
         "Switch the engine off and let it cool first. Washer fluid can catch fire on a hot engine."
@@ -1490,6 +1513,10 @@
           "caution": "Don't keep running the washer with an empty tank. It can damage the pump."
         }
       ],
+      "remind": {
+        "after_days": 7,
+        "say": "Quick weekly check: is your windscreen washer tank topped up?"
+      },
       "source": "Maruti Swift OM p.9-40 + Honda City 2022 OM pp.263, 276 + Hyundai Creta 2019 OM p.9-37 + Tata Nexon BS-VI OM p.179; checked 2026-09-27",
       "safety_anim": [
         {
@@ -1525,6 +1552,34 @@
       "source": "FixLens policy (CLAUDE.md §3) + Maruti Swift OM p.10-16 (major electrical problem: workshop) + Hyundai Creta 2019 OM p.9-6, 9-47 (disconnect the battery before touching wiring; high-voltage ignition); checked 2026-09-27"
     },
     {
+      "id": "car_smoke_or_burning_smell",
+      "appliance": "car",
+      "brand": "generic",
+      "error_code": null,
+      "code_aliases": [],
+      "title": "Smoke or burning smell from the car",
+      "meaning": "Smoke or a burning smell isn't safe to check yourself. Stop somewhere safe, switch the engine off, step away and call a mechanic.",
+      "symptoms": [
+        "smoke from the engine",
+        "burning smell",
+        "smoke coming out",
+        "something is burning"
+      ],
+      "aliases": [
+        "smoke coming from the engine",
+        "burning smell from my car",
+        "car is smoking",
+        "engine is smoking",
+        "smell of burning in the car",
+        "car smells like burning"
+      ],
+      "severity": "call_technician",
+      "escalate_if": [],
+      "safety": [],
+      "steps": [],
+      "source": "FixLens safety policy: smoke or a burning smell goes to a mechanic, no DIY steps (as car_electrical_wiring). Steam from an overheating engine is car_overheating."
+    },
+    {
       "id": "car_battery_terminals",
       "appliance": "car",
       "brand": "generic",
@@ -1549,7 +1604,8 @@
       "escalate_if": [
         "battery leaking",
         "battery cracked",
-        "acid spilled"
+        "acid spilled",
+        "smoke"
       ],
       "safety": [
         "Switch the engine off and keep flames, sparks and cigarettes away. Batteries give off explosive gas.",
@@ -1592,6 +1648,10 @@
           "caution": null
         }
       ],
+      "remind": {
+        "after_days": 30,
+        "say": "Time for your monthly battery check. Look at the terminals for any white or yellowish crust."
+      },
       "source": "Maruti Swift OM p.9-20 + Honda City 2022 OM pp.253, 303-304 + Hyundai Creta 2019 OM pp.9-45 to 9-48 + Tata Nexon BS-VI OM pp.179-181; checked 2026-09-27",
       "safety_anim": [
         {
@@ -1622,7 +1682,8 @@
       "escalate_if": [
         "below minimum",
         "fluid leaking",
-        "soft pedal"
+        "soft pedal",
+        "smoke"
       ],
       "safety": [
         "Park on level ground, set the parking brake and switch the engine off.",
@@ -1668,6 +1729,10 @@
           "caution": "If the level drops quickly, there may be a leak. Don't drive until it's checked."
         }
       ],
+      "remind": {
+        "after_days": 7,
+        "say": "Time for your weekly brake fluid check. Just look at the level and keep the cap closed."
+      },
       "source": "Maruti Swift OM p.9-13, 9-14 + Honda City 2022 OM pp.253-254, 263, 275 + Hyundai Creta 2019 OM p.9-35, 9-36 + Tata Nexon BS-VI OM p.177; checked 2026-09-27",
       "safety_anim": [
         {
@@ -1696,7 +1761,8 @@
       "severity": "diy",
       "escalate_if": [
         "clip is broken",
-        "filter is torn"
+        "filter is torn",
+        "smoke"
       ],
       "safety": [
         "Switch the engine off and let it cool before you reach in."
@@ -1745,6 +1811,10 @@
           "caution": "Don't drive with the filter out, and don't let dirt fall into the box."
         }
       ],
+      "remind": {
+        "after_days": 90,
+        "say": "It's been a while since you looked at your car's air filter. Let's check it."
+      },
       "source": "Maruti Swift OM p.9-11 + Hyundai Creta 2019 OM p.9-39; Honda City 2022 lists it for the dealer only; checked 2026-09-27",
       "safety_anim": [
         {
@@ -4801,6 +4871,10 @@
           "caution": null
         }
       ],
+      "remind": {
+        "after_days": 30,
+        "say": "Time for your monthly drum clean. Run it with the drum empty."
+      },
       "source": "Samsung WW70T4020EE manual pp.12,43,49,54 + LG help library tcL/Sud (UAE) + IFB Senator Plus manual pp.13,58,61,66 + Whirlpool product help odours, door seal and HE detergent pages; checked 2026-09-27",
       "safety_anim": [
         {
@@ -4883,7 +4957,12 @@
         "water on the floor",
         "motor error",
         "heater error",
-        "sensor error"
+        "sensor error",
+        "plug is melted",
+        "melted plug",
+        "burnt plug",
+        "socket is burnt",
+        "burning smell from the machine"
       ],
       "severity": "call_technician",
       "escalate_if": [

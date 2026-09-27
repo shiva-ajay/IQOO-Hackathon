@@ -21,6 +21,7 @@ without asking.
 | Text-to-speech | **Piper** `en_US-lessac-medium` via the sherpa-onnx `OfflineTts` already in the AAR | sherpa-onnx `tts-models` release |
 | Knowledge base | **JSON in assets** + `kotlinx.serialization`, 4-stage lookup | Gradle |
 | IR remote | `ConsumerIrManager` + code catalog in assets (IRext + Flipper-IRDB) + **IRext AC decoder** (vendored C, MIT) | `tools/ir/build_ir_assets.py`, `app/src/main/cpp/irext/` |
+| Reminders ("Alerts") | `AlarmManager` (inexact, 1 h window) + a local `Notification`; interval and text from the KB (`remind`) | Platform APIs, no library |
 | Concurrency | Kotlin coroutines | Gradle |
 | Persona | Fixy: hard-coded greeting + system prompt (no training) | Our code |
 
@@ -116,7 +117,9 @@ Enable the `kotlinx-serialization` plugin.
 ## 5. Android manifest
 
 - Permissions: `android.permission.CAMERA`, `android.permission.RECORD_AUDIO`, `android.permission.TRANSMIT_IR`
-  (the IR blaster; a normal permission, no network). **Nothing else.**
+  (the IR blaster; a normal permission, no network), `android.permission.POST_NOTIFICATIONS` (Fixy's reminders,
+  asked the first time one is scheduled) and `android.permission.RECEIVE_BOOT_COMPLETED` (re-arm reminders after a
+  reboot). **Nothing else.** The reminders are local notifications posted by the app, not server pushes.
 - **No `INTERNET` permission** (this is proof of offline operation for the judges).
 - Lock orientation to portrait for the demo (it simplifies coordinate mapping).
 

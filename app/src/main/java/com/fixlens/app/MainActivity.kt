@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
@@ -31,6 +32,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,7 +47,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fixlens.ui.CameraScreen
-import com.fixlens.ui.SessionsScreen
+import com.fixlens.alerts.AlertScheduler
+import com.fixlens.ui.HomeShell
 import com.fixlens.R
 
 // FixLens palette, see design/logo/README.md.
@@ -71,6 +74,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        if (savedInstanceState == null) openAlert(intent)
         setContent {
             MaterialTheme(colorScheme = FixLensColors) {
                 var granted by remember { mutableStateOf(allGranted()) }
@@ -95,11 +99,18 @@ class MainActivity : ComponentActivity() {
      * IR remote (docs/ir-remote-plan.md §11): `--ez irinfo true` logs the hardware; `--ez irfake true` pretends to
      * send; `--es ir "tv/LG/mute"` or `"ac/LG/cool 24"` sends one code; `--es irpair "tv:LG"` opens pairing;
      * `--es irtake "take the remote"` runs a spoken remote request; `--es irpress vol_up` shows a key pop-up.
+     * Alerts: `--es remind car_check_engine_oil --ei remindsec 5` schedules that entry's reminder 5 s from now
+     * (keep it under 10 s: a longer lead gets the one-hour delivery window). `--es alerttitle "…" --es alertbody "…"`
+     * give a demo alert its own words.
      */
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
+        if (openAlert(intent)) return
         if (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE == 0) return
         val vm = ViewModelProvider(this)[FixLensViewModel::class.java]
+        intent.getStringExtra("remind")?.let {
+            vm.debugRemind(it, intent.getIntExtra("remindsec", 5), intent.getStringExtra("alerttitle"), intent.getStringExtra("alertbody"))
+        }
         if (intent.getBooleanExtra("new", false)) vm.newSession()
         fun flag(name: String) = if (intent.hasExtra(name)) intent.getBooleanExtra(name, false) else null
         vm.debugSettings(flag("testbox"), flag("freeze"), intent.getStringExtra("grounding"), intent.getStringExtra("coords"))
@@ -133,26 +144,47 @@ class MainActivity : ComponentActivity() {
         return super.dispatchKeyEvent(event)
     }
 
+    override fun onResume() {
+        super.onResume()
+        // A reminder may have gone off while the app was in the background.
+        ViewModelProvider(this)[FixLensViewModel::class.java].refreshAlerts()
+    }
+
+    /** A tap on one of Fixy's reminder notifications (alerts/AlertScheduler). True if [intent] was one. */
+    private fun openAlert(intent: Intent?): Boolean {
+        if (intent?.action != AlertScheduler.ACTION_OPEN) return false
+        val id = intent.getStringExtra(AlertScheduler.EXTRA_ALERT) ?: return false
+        ViewModelProvider(this)[FixLensViewModel::class.java].openAlert(id, intent.getBooleanExtra(AlertScheduler.EXTRA_START, false))
+        return true
+    }
+
     private fun allGranted() = REQUIRED_PERMISSIONS.all { checkSelfPermission(it) == PackageManager.PERMISSION_GRANTED }
 }
 
 @Composable
 private fun AppRoot(vm: FixLensViewModel) {
     val state by vm.state.collectAsStateWithLifecycle()
+    // Fixy just scheduled a reminder: ask once for the notification permission it needs (Android 13+).
+    val notifications = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        Log.i(TAG, "Notification permission: $granted")
+    }
+    val context = LocalContext.current
+    LaunchedEffect(state.askNotifications) {
+        if (!state.askNotifications) return@LaunchedEffect
+        vm.notificationsAsked()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            context.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
+        ) {
+            notifications.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
+    }
     AnimatedContent(
         targetState = state.screen,
         transitionSpec = { fadeIn(tween(260)) togetherWith fadeOut(tween(200)) },
         label = "screen",
     ) { screen ->
         when (screen) {
-            Screen.Sessions -> SessionsScreen(
-                state = state,
-                sessionDir = vm::sessionDir,
-                onNew = vm::newSession,
-                onOpen = vm::openSession,
-                onRename = vm::renameSession,
-                onDelete = vm::deleteSession,
-            )
+            Screen.Sessions -> HomeShell(vm, state)
             Screen.Session -> {
                 BackHandler(onBack = vm::closeSession)
                 CameraScreen(vm, onBack = vm::closeSession)

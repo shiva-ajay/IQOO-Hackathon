@@ -157,7 +157,8 @@ com.fixlens
 ├── voice/      SpeechInput (AudioRecord → VAD → Moonshine), SpeechOutput (TTS sentence queue)
 ├── kb/         KbModels, KbRepository (load + validate JSON), Retriever (4-stage lookup)
 ├── guide/      Orchestrator, GuideStateMachine, FixyPrompts
-└── ui/         CameraScreen, MarkerOverlay, CaptionBar, StepCard, TalkButton
+├── alerts/     Alerts (pure rules), AlertStore, AlertScheduler + AlertReceiver (alarm, notification, reboot)
+└── ui/         CameraScreen, MarkerOverlay, CaptionBar, StepCard, TalkButton, HomeShell (drawer), RemoteHome, AlertsScreen
 ```
 
 ---
@@ -202,6 +203,9 @@ post-hackathon plan, not now.
 }
 ```
 - `severity`: `diy` | `caution` | `call_technician`.
+- `remind` (optional, routine checks only): `{"after_days": 7, "say": "..."}`. When the guide is finished Fixy
+  schedules a local reminder that many days later; `say` is the notification text, verbatim. Intervals come from the
+  manuals like everything else (tools/kb/sources, "Reminder intervals").
 - `target` is a **descriptive grounding phrase** for the VLM ("yellow ring handle of the engine
   oil dipstick", not "dipstick"), or `null` for steps with nothing to point at.
 
@@ -445,6 +449,24 @@ Notes:
   "no sound" go to it; plain commands stay on the fast path. Pairing now scans codes by itself: TV test = volume up,
   seen by `ir/ScreenProbe` (24×24 brightness grid), AC by its beep; "It responded" / volume-up anytime. Every send drops
   a key pop-up under the badge (`ui/remote/KeyPressStack.kt`). Debug: `--ez irfake true` (no IR out), `--es irpress vol_up`.
+  **Is it the TV or your remote?** During (or after) a KB "remote not working" guide, "still not working" / "diagnose
+  it" (or anytime "test the TV with your remote") starts `RemoteController.startRemoteTest`: same device as the saved
+  pairing? → aim ("tell me when you're ready") → press volume up (AC: temp up) → camera/beep, else ask → verdict (the
+  device reacts: the user's remote is at fault; it doesn't: the device's sensor/the device) and undo the key.
+- **Home drawer: universal remote + alerts (2026-09-27, builds + unit-tested; not yet tried on the phone):** the home
+  screen has a side drawer (menu button top left): Repairs, Universal remote, Alerts. `ui/HomeShell.kt`.
+  *Universal remote* (`ui/RemoteHome.kt`): the saved remotes (`files/remotes.json`, now with an optional user name;
+  long-press to rename/forget), "add a remote" by device tile → brand sheet → pairing, then the pad. Same
+  `RemoteController` as in a repair, with `cameraOn = false`: no VLM look, pairing waits for "It responded" / volume up;
+  the mic opens only while pairing an AC, to hear its beep. AC "last sent" state is kept in the saved remote.
+  *Alerts* (`alerts/`, `ui/AlertsScreen.kt`): when a KB guide reaches Done and the entry has `remind`, Fixy says
+  "I'll remind you to check it again in a week." and schedules it (one per entry; doing the check again replaces it).
+  AlarmManager (1 h window, re-armed on boot) → local notification with "Start the check", which opens a new session on
+  that guide. Alerts page: due first, then "Scheduled by Fixy" (start now / test in 5 s / cancel). KB
+  `2026-09-27.generic2`: `remind` on 10 entries (car oil/coolant/washer/brake fluid 7 d, car battery 30 d, air filter
+  90 d, bike chain 14 d, bike battery 90 d, AC filters 14 d, washer drum clean 30 d); no reminder for the bikes' daily
+  pre-ride checks. Permissions added: POST_NOTIFICATIONS, RECEIVE_BOOT_COMPLETED. Debug: `--es remind <entry_id>
+  --ei remindsec 5`.
 
 ---
 

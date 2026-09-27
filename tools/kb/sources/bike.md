@@ -154,3 +154,19 @@ Targets are written to hold for most Indian models: oil window or cap low on the
 ## Licence
 
 The owner's manuals are copyright of their makers (Honda Motorcycle & Scooter India, TVS Motor Company, Bajaj Auto, Royal Enfield, Hero MotoCorp). Only facts and step order were used. Every line was rewritten in our own words, and no text or images were copied. Each entry cites its manuals in `source`.
+
+---
+
+## Reminder intervals (`remind`, checked 2026-09-27)
+
+After a routine check's guide is finished, the app schedules a local reminder `after_days` later (app `alerts/`).
+Distances are converted at about 25 km a day.
+
+| Entry | after_days | Sources |
+|---|---|---|
+| bike_chain_slack_lube | 14 | Lube every 500 km (~20 days): TVS Apache p.75, Bajaj N160 p.36, Bajaj 2018 p.28; Royal Enfield p.24 every 1,000 km |
+| bike_battery_terminals | 90 | Royal Enfield p.24 every service, 3,000 km or 3 months; Bajaj Pulsar 150 p.41 every service, ~5,000 km |
+
+**No reminder:** `bike_engine_oil_check`, `bike_tyre_pressure_check`, `bike_brake_fluid_check`. The manuals make them
+daily pre-ride checks (Bajaj p.23/26, Honda Activa p.45 / Shine p.38, TVS Apache p.47); a daily notification would be
+noise, and a looser interval (weekly tyre gauge check) has only one brand (TVS Apache p.52, Jupiter 125 p.76).

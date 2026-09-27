@@ -1,5 +1,6 @@
 package com.fixlens.guide
 
+import com.fixlens.alerts.Alerts
 import com.fixlens.kb.KbEntry
 import com.fixlens.kb.Retriever
 import com.fixlens.kb.Severity
@@ -47,6 +48,8 @@ data class GuideView(
     val technician: Boolean,
     /** The step's animation, for the how-to card and the cue on the pointed part. */
     val anim: StepAnim? = null,
+    /** The KB appliance id ("car", "air_conditioner"…), e.g. to say which kind of technician to call. */
+    val appliance: String? = null,
 )
 
 /** The entry a guide state belongs to (null when idle). */
@@ -110,7 +113,7 @@ object Guide {
             is GuideState.Step -> if (ins.verify != null) "Say “done”, or I'll see when it's done" else "Say “done” for the next step"
             else -> null
         }
-        return GuideView(entry.id, entry.title, ins.progress.orEmpty(), ins.caution, prompt, state is GuideState.Escalate, ins.anim)
+        return GuideView(entry.id, entry.title, ins.progress.orEmpty(), ins.caution, prompt, state is GuideState.Escalate, ins.anim, entry.appliance)
     }
 
     fun instruction(state: GuideState): Instruction? = when (state) {
@@ -129,7 +132,11 @@ object Guide {
         is GuideState.Step -> state.entry.steps[state.index].let { s ->
             Instruction(s.say, s.target, s.verify, "Step ${state.index + 1} of ${state.entry.steps.size}", s.caution, s.anim)
         }
-        is GuideState.Done -> Instruction(ALL_DONE, null, null, "Done", null)
+        // A routine check (the KB's `remind`) says when it comes round again; the app schedules that reminder.
+        is GuideState.Done -> Instruction(
+            listOfNotNull(ALL_DONE, state.entry.remind?.let { reminderLine(it.afterDays) }).joinToString(" "),
+            null, null, "Done", null,
+        )
         is GuideState.Escalate -> Instruction(
             // A danger sign names itself; a technician-only entry explains why with its meaning.
             say = listOfNotNull(
@@ -139,6 +146,9 @@ object Guide {
             target = null, verify = null, progress = "Technician", caution = state.reason,
         )
     }
+
+    /** Fixed wording; the interval comes from the KB entry. */
+    fun reminderLine(days: Int): String = "I'll remind you to check it again in ${Alerts.spokenInterval(days)}."
 
     /** The `escalate_if` sign the user just described ("there's a burning smell"), if any. */
     fun escalation(entry: KbEntry, text: String): String? {

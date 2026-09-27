@@ -861,6 +861,10 @@
           "caution": null
         }
       ],
+      "remind": {
+        "after_days": 30,
+        "say": "Time for your monthly drum clean. Run it with the drum empty."
+      },
       "source": "Samsung WW70T4020EE manual pp.12,43,49,54 + LG help library tcL/Sud (UAE) + IFB Senator Plus manual pp.13,58,61,66 + Whirlpool product help odours, door seal and HE detergent pages; checked 2026-09-27",
       "safety_anim": [
         {
@@ -943,7 +947,12 @@
         "water on the floor",
         "motor error",
         "heater error",
-        "sensor error"
+        "sensor error",
+        "plug is melted",
+        "melted plug",
+        "burnt plug",
+        "socket is burnt",
+        "burning smell from the machine"
       ],
       "severity": "call_technician",
       "escalate_if": [
@@ -1077,6 +1086,10 @@
     {
       "q": "can I wash a woollen sweater in my washing machine",
       "expect": "NONE"
+    },
+    {
+      "q": "my washing machine plug is melted",
+      "expect": "washing_machine_technician_fault"
     }
   ]
 }

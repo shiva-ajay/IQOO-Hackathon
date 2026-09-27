@@ -277,3 +277,19 @@ car that is out of fuel).
   sending it to engine oil; "brake oil level" and "is my brake oil low" reach brake fluid.
 - "can you help me fix the wiring" names no car word, so the app searches every appliance. It matches here, but may tie
   with other categories' wiring entries once they exist.
+
+---
+
+## Reminder intervals (`remind`, checked 2026-09-27)
+
+After a routine check's guide is finished, the app schedules a local reminder `after_days` later (app `alerts/`).
+The interval is the most frequent one ≥ 2 manuals agree on; distances are converted at about 30 km a day.
+
+| Entry | after_days | Sources |
+|---|---|---|
+| car_check_engine_oil | 7 | Swift p.5-1 weekly or each fill-up; Nexon p.105 weekly; City p.268 every refuel; Creta p.9-8 each fuel stop |
+| car_check_coolant | 7 | Swift p.5-1 and Nexon p.105 weekly; City p.271 every refuel; Creta p.9-8/9-9 each fuel stop, at least monthly |
+| car_top_up_washer_fluid | 7 | Swift p.5-1 weekly or each fill-up; Nexon p.105 weekly; Creta p.9-8 each fuel stop (City: no interval) |
+| car_check_brake_fluid | 7 | Swift p.5-1 and Nexon p.105 weekly; City p.252 monthly; Creta p.9-10 yearly |
+| car_battery_terminals | 30 | City p.303 + quick guide p.100 terminals monthly; Swift p.5-1 and Nexon p.105 weekly battery check (fluid), Swift p.9-21 terminals "periodically". Only City gives a number for the terminals themselves |
+| car_check_air_filter | 90 | Swift p.9-4 clean every 5,000 km, 2,500 km on dusty roads (~83 days); Nexon p.189 diesel 7,500 km or 6 months, p.191 petrol 15,000 km or 12 months; Creta p.9-12 10,000 km or 12 months. 90 follows Swift's dusty-road figure; 180 is the other defensible choice |

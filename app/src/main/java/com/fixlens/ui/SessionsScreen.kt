@@ -66,7 +66,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 
-/** Home: the saved repair sessions, and the way into a new one. The models load in the background meanwhile. */
+/**
+ * Home's first page: the saved repair sessions, and the way into a new one. The models load in the background
+ * meanwhile. [onMenu] opens the side drawer (universal remote, alerts); a due reminder shows above the list.
+ */
 @Composable
 fun SessionsScreen(
     state: UiState,
@@ -75,6 +78,9 @@ fun SessionsScreen(
     onOpen: (String) -> Unit,
     onRename: (String, String) -> Unit,
     onDelete: (String) -> Unit,
+    onMenu: () -> Unit,
+    menuDot: Boolean,
+    onStartAlert: (String) -> Unit,
 ) {
     var menuFor by remember { mutableStateOf<RepairSession?>(null) }
     var renaming by remember { mutableStateOf<RepairSession?>(null) }
@@ -89,6 +95,8 @@ fun SessionsScreen(
             item {
                 Column(Modifier.statusBarsPadding()) {
                     Row(Modifier.padding(top = 14.dp), verticalAlignment = Alignment.CenterVertically) {
+                        MenuButton(onMenu, menuDot)
+                        Spacer(Modifier.width(14.dp))
                         Image(
                             painter = painterResource(R.drawable.fixlens_logo_dark),
                             contentDescription = "FixLens",
@@ -111,6 +119,10 @@ fun SessionsScreen(
                     )
                     Spacer(Modifier.height(24.dp))
                     NewRepairButton(onNew)
+                    state.alerts.firstOrNull { it.delivered }?.let { alert ->
+                        Spacer(Modifier.height(12.dp))
+                        DueAlert(alert.title, alert.body) { onStartAlert(alert.id) }
+                    }
                     if (state.sessions.isNotEmpty()) {
                         Spacer(Modifier.height(28.dp))
                         Text("RECENT", color = Muted, style = LabelStyle.copy(fontSize = 11.sp))
@@ -227,6 +239,28 @@ private fun NewRepairButton(onClick: () -> Unit) {
             Text("New repair", color = Ink, style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.SemiBold))
             Text("Point the camera and ask Fixy", color = Ink.copy(alpha = 0.7f), style = TextStyle(fontSize = 13.sp))
         }
+    }
+}
+
+/** A reminder Fixy scheduled that is due now: tap to start the check. */
+@Composable
+private fun DueAlert(title: String, body: String, onClick: () -> Unit) {
+    Row(
+        Modifier
+            .homeCard(highlight = true)
+            .clickable(onClick = onClick)
+            .padding(horizontal = 16.dp, vertical = 14.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        BellGlyph(Amber, Modifier.size(24.dp))
+        Spacer(Modifier.width(14.dp))
+        Column(Modifier.weight(1f)) {
+            Text("Due now · $title", color = Paper, maxLines = 1, overflow = TextOverflow.Ellipsis,
+                style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.SemiBold))
+            Text(body, color = Muted, maxLines = 2, overflow = TextOverflow.Ellipsis, style = TextStyle(fontSize = 13.sp))
+        }
+        Spacer(Modifier.width(8.dp))
+        Text("Start", color = Amber, style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.SemiBold))
     }
 }
 

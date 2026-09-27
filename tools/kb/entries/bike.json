@@ -200,6 +200,10 @@
           "caution": null
         }
       ],
+      "remind": {
+        "after_days": 14,
+        "say": "Your bike chain is due for a clean and lube. Let's check its slack too."
+      },
       "source": "Honda Shine OM PDF p.44, 73-75 + TVS Apache RTR 160 OM PDF p.75-76 + Bajaj Pulsar N160 OM PDF p.35-36 + Royal Enfield Classic 350 OM PDF p.27, 32; checked 2026-09-27",
       "safety_anim": [
         {
@@ -586,6 +590,10 @@
           "caution": null
         }
       ],
+      "remind": {
+        "after_days": 90,
+        "say": "Time to check your bike battery terminals. Make sure they're tight and clean."
+      },
       "source": "Honda Activa 6G OM PDF p.10, 46-48, 55-56 + Honda Shine OM PDF p.49 + Bajaj Pulsar 150 OM PDF p.31, 48 + Royal Enfield Classic 350 OM PDF p.33 + TVS Jupiter OM PDF p.55 + TVS Jupiter 125 OM PDF p.83; checked 2026-09-27",
       "safety_anim": [
         {

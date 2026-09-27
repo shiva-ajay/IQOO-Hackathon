@@ -440,6 +440,26 @@
     "from": "car"
   },
   {
+    "q": "I can see smoke coming from the engine",
+    "expect": "car_smoke_or_burning_smell",
+    "from": "car"
+  },
+  {
+    "q": "there is a burning smell from my car",
+    "expect": "car_smoke_or_burning_smell",
+    "from": "car"
+  },
+  {
+    "q": "the wires near the battery look burnt",
+    "expect": "car_electrical_wiring",
+    "from": "car"
+  },
+  {
+    "q": "the car wires are melted",
+    "expect": "car_electrical_wiring",
+    "from": "car"
+  },
+  {
     "q": "my inverter is not giving backup",
     "expect": "inverter_no_backup",
     "from": "inverter"
@@ -957,6 +977,11 @@
   {
     "q": "can I wash a woollen sweater in my washing machine",
     "expect": "NONE",
+    "from": "washing_machine"
+  },
+  {
+    "q": "my washing machine plug is melted",
+    "expect": "washing_machine_technician_fault",
     "from": "washing_machine"
   },
   {

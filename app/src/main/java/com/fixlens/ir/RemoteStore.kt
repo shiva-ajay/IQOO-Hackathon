@@ -20,9 +20,43 @@ class RemoteStore(private val file: File) {
     fun find(kind: DeviceKind, brand: String): RemoteProfile? =
         read().firstOrNull { it.kind == kind && it.brand.equals(brand, ignoreCase = true) }
 
+    /** The device of this kind paired most recently, if any. */
+    @Synchronized
+    fun latest(kind: DeviceKind): RemoteProfile? = read().firstOrNull { it.kind == kind }
+
+    /** Every paired device, newest first. */
+    @Synchronized
+    fun all(): List<RemoteProfile> = read()
+
+    /** Saves [profile] as the newest pairing; a name the user gave the same device before is kept. */
     @Synchronized
     fun save(profile: RemoteProfile) {
-        write(listOf(profile) + read().filterNot { it.kind == profile.kind && it.brand.equals(profile.brand, ignoreCase = true) })
+        val devices = read()
+        val same = devices.firstOrNull { it.kind == profile.kind && it.brand.equals(profile.brand, ignoreCase = true) }
+        val named = if (profile.name == null && same?.name != null) profile.copy(name = same.name) else profile
+        write(listOf(named) + devices.filterNot { it === same })
+    }
+
+    /** Renames a saved device in place (the list order stays). Blank clears the name. */
+    @Synchronized
+    fun rename(kind: DeviceKind, brand: String, name: String?) {
+        write(read().map {
+            if (it.kind == kind && it.brand.equals(brand, ignoreCase = true)) it.copy(name = name?.trim()?.takeIf(String::isNotEmpty)) else it
+        })
+    }
+
+    /** Stores what changed on a saved device (the AC's last sent state) without moving it up the list. */
+    @Synchronized
+    fun update(profile: RemoteProfile) {
+        val devices = read()
+        if (devices.none { it.kind == profile.kind && it.modelId == profile.modelId }) return
+        write(devices.map {
+            if (it.kind == profile.kind && it.modelId == profile.modelId && it.brand.equals(profile.brand, ignoreCase = true)) {
+                profile.copy(name = profile.name ?: it.name)
+            } else {
+                it
+            }
+        })
     }
 
     @Synchronized

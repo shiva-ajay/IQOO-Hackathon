@@ -33,6 +33,9 @@ object MemoryRules {
     /** The KB `appliance` ids the notes can name. One with no entries (a printer) finds nothing rather than everything. */
     val KB_APPLIANCES: Set<String> = APPLIANCES.map { it.kbId }.toSet()
 
+    /** The notes' name for a KB appliance id ("car" → "Car engine"), or null. */
+    fun applianceName(kbId: String): String? = APPLIANCES.firstOrNull { it.kbId == kbId }?.name
+
     /**
      * The KB appliance and brand to look an entry up under: what [text] names, else the session's notes.
      * Null appliance = search every appliance.

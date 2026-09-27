@@ -44,12 +44,30 @@ sealed interface RemotePanel {
         val auto: Boolean,
         /** The device's response was noticed: the AC's beep or a change on the screen. */
         val detected: Boolean = false,
+        /** The camera watches the screen (TV/projector in view); false: Fixy waits for the user to say it reacted. */
+        val camera: Boolean = true,
     ) : RemotePanel
 
     data class NoMatch(val kind: DeviceKind, val brand: String, val triedCommon: Boolean, val wasAuto: Boolean) : RemotePanel
 
     /** The short "paired" moment before the card folds into the badge. */
     data class Paired(val profile: RemoteProfile) : RemotePanel
+
+    /** "Is it the same TV as before?" before testing with a remote paired earlier. */
+    data class SameDevice(val kind: DeviceKind, val saved: RemoteProfile) : RemotePanel
+
+    /** Testing whether the device answers Fixy's remote (is it the device or the user's remote?). */
+    data class Aim(val kind: DeviceKind, val label: String, val key: String, val phase: AimPhase, val detected: Boolean = false) : RemotePanel
+}
+
+enum class AimPhase {
+    /** "Point the phone at it and tell me when you're ready." */
+    Waiting,
+    Sending,
+    /** The camera watches the screen (TV/projector), or the mic listens for the AC's beep. */
+    Checking,
+    /** "Did the TV's volume change?" */
+    Asking,
 }
 
 enum class PairPhase {
@@ -88,6 +106,8 @@ data class RemoteUi(
     /** What Fixy is doing with the remote ("Step 2: looking"), shown on the badge. */
     val task: String? = null,
     val padOpen: Boolean = false,
+    /** Devices paired before (files/remotes.json), newest first: the home screen's saved remotes. */
+    val saved: List<RemoteProfile> = emptyList(),
 )
 
 /**
@@ -132,6 +152,12 @@ class RemoteController(
     val screen = ScreenProbe()
     @Volatile private var catalog: IrCatalog? = null
 
+    /**
+     * False on the home screen's universal remote: no camera runs there, so pairing never watches the screen or asks
+     * the VLM; the user taps "It responded" (an AC's beep is still heard when the host opens the mic).
+     */
+    @Volatile var cameraOn = true
+
     private val _ui = MutableStateFlow(RemoteUi())
     val ui: StateFlow<RemoteUi> = _ui
 
@@ -156,6 +182,17 @@ class RemoteController(
     /** The agent asked the user something; their next words answer it. */
     private var agentAnswer: CompletableDeferred<String>? = null
     private var agentRunning = false
+    /** Test the device with Fixy's remote once it's paired (the user's own remote seems broken). */
+    private var pendingTest = false
+    /** The saved device the "same TV?" question is about. */
+    private var sameCandidate: RemoteProfile? = null
+    /** The key the user says doesn't work on their remote ("mute doesn't work"); the test presses that one. */
+    private var testButton: Button? = null
+    /**
+     * Whether the camera can see the screen during this pairing (checked with the VLM the first time the camera
+     * notices a change: aiming the phone's top edge often points the camera at the floor). Null: not checked yet.
+     */
+    private var cameraTrusted: Boolean? = null
     private var pressSeq = 0L
     private var lastPressAt = 0L
 
@@ -192,7 +229,49 @@ class RemoteController(
             .onFailure { Log.e(TAG, "IR catalog failed to load", it) }.getOrNull()
         catalog = loaded
         Log.i(TAG, "IR: ${blaster.describe()}; catalog ${loaded?.version ?: "missing"}")
-        _ui.update { it.copy(available = loaded != null && blaster.available) }
+        _ui.update { it.copy(available = loaded != null && blaster.available, saved = store.all()) }
+    }
+
+    /** Re-reads the saved devices (IO thread). */
+    private fun refreshSaved() {
+        val all = store.all()
+        _ui.update { it.copy(saved = all) }
+    }
+
+    // ---- Saved remotes (home screen) ----
+
+    /** "Add a remote" without the camera: straight to the brand picker for [kind]. */
+    fun chooseDevice(kind: DeviceKind) {
+        if (catalog == null || !blaster.available) {
+            host.reply(null, "This phone has no IR blaster, so I can't use a remote here.")
+            return
+        }
+        reset()
+        openPicker(kind, emptyList())
+    }
+
+    fun renameSaved(profile: RemoteProfile, name: String) {
+        scope.launch(Dispatchers.IO) {
+            store.rename(profile.kind, profile.brand, name)
+            refreshSaved()
+        }
+        _ui.update { ui ->
+            val held = ui.profile
+            if (held != null && held.kind == profile.kind && held.brand.equals(profile.brand, ignoreCase = true)) {
+                ui.copy(profile = held.copy(name = name.trim().takeIf(String::isNotEmpty)))
+            } else {
+                ui
+            }
+        }
+    }
+
+    fun forgetSaved(profile: RemoteProfile) {
+        val held = _ui.value.profile
+        if (held != null && held.kind == profile.kind && held.brand.equals(profile.brand, ignoreCase = true)) detach()
+        scope.launch(Dispatchers.IO) {
+            store.forget(profile.kind, profile.brand)
+            refreshSaved()
+        }
     }
 
     fun describe(): String = blaster.describe() + "; catalog " + (catalog?.version ?: "missing")
@@ -231,6 +310,8 @@ class RemoteController(
         missedBeeps = 0
         agentAnswer?.cancel()
         agentAnswer = null
+        pendingTest = false
+        sameCandidate = null
         screen.active = false
         _ui.update { it.copy(panel = null, picker = null, task = null, padOpen = false, presses = emptyList()) }
     }
@@ -266,6 +347,31 @@ class RemoteController(
                 }
                 return true
             }
+            is RemotePanel.SameDevice -> {
+                when {
+                    CANCEL.containsMatchIn(t) -> cancel()
+                    else -> when (RemoteCommands.sameDevice(text)) {
+                        true -> sameDevice(true, text)
+                        false -> sameDevice(false, text)
+                        null -> host.speak("Is it the same ${panel.kind.noun} as before, or a different one?")
+                    }
+                }
+                return true
+            }
+            is RemotePanel.Aim -> {
+                when {
+                    CANCEL.containsMatchIn(t) -> cancel()
+                    panel.phase == AimPhase.Waiting && RemoteCommands.ready(text) -> aimReady()
+                    panel.phase == AimPhase.Asking -> when (RemoteCommands.answer(text)) {
+                        RemoteCommands.Answer.Yes -> aimAnswer(true)
+                        RemoteCommands.Answer.No -> aimAnswer(false)
+                        null -> host.speak("Did the ${panel.kind.noun} react? Say yes or no.")
+                    }
+                    panel.phase == AimPhase.Waiting -> host.speak("Say ready when the phone points at the ${panel.kind.noun}.")
+                    else -> Unit
+                }
+                return true
+            }
             is RemotePanel.Identifying, is RemotePanel.Preparing -> return false
             else -> Unit
         }
@@ -290,6 +396,10 @@ class RemoteController(
         val profile = ui.profile
         if (profile != null && PAIR_AGAIN.containsMatchIn(t)) {
             pairAgain(text)
+            return true
+        }
+        if (RemoteCommands.wantsRemoteTest(text) || (RemoteCommands.remoteBroken(text) && blaster.available)) {
+            startRemoteTest(RemoteCommands.deviceIn(text) ?: profile?.kind ?: DeviceKind.Tv, text)
             return true
         }
         return when (val parsed = RemoteCommands.parse(text, profile?.kind)) {
@@ -338,6 +448,7 @@ class RemoteController(
 
     /** Whether the volume keys answer pairing right now: up = it responded, down = no (one at a time only). */
     fun volumeKeyUsable(up: Boolean): Boolean {
+        if ((_ui.value.panel as? RemotePanel.Aim)?.phase == AimPhase.Asking) return true
         val panel = _ui.value.panel as? RemotePanel.Pair ?: return false
         if (panel.phase == PairPhase.Ready || panel.phase == PairPhase.Sending) return false
         return up || !panel.auto
@@ -345,7 +456,7 @@ class RemoteController(
 
     fun volumeKey(up: Boolean): Boolean {
         if (!volumeKeyUsable(up)) return false
-        answer(up)
+        if (_ui.value.panel is RemotePanel.Aim) aimAnswer(up) else answer(up)
         return true
     }
 
@@ -484,7 +595,8 @@ class RemoteController(
             auto = !oneByOne
             sentStep = null
             lastMark = null
-            screen.active = kind == DeviceKind.Tv || kind == DeviceKind.Projector
+            cameraTrusted = if (cameraOn) null else false
+            screen.active = cameraOn && (kind == DeviceKind.Tv || kind == DeviceKind.Projector)
             Log.i(TAG, "IR pairing ${kind.id}/$brand${if (common) " (common codes)" else ""}: ${models.size} models, ${p.tries} distinct codes")
             when (val step = p.current()) {
                 is Pairing.Step.Test -> {
@@ -529,6 +641,7 @@ class RemoteController(
                     kind = s.kind, brand = s.brand, stage = step.stage, attempt = step.attempt, attempts = step.attempts,
                     test = if (step.stage == 1) tests.firstLabel else tests.secondLabel ?: tests.firstLabel,
                     phase = phase, auto = auto, detected = detected,
+                    camera = (s.kind == DeviceKind.Tv || s.kind == DeviceKind.Projector) && cameraTrusted != false,
                 ),
                 badge = BadgeState.Pairing,
             )
@@ -655,7 +768,10 @@ class RemoteController(
                     verified = next.verified,
                     acState = if (next.verified) tests?.acSecond ?: tests?.acFirst else tests?.acFirst,
                 )
-                scope.launch(Dispatchers.IO) { store.save(profile) }
+                scope.launch(Dispatchers.IO) {
+                    store.save(profile)
+                    refreshSaved()
+                }
                 becomePaired(profile, announce = pairedLine(profile))
                 false
             }
@@ -675,16 +791,44 @@ class RemoteController(
         showStep(step, phaseAfterSend(kind))
         return when (kind) {
             DeviceKind.Ac -> if (beep.listen()) Seen.Yes else Seen.No
-            DeviceKind.Tv, DeviceKind.Projector -> when (screen.watch()) {
-                ScreenProbe.Verdict.Changed -> Seen.Yes
-                ScreenProbe.Verdict.Same -> Seen.No
-                ScreenProbe.Verdict.Unsure -> Seen.Unsure
+            DeviceKind.Tv, DeviceKind.Projector -> {
+                if (cameraTrusted == false) {
+                    // The camera can't see the screen: the user says when it reacts.
+                    delay(TAP_WINDOW_MS)
+                    return Seen.No
+                }
+                when (screen.watch()) {
+                    ScreenProbe.Verdict.Changed -> if (screenInView()) Seen.Yes else {
+                        cameraOff(kind)
+                        Seen.No
+                    }
+                    ScreenProbe.Verdict.Same -> Seen.No
+                    ScreenProbe.Verdict.Unsure -> Seen.Unsure
+                }
             }
             DeviceKind.Fan -> {
                 delay(FAN_WINDOW_MS)
                 Seen.No
             }
         }
+    }
+
+    /**
+     * A change the camera noticed only counts if a screen is really in the picture (the VLM checks once per
+     * pairing). Otherwise it was the floor or a hand moving.
+     */
+    private suspend fun screenInView(): Boolean {
+        cameraTrusted?.let { return it }
+        val visible = host.check(SCREEN_VISIBLE) == true
+        Log.i(TAG, "IR: screen in view for the camera check: $visible")
+        cameraTrusted = visible
+        return visible
+    }
+
+    private fun cameraOff(kind: DeviceKind) {
+        cameraTrusted = false
+        screen.active = false
+        host.speak("I can't see the ${kind.noun} screen from here, so say yes the moment it reacts.")
     }
 
     private suspend fun sendStep(s: PairSession, step: Pairing.Step.Test): Boolean {
@@ -740,6 +884,9 @@ class RemoteController(
         pendingCommand = null
         pendingRoutine = null
         pendingGoal = null
+        pendingTest = false
+        sameCandidate = null
+        testButton = null
         awaitingBrand = false
         screen.active = false
         _ui.update { it.copy(panel = null, picker = null, badge = it.profile?.let { BadgeState.Ready }) }
@@ -759,14 +906,17 @@ class RemoteController(
         val command = pendingCommand
         val routine = pendingRoutine
         val goal = pendingGoal
+        val test = pendingTest
         pendingCommand = null
         pendingRoutine = null
         pendingGoal = null
+        pendingTest = false
         cardJob?.cancel()
         cardJob = scope.launch {
             delay(PAIRED_CARD_MS)
             _ui.update { if (it.panel is RemotePanel.Paired) it.copy(panel = null) else it }
             when {
+                test -> aim(profile)
                 command != null -> run(command, null, byFixy = true)
                 routine != null -> startAgent(routineGoal(routine), null, routine)
                 goal != null -> startAgent(goal, null)
@@ -840,6 +990,11 @@ class RemoteController(
                 val updated = profile.copy(acState = next)
                 _ui.update { it.copy(profile = updated, lastSent = next.describe()) }
                 host.onProfile(updated)
+                // The saved remote remembers what was last sent too, for the next time its pad opens.
+                scope.launch(Dispatchers.IO) {
+                    store.update(updated)
+                    refreshSaved()
+                }
                 val heard = beep.listen()
                 missedBeeps = if (heard) 0 else missedBeeps + 1
                 _ui.update { it.copy(badge = if (agentRunning) BadgeState.Working else restingBadge(it)) }
@@ -1043,6 +1198,207 @@ class RemoteController(
         }
     }
 
+    // ---- Is it the device or the user's remote? ----
+
+    /**
+     * The user's own remote doesn't seem to work: test the device with Fixy's remote. With a device already held,
+     * aim right away; with one paired before, ask whether it's the same; otherwise identify and pair it first.
+     */
+    fun startRemoteTest(kind: DeviceKind, userText: String?) {
+        testButton = userText?.let { RemoteCommands.brokenKey(it) }
+            ?.takeIf { kind == DeviceKind.Tv || kind == DeviceKind.Projector }
+        if (catalog == null || !blaster.available) {
+            host.reply(userText, "This phone has no IR blaster, so I can't test the ${kind.noun} with my own remote.")
+            return
+        }
+        val held = _ui.value.profile
+        if (held != null && held.kind == kind) {
+            host.reply(userText, "Let me test the ${kind.noun} with my own remote, to see if it's the ${kind.noun} or your remote.")
+            aim(held)
+            return
+        }
+        job?.cancel()
+        job = scope.launch {
+            val saved = withContext(Dispatchers.IO) { store.latest(kind) }?.takeIf { modelFor(it) != null }
+            if (saved != null) {
+                sameCandidate = saved
+                _ui.update { it.copy(panel = RemotePanel.SameDevice(kind, saved), picker = null) }
+                host.reply(
+                    userText,
+                    "Let me test the ${kind.noun} with my own remote. Last time I used the ${saved.label} remote. " +
+                        "Is it the same ${kind.noun}, or a different one?",
+                )
+            } else {
+                host.reply(userText, "Let me test the ${kind.noun} with my own remote. First I need to know which one it is.")
+                takeForTest(kind, null)
+            }
+        }
+    }
+
+    /** The answer to "Is it the same TV as before?". */
+    fun sameDevice(same: Boolean, userText: String? = null) {
+        val saved = sameCandidate ?: (_ui.value.panel as? RemotePanel.SameDevice)?.saved ?: return
+        sameCandidate = null
+        if (same) {
+            _ui.update { it.copy(profile = saved, badge = BadgeState.Ready, panel = null, lastSent = null) }
+            host.onProfile(saved)
+            userText?.let { host.reply(it, "Okay, the same ${saved.label}.") }
+            aim(saved)
+        } else {
+            userText?.let { host.reply(it, "Okay, a different one. Let me see which ${saved.kind.noun} it is.") }
+            takeForTest(saved.kind, null)
+        }
+    }
+
+    private fun takeForTest(kind: DeviceKind, userText: String?) {
+        _ui.update { it.copy(panel = null) }
+        take(kind, userText)
+        // take() starts afresh; remember to test once it's paired.
+        pendingTest = true
+    }
+
+    /** Aim first: the card asks the user to point the phone and say when. */
+    private fun aim(profile: RemoteProfile) {
+        val (_, keyLabel) = testKey(profile.kind, profile)
+        screen.active = profile.kind == DeviceKind.Tv || profile.kind == DeviceKind.Projector
+        _ui.update { it.copy(panel = RemotePanel.Aim(profile.kind, profile.label, keyLabel, AimPhase.Waiting), badge = BadgeState.Ready) }
+        host.reply(
+            null,
+            when (profile.kind) {
+                DeviceKind.Tv, DeviceKind.Projector -> "Point the top of your phone at the ${profile.kind.noun} and keep its screen " +
+                    "in the camera. Tell me when you're ready."
+                else -> "Point the top of your phone at the ${profile.kind.noun} and tell me when you're ready."
+            },
+        )
+    }
+
+    /** "Ready": press the test key, then look (camera) or listen (AC); ask if neither can tell. */
+    fun aimReady() {
+        val panel = _ui.value.panel as? RemotePanel.Aim ?: return
+        if (panel.phase != AimPhase.Waiting) return
+        val profile = _ui.value.profile ?: return
+        val model = modelFor(profile) ?: return
+        val (command, _) = testKey(profile.kind, profile)
+        job?.cancel()
+        job = scope.launch {
+            _ui.update { it.copy(panel = panel.copy(phase = AimPhase.Sending)) }
+            val outcome = execute(profile, model, command, null, byFixy = true)
+            if (!outcome.sent) {
+                _ui.update { it.copy(panel = panel.copy(phase = AimPhase.Waiting)) }
+                host.reply(null, "That didn't go out. Say ready to try again.")
+                return@launch
+            }
+            _ui.update { it.copy(panel = panel.copy(phase = AimPhase.Checking)) }
+            val seen = when (profile.kind) {
+                DeviceKind.Ac -> outcome.beep == true
+                // Only when a screen is really in the picture: while aiming, the camera often faces the floor.
+                DeviceKind.Tv, DeviceKind.Projector -> screen.watch() == ScreenProbe.Verdict.Changed &&
+                    host.check(SCREEN_VISIBLE) == true
+                DeviceKind.Fan -> false
+            }
+            if (seen) {
+                _ui.update { it.copy(panel = panel.copy(phase = AimPhase.Checking, detected = true)) }
+                delay(DETECTED_PAUSE_MS)
+                concludeTest(profile, model, responded = true, seen = true)
+                return@launch
+            }
+            // The camera or the mic couldn't tell (the screen may be out of view): ask.
+            _ui.update { it.copy(panel = panel.copy(phase = AimPhase.Asking)) }
+            host.reply(null, testQuestion(profile.kind, pressedButton(command)))
+        }
+    }
+
+    /** The user's answer to "Did the volume change?". */
+    fun aimAnswer(responded: Boolean) {
+        val panel = _ui.value.panel as? RemotePanel.Aim ?: return
+        if (panel.phase != AimPhase.Asking) return
+        val profile = _ui.value.profile ?: return
+        val model = modelFor(profile) ?: return
+        job?.cancel()
+        job = scope.launch { concludeTest(profile, model, responded, seen = false) }
+    }
+
+    private suspend fun concludeTest(profile: RemoteProfile, model: IrCatalog.ModelCodes, responded: Boolean, seen: Boolean) {
+        val noun = profile.kind.noun
+        screen.active = false
+        _ui.update { it.copy(panel = null) }
+        val pressed = testButton
+        testButton = null
+        if (responded) {
+            // Put things back the way they were, where one key undoes the other.
+            testUndo(profile.kind, pressed)?.let { execute(_ui.value.profile ?: profile, model, it, null, byFixy = true) }
+            host.reply(
+                null,
+                (if (seen) "I saw the $noun react to my remote. " else "") +
+                    "The $noun works, so the problem is your remote. Put in two new batteries of the same kind, check the " +
+                    "springs inside are clean, and point it straight at the $noun. Until then, I can be your remote." +
+                    if (pressed == Button.Mute) " It's muted now: say \"unmute\" to bring the sound back." else "",
+            )
+        } else {
+            host.reply(
+                null,
+                "The $noun didn't react to my remote either, so the $noun itself may not be receiving. Make sure nothing " +
+                    "covers its sensor on the front, then unplug it for a minute and plug it back in. If it still ignores " +
+                    "both remotes, it needs a technician." +
+                    if (!profile.verified) " It's also possible I have the wrong code: say \"pair again\" to check." else "",
+            )
+        }
+    }
+
+    /**
+     * The key the test presses, and how the card names it: the key the user said doesn't work if this remote has
+     * it ("mute doesn't work" → mute), else a harmless default.
+     */
+    private fun testKey(kind: DeviceKind, profile: RemoteProfile): Pair<RemoteCommand, String> {
+        val named = testButton?.takeIf { b -> modelFor(profile)?.let { catalog?.pattern(it, b) } != null }
+        if (named != null) return RemoteCommand.Press(named) to named.label
+        return when (kind) {
+            DeviceKind.Tv -> RemoteCommand.Press(Button.VolUp) to "Volume up"
+            DeviceKind.Projector -> RemoteCommand.Press(Button.Menu) to "Menu"
+            DeviceKind.Ac -> RemoteCommand.Ac(AcChange.Warmer) to "Temperature up"
+            DeviceKind.Fan -> RemoteCommand.Press(Button.Speed) to "Speed"
+        }
+    }
+
+    private fun pressedButton(command: RemoteCommand): Button? = (command as? RemoteCommand.Press)?.button
+
+    /** The key that puts the test back (volume up ↔ down); none for toggles like mute or power. */
+    private fun testUndo(kind: DeviceKind, pressed: Button?): RemoteCommand? {
+        val button = pressed ?: when (kind) {
+            DeviceKind.Tv -> Button.VolUp
+            DeviceKind.Projector -> Button.Menu
+            DeviceKind.Ac -> return RemoteCommand.Ac(AcChange.Cooler)
+            DeviceKind.Fan -> return null
+        }
+        val undo = when (button) {
+            Button.VolUp -> Button.VolDown
+            Button.VolDown -> Button.VolUp
+            Button.ChUp -> Button.ChDown
+            Button.ChDown -> Button.ChUp
+            Button.Menu -> Button.Back
+            else -> null
+        }
+        return undo?.let { RemoteCommand.Press(it) }
+    }
+
+    private fun testQuestion(kind: DeviceKind, pressed: Button?): String {
+        val noun = kind.noun
+        return when (pressed) {
+            Button.Mute -> "I pressed mute. Did the $noun go quiet, or show a mute sign?"
+            Button.VolUp -> "I pressed volume up. Did the $noun get louder, or show a volume bar?"
+            Button.VolDown -> "I pressed volume down. Did the $noun get quieter, or show a volume bar?"
+            Button.ChUp, Button.ChDown -> "I pressed channel. Did the channel change?"
+            Button.Input -> "I pressed input. Did the $noun switch its source?"
+            Button.Power -> "I pressed power. Did the $noun switch off or on?"
+            Button.Menu -> "I pressed menu. Did a menu open on the $noun?"
+            else -> when (kind) {
+                DeviceKind.Ac -> "I pressed temperature up. Did the AC beep or change its display?"
+                DeviceKind.Fan -> "I pressed speed. Did the fan change speed?"
+                else -> "Did the $noun react?"
+            }
+        }
+    }
+
     /** Stop controlling: the badge goes, the device stays in the paired list for next time. */
     fun release(userText: String?) {
         val profile = _ui.value.profile ?: return
@@ -1056,7 +1412,10 @@ class RemoteController(
     fun pairAgain(userText: String? = null) {
         val profile = _ui.value.profile ?: return
         userText?.let { host.reply(it, "Okay, let's pair the ${profile.label} again.") }
-        scope.launch(Dispatchers.IO) { store.forget(profile.kind, profile.brand) }
+        scope.launch(Dispatchers.IO) {
+            store.forget(profile.kind, profile.brand)
+            refreshSaved()
+        }
         startPairing(profile.kind, profile.brand, useSaved = false)
     }
 
@@ -1181,7 +1540,11 @@ class RemoteController(
         AcChange.Swing -> Triple("ac_swing", if (next.swing) "Swing on" else "Swing off", null)
     }
 
-    private fun aimLine(kind: DeviceKind, codes: Int): String = when (kind) {
+    private fun aimLine(kind: DeviceKind, codes: Int): String = if (!cameraOn) when (kind) {
+        DeviceKind.Ac -> "Point the top of your phone at the AC and tap Start. I'll try $codes codes and listen for its beep."
+        else -> "Point the top of your phone at the ${kind.noun} and tap Start. I'll try $codes codes. " +
+            "Tap It responded the moment the ${kind.noun} reacts."
+    } else when (kind) {
         DeviceKind.Ac -> "Point the top of your phone at the AC and tap Start. I'll try $codes codes and listen for its beep."
         DeviceKind.Tv -> "Point the top of your phone at the TV, keep the screen in view, and tap Start. " +
             "I'll try $codes codes and watch for the volume bar."
@@ -1225,6 +1588,9 @@ class RemoteController(
         const val NEXT_TEST_PAUSE_MS = 900L
         const val SCAN_GAP_MS = 250L
         const val FAN_WINDOW_MS = 2200L
+        /** Pairing without the camera: time to say "yes" after each code. */
+        const val TAP_WINDOW_MS = 2500L
+        const val SCREEN_VISIBLE = "a TV or projector screen is clearly visible in this picture"
         const val PAIRED_CARD_MS = 1400L
         const val REPEAT_GAP_MS = 350L
         const val INPUT_SETTLE_MS = 3000L

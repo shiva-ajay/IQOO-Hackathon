@@ -51,6 +51,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.fixlens.ir.AimPhase
 import com.fixlens.ir.DeviceKind
 import com.fixlens.ir.PairPhase
 import com.fixlens.ir.RemotePanel
@@ -75,6 +76,12 @@ class PanelActions(
     val onTryCommon: () -> Unit,
     val onOneByOne: () -> Unit,
     val onClose: () -> Unit,
+    /** "Same TV as before?" */
+    val onSame: (Boolean) -> Unit = {},
+    /** The phone is aimed: press the test key. */
+    val onAimReady: () -> Unit = {},
+    /** "Did it react?" in the device-or-remote test. */
+    val onAimAnswer: (Boolean) -> Unit = {},
 )
 
 private val PanelShape = RoundedCornerShape(28.dp)
@@ -119,6 +126,8 @@ fun PairingPanel(panel: RemotePanel, actions: PanelActions, modifier: Modifier =
                 is RemotePanel.Pair -> Pairing(p, actions)
                 is RemotePanel.NoMatch -> NoMatch(p, actions)
                 is RemotePanel.Paired -> Paired(p)
+                is RemotePanel.SameDevice -> SameDevice(p, actions)
+                is RemotePanel.Aim -> AimTest(p, actions)
             }
         }
     }
@@ -231,7 +240,7 @@ private fun statusLine(p: RemotePanel.Pair): String {
         PairPhase.Ready -> if (p.auto) "Tap to start" else "Send test: ${p.test}"
         PairPhase.Sending -> "Sending ${p.test.lowercase()}"
         PairPhase.Listening -> "Listening for the beep"
-        PairPhase.Watching -> if (p.kind == DeviceKind.Fan) "Watching for the fan to react" else "Watching the screen"
+        PairPhase.Watching -> if (p.camera) "Watching the screen" else "Say yes the moment the $noun reacts"
         PairPhase.Asking -> "Sent: ${p.test.lowercase()}"
     }
 }
@@ -412,6 +421,82 @@ private fun Paired(p: RemotePanel.Paired) {
             style = BodyStyle,
             modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
         )
+    }
+}
+
+@Composable
+private fun SameDevice(p: RemotePanel.SameDevice, actions: PanelActions) {
+    val noun = p.kind.noun
+    Column {
+        Header(title = "Same $noun as before?", onClose = actions.onClose)
+        Spacer(Modifier.height(4.dp))
+        Text(
+            "Last time I used the ${p.saved.label} remote (model ${p.saved.modelNumber}). If it's the same $noun, I can test it right away.",
+            color = Muted,
+            style = BodyStyle,
+        )
+        Spacer(Modifier.height(20.dp))
+        PrimaryButton("Same $noun", { actions.onSame(true) }, Modifier.fillMaxWidth())
+        Spacer(Modifier.height(10.dp))
+        SecondaryButton("A different $noun", { actions.onSame(false) }, Modifier.fillMaxWidth())
+    }
+}
+
+/**
+ * Is it the device or the user's remote? Aim, then Fixy presses one key with its own remote and checks the
+ * result with the camera (TV), the beep (AC), or by asking.
+ */
+@Composable
+private fun AimTest(p: RemotePanel.Aim, actions: PanelActions) {
+    val noun = p.kind.noun
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Header(title = "Test the $noun", onClose = actions.onClose)
+        Text(
+            "I'll press ${p.key.lowercase()} with my remote. If the $noun reacts, your own remote is the problem.",
+            color = Muted,
+            style = BodyStyle.copy(fontSize = 13.sp),
+        )
+        Spacer(Modifier.height(18.dp))
+        when (p.phase) {
+            AimPhase.Waiting -> {
+                AimHint(p.kind)
+                Spacer(Modifier.height(16.dp))
+                PrimaryButton("I'm pointing at it", actions.onAimReady, Modifier.fillMaxWidth())
+                Spacer(Modifier.height(8.dp))
+                Text("Or just say \"ready\".", color = Muted, style = BodyStyle.copy(fontSize = 12.sp))
+            }
+            AimPhase.Sending, AimPhase.Checking -> {
+                val detected = p.detected
+                Box(
+                    Modifier.size(84.dp).clip(CircleShape).background(if (detected) Confirmed else Amber.copy(alpha = 0.9f)),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    if (detected) CheckGlyph(Ink, Modifier.size(36.dp)) else RemoteGlyph(Ink, Modifier.size(40.dp), restAlpha = 0.9f)
+                }
+                Spacer(Modifier.height(12.dp))
+                Text(
+                    when {
+                        detected -> "The $noun reacted"
+                        p.phase == AimPhase.Sending -> "Pressing ${p.key.lowercase()}"
+                        p.kind == DeviceKind.Ac -> "Listening for the beep"
+                        else -> "Watching the screen"
+                    },
+                    color = if (detected) Confirmed else Paper,
+                    style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Medium),
+                    modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
+                )
+            }
+            AimPhase.Asking -> {
+                Text("Did the $noun react?", color = Paper, style = TitleStyle.copy(fontSize = 18.sp))
+                Spacer(Modifier.height(14.dp))
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    SecondaryButton("No", { actions.onAimAnswer(false) }, Modifier.weight(1f))
+                    PrimaryButton("Yes, it did", { actions.onAimAnswer(true) }, Modifier.weight(1f))
+                }
+                Spacer(Modifier.height(10.dp))
+                Text("Volume keys work too: up for yes, down for no.", color = Muted, style = BodyStyle.copy(fontSize = 12.sp))
+            }
+        }
     }
 }
 

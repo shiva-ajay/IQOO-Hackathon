@@ -96,6 +96,55 @@ The core idea: **the AI model is just the engine. FixLens is the whole car.**
 
 ---
 
+## 3B. More tough questions about daily use
+
+**Rule for all of these: only say what is true today.** If you have not tried something on the
+phone, say "it can" or "I'm building it", never "it does". Judges forgive "not yet". They do not
+forgive a claim that falls apart in the demo.
+
+**"How often do YOU use this app?"** (they mean you, the builder)
+Say only what is true. Fill in the blanks with real facts:
+> "I've been testing it on my own [car / washing machine / AC / TV] while building it, about
+> [how often] a week. It's a new build, so I can't say I've used it for a year. But it has
+> already shown me one thing: [one real moment, e.g. 'it pointed me to the oil dipstick on my
+> car in seconds']. The better question is how often a family would need it, and I think it's
+> more than people expect."
+
+**"How often would a normal person use it?"**
+> "Two ways. First, when something breaks — not daily, like a fire extinguisher. Second,
+> every day: Fixy can also work as a remote for your AC or TV through the phone's IR blaster.
+> You say 'set it to 24' or 'volume up' and it does it. And it remembers your last repair and
+> asks you, 'Is it working fine now?' So it is a small helper that stays on your phone, not an
+> app you open once."
+
+**Check first:** the remote feature is built but only partly tried on the phone (TV and AC codes
+were sent, the AC decoder runs). Try it by hand before Round 2. If it works, demo it in 10
+seconds. If not, say "I'm building it" and skip the demo.
+
+**"Isn't this a rarely-used app? People will uninstall it."**
+> "Some apps are used rarely and still matter, like a first-aid kit or a spare tyre. And nobody
+> deletes those. What makes FixLens different from a plain repair app is that it also gives a
+> reason to open it on normal days: the remote, and Fixy checking back on your last repair."
+
+**"Why not just watch YouTube?"**
+> "YouTube needs internet, and the video is for someone else's model. You end up pausing it with
+> dirty hands. Fixy sees your exact machine, talks to you, and points at the part — and it works
+> in a basement with no signal."
+
+**"Do you have real users, or proof people want this?"**
+Answer honestly. Do not make up numbers.
+> "Not a proper study yet. I've tried it myself and with [number] friends / family. After this
+> hackathon, my first step is to put it in front of 10 households and watch where they get stuck."
+
+**"How fast is it?"** (be ready, this one is easy to overclaim)
+The Round 1 deck says "about 2 to 3 seconds" as a target. Your real measured number is about
+5 seconds to the marker today, and a "Let me look." filler plays at once so it never feels silent.
+> "Right now it takes about five seconds for the marker to appear on a phone with no internet.
+> While it thinks, Fixy says 'Let me look' so you're not waiting in silence. Making it faster is
+> my next step."
+
+---
+
 ## 4. How to handle a tough question you didn't expect
 
 Simple 3-step habit, works for almost anything they throw at you:

@@ -29,7 +29,16 @@ data class KbEntry(
     /** How to do each safety line, by position (null = none), e.g. unplug first. */
     @SerialName("safety_anim") val safetyAnim: List<StepAnim?> = emptyList(),
     val steps: List<KbStep> = emptyList(),
+    /** A routine check: once its guide is finished, Fixy schedules a reminder to do it again (alerts/). */
+    val remind: KbRemind? = null,
     val source: String = "",
+)
+
+/** When to check again ([afterDays] after the guide is finished) and the reminder's words, shown verbatim. */
+@Serializable
+data class KbRemind(
+    @SerialName("after_days") val afterDays: Int,
+    val say: String,
 )
 
 /** [codes] as shown on the display ("5C", "OE"); [spoken] how people say them ("five c", "oh e"). */

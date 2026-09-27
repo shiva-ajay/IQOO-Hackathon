@@ -5,6 +5,9 @@ import android.content.pm.ApplicationInfo
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.fixlens.alerts.Alert
+import com.fixlens.alerts.AlertScheduler
+import com.fixlens.alerts.Alerts
 import com.fixlens.camera.FrameGrabber
 import com.fixlens.guide.ConversationContext
 import com.fixlens.guide.FixyPrompts
@@ -15,7 +18,9 @@ import com.fixlens.guide.Intent
 import com.fixlens.guide.GuideState
 import com.fixlens.guide.GuideView
 import com.fixlens.guide.entry
+import com.fixlens.ir.DeviceKind
 import com.fixlens.ir.RemoteController
+import com.fixlens.ir.RemotePanel
 import com.fixlens.ir.RemoteProfile
 import com.fixlens.ir.RemoteUi
 import com.fixlens.kb.KbRepository
@@ -23,7 +28,9 @@ import com.fixlens.kb.KnowledgeBase
 import com.fixlens.kb.Retriever
 import com.fixlens.guide.MemoryRules
 import com.fixlens.guide.Recall
+import com.fixlens.kb.KbEntry
 import com.fixlens.session.RepairSession
+import com.fixlens.session.SessionMemory
 import com.fixlens.session.SessionRepository
 import com.fixlens.session.TitleSource
 import com.fixlens.session.Turn
@@ -56,6 +63,9 @@ sealed interface Screen {
     data object Session : Screen
 }
 
+/** The home screen's pages, picked in the side drawer. */
+enum class HomePage { Repairs, Remote, Alerts }
+
 data class UiState(
     val screen: Screen = Screen.Sessions,
     // Engine (loads once at app start, while the user is on the sessions list)
@@ -65,6 +75,16 @@ data class UiState(
     // Sessions list
     val sessions: List<RepairSession> = emptyList(),
     val sessionsLoaded: Boolean = false,
+    // Home drawer pages
+    val home: HomePage = HomePage.Repairs,
+    /** Fixy's latest line about the remote on the home universal remote (there's no conversation card there). */
+    val remoteNote: String? = null,
+    /** Fixy's reminders for routine checks (alerts/), due ones first. */
+    val alerts: List<Alert> = emptyList(),
+    /** The alert a notification tap opened, highlighted on the alerts page. */
+    val focusAlert: String? = null,
+    /** A reminder was just scheduled: the activity asks for the notification permission if it's missing. */
+    val askNotifications: Boolean = false,
     // Open session
     val session: RepairSession? = null,
     val phase: Phase = Phase.Loading,
@@ -175,12 +195,29 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
      * the greeting; null otherwise, so an old car repair never colors a new session about a laptop.
      */
     private var pastRepairs: String? = null
+    /**
+     * Set while (and after) a "remote not working" guide: the device whose remote the user says is broken. Their
+     * "still not working" then starts the device-or-remote test (ir/RemoteController.startRemoteTest).
+     */
+    private var remoteTrouble: com.fixlens.ir.DeviceKind? = null
+    private val alertStore = AlertScheduler.store(app)
+    /** A check opened from a reminder before the engine was ready; it starts once the session is ready. */
+    private var pendingCheck: KbEntry? = null
+    /** "Start the check" tapped (a notification at a cold start) before the KB loaded. */
+    private var pendingAlertStart: String? = null
+    /** The mic is open on the home remote to hear an AC's pairing beep. */
+    private var homeMic = false
 
     init {
         refreshSessions()
         viewModelScope.launch(Dispatchers.IO) { loadKb() }
         viewModelScope.launch(Dispatchers.IO) { remote.load() }
         speech.monitor = remote.beep::feed
+        refreshAlerts()
+        // An alert delivered while the app is open shows up at once.
+        viewModelScope.launch { AlertScheduler.changes.collect { refreshAlerts() } }
+        // Pairing an AC on the home remote: open the mic so its beep is heard (nothing is kept; see SpeechInput).
+        viewModelScope.launch { remote.ui.collect { updateHomeMic(it) } }
         viewModelScope.launch(Dispatchers.IO) {
             _state.update { it.copy(loadingStep = "Loading speech recognition") }
             if (!speech.load()) {
@@ -220,6 +257,9 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
         frameGrabber.clear()
         clearMarker()
         endGuide()
+        remoteTrouble = null
+        stopHomeMic()
+        remote.cameraOn = true
         remote.attach(session.remote)
         val last = session.turns.lastOrNull()
         pastRepairs = session.followUpOf?.takeIf { session.turns.isEmpty() }
@@ -262,11 +302,16 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
         val session = s.session ?: return
         if (!s.typing) speech.start()
         viewModelScope.launch { runCatching { context.prewarm(session, pastRepairs) }.onFailure { Log.e(TAG, "Prewarm failed", it) } }
+        pendingCheck?.let { entry ->
+            pendingCheck = null
+            showGuide(checkQuestion(entry), Guide.start(entry))
+        }
     }
 
     fun closeSession() {
         cancelTurn()
         greetedId = null
+        pendingCheck = null
         remote.detach()
         speech.stop()
         frameGrabber.clear()
@@ -301,6 +346,163 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
             _state.update { it.copy(sessions = list, sessionsLoaded = true) }
         }
     }
+
+    // ---- Home drawer: universal remote and alerts ----
+
+    fun showHome(page: HomePage) {
+        val from = _state.value.home
+        if (from == HomePage.Remote && page != HomePage.Remote) remote.detach()
+        // The home remote has no camera: pairing waits for the user's "It responded" (or an AC's beep).
+        if (page == HomePage.Remote) remote.cameraOn = false
+        _state.update { it.copy(home = page, remoteNote = null, focusAlert = if (page == HomePage.Alerts) it.focusAlert else null) }
+        if (page == HomePage.Alerts) refreshAlerts()
+    }
+
+    /** Opens a saved remote's pad. */
+    fun homeUseRemote(profile: RemoteProfile) {
+        remote.cameraOn = false
+        remote.attach(profile)
+        _state.update { it.copy(remoteNote = null) }
+    }
+
+    /** Back to the saved remotes (the device stays saved). */
+    fun homeCloseRemote() {
+        remote.detach()
+        _state.update { it.copy(remoteNote = null) }
+    }
+
+    /** "Add a remote": the device kind is tapped, so no camera look; the brand picker opens. */
+    fun homeAddRemote(kind: DeviceKind) {
+        remote.cameraOn = false
+        _state.update { it.copy(remoteNote = null) }
+        remote.chooseDevice(kind)
+    }
+
+    fun homeRenameRemote(profile: RemoteProfile, name: String) = remote.renameSaved(profile, name)
+    fun homeForgetRemote(profile: RemoteProfile) = remote.forgetSaved(profile)
+
+    private fun updateHomeMic(ui: RemoteUi) {
+        val s = _state.value
+        val pairingAc = s.screen == Screen.Sessions && s.home == HomePage.Remote &&
+            ((ui.panel as? RemotePanel.Pair)?.kind == DeviceKind.Ac)
+        if (pairingAc && !homeMic) {
+            homeMic = true
+            speech.start()
+        } else if (!pairingAc) {
+            stopHomeMic()
+        }
+    }
+
+    private fun stopHomeMic() {
+        if (!homeMic) return
+        homeMic = false
+        if (_state.value.screen == Screen.Sessions) speech.stop()
+    }
+
+    fun refreshAlerts() {
+        viewModelScope.launch {
+            val all = withContext(Dispatchers.IO) { alertStore.all() }
+            _state.update { it.copy(alerts = Alerts.ordered(all)) }
+        }
+    }
+
+    /** A finished routine check: schedule the next one, as the KB entry says. */
+    private fun scheduleReminder(entry: KbEntry) {
+        val session = _state.value.session
+        val alert = Alerts.plan(entry, System.currentTimeMillis(), kb?.version, session?.id, session?.title) ?: return
+        val app = getApplication<Application>()
+        viewModelScope.launch {
+            val replaced = withContext(Dispatchers.IO) {
+                val before = alertStore.all().filter { it.entryId == entry.id }
+                alertStore.edit { Alerts.add(it, alert) }
+                before
+            }
+            replaced.forEach { AlertScheduler.disarm(app, it.id) }
+            AlertScheduler.arm(app, alert)
+            Log.i(TAG, "Reminder scheduled by Fixy: ${entry.id} in ${entry.remind?.afterDays} days (kb ${kb?.version})")
+            refreshAlerts()
+            if (!AlertScheduler.notificationsAllowed(app)) _state.update { it.copy(askNotifications = true) }
+        }
+    }
+
+    fun notificationsAsked() = _state.update { it.copy(askNotifications = false) }
+
+    /** Cancels an upcoming reminder, or clears one that's due. */
+    fun dismissAlert(id: String) {
+        val app = getApplication<Application>()
+        AlertScheduler.disarm(app, id)
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) { alertStore.edit { list -> list.filterNot { it.id == id } } }
+            refreshAlerts()
+        }
+    }
+
+    /** Demo: the reminder fires in a few seconds instead of in days, so the notification can be shown. */
+    fun testAlert(id: String) {
+        val app = getApplication<Application>()
+        viewModelScope.launch {
+            var armed: Alert? = null
+            withContext(Dispatchers.IO) {
+                alertStore.edit { list ->
+                    list.map { if (it.id == id) it.copy(dueAt = System.currentTimeMillis() + TEST_ALERT_MS, delivered = false).also { a -> armed = a } else it }
+                }
+            }
+            armed?.let { AlertScheduler.arm(app, it) }
+            refreshAlerts()
+        }
+    }
+
+    /** "Start the check" on a reminder: a new session opens on the entry's guide (safety lines first). */
+    fun startAlertCheck(id: String) {
+        if (kb == null) {
+            pendingAlertStart = id
+            return
+        }
+        val alert = _state.value.alerts.firstOrNull { it.id == id } ?: alertStore.get(id) ?: return
+        val entry = kb?.entries?.firstOrNull { it.id == alert.entryId } ?: run {
+            Log.w(TAG, "Alert $id: KB entry ${alert.entryId} not found")
+            return
+        }
+        AlertScheduler.disarm(getApplication(), id)
+        viewModelScope.launch(Dispatchers.IO) { alertStore.edit { list -> list.filterNot { it.id == id } } }
+        _state.update { it.copy(home = HomePage.Repairs, focusAlert = null) }
+        remote.detach()
+        val memory = SessionMemory(appliance = MemoryRules.applianceName(entry.appliance))
+        open(repo.create().copy(memory = memory))
+        if (_state.value.engineReady) showGuide(checkQuestion(entry), Guide.start(entry)) else pendingCheck = entry
+    }
+
+    /** A notification tap: the alerts page with that alert, or ([start]) straight into its check. */
+    fun openAlert(id: String, start: Boolean) {
+        if (start) {
+            refreshAlerts()
+            startAlertCheck(id)
+            return
+        }
+        if (_state.value.screen == Screen.Session) closeSession()
+        showHome(HomePage.Alerts)
+        _state.update { it.copy(focusAlert = id) }
+    }
+
+    /** Debug (`--es remind <entry id> --ei remindsec N`): schedules an entry's reminder N seconds from now. */
+    fun debugRemind(entryId: String, seconds: Int = 5, title: String? = null, body: String? = null) {
+        val entry = kb?.entries?.firstOrNull { it.id == entryId }
+        // A demo alert may carry its own title and text (`--es alerttitle`, `--es alertbody`); it still opens [entry].
+        val alert = entry?.let { Alerts.plan(it.copy(remind = it.remind ?: com.fixlens.kb.KbRemind(7, "")), System.currentTimeMillis(), kb?.version, null, null) }
+            ?.let { a -> a.copy(title = title ?: a.title, body = body ?: a.body) }
+            ?.copy(dueAt = System.currentTimeMillis() + seconds * 1000L)
+        if (alert == null) {
+            Log.w(TAG, "Debug remind: no KB entry $entryId with a remind")
+            return
+        }
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) { alertStore.edit { Alerts.add(it, alert) } }
+            AlertScheduler.arm(getApplication(), alert)
+            refreshAlerts()
+        }
+    }
+
+    private fun checkQuestion(entry: KbEntry) = "Reminder: ${entry.title.replaceFirstChar { it.lowercase() }}"
 
     // ---- Conversation ----
 
@@ -416,6 +618,9 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
     fun remoteAnswer(responded: Boolean) = remote.answer(responded)
     fun remoteTryCommon() = remote.tryCommonCodes()
     fun remoteStartScan() = remote.startScan()
+    fun remoteSameDevice(same: Boolean) = remote.sameDevice(same)
+    fun remoteAimReady() = remote.aimReady()
+    fun remoteAimAnswer(responded: Boolean) = remote.aimAnswer(responded)
     fun remotePauseScan() = remote.pauseScan()
     fun remoteOneByOne() = remote.retryOneByOne()
     fun remoteVolumeKeyUsable(up: Boolean): Boolean = remote.volumeKeyUsable(up)
@@ -431,6 +636,14 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
     /** Fixy's line about the remote in the conversation card, spoken; a user command is saved as a turn. */
     private fun remoteReply(userText: String?, answer: String) {
         val s = _state.value
+        if (s.screen == Screen.Sessions) {
+            // The home remote: Fixy's line shows under the page title and is spoken.
+            if (s.home == HomePage.Remote) {
+                _state.update { it.copy(remoteNote = answer) }
+                voice.speak(answer, voice.epoch())
+            }
+            return
+        }
         if (s.screen != Screen.Session) return
         if (userText != null) {
             cancelTurn()
@@ -525,6 +738,17 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
      */
     private fun ask(question: String, target: String? = null, image: File? = null) {
         val session = _state.value.session ?: return
+        // The user's remote doesn't work and the guide's fix didn't help ("still not working", "diagnose it"): test
+        // the device with Fixy's own remote, which tells whether the device or the user's remote is at fault.
+        val trouble = remoteTrouble
+        if (target == null && image == null && trouble != null && remote.ui.value.panel == null &&
+            com.fixlens.ir.RemoteCommands.stillBroken(question)
+        ) {
+            endGuide()
+            remoteTrouble = null
+            remote.startRemoteTest(trouble, question)
+            return
+        }
         // Remote words first: a pairing answer, a brand, "take the remote", "set it to 24" (no VLM needed).
         if (target == null && image == null && remote.handle(question)) return
         // A KB match starts a guided repair, and "done", "back"… drive it: the words come from the KB, not the VLM.
@@ -759,6 +983,10 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
         kb = loaded
         retriever = Retriever(loaded)
         Log.i(TAG, "KB ${loaded.version}: ${loaded.entries.size} entries")
+        pendingAlertStart?.let { id ->
+            pendingAlertStart = null
+            viewModelScope.launch(Dispatchers.Main) { startAlertCheck(id) }
+        }
     }
 
     /**
@@ -797,6 +1025,16 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
         // Asking about the repair already in progress is a follow-up, not a restart.
         if (match.entry.id == entry?.id && guideState !is GuideState.Done) return false
         Log.i(TAG, "KB match ${match.entry.id} (stage ${match.stage}: ${match.why}; appliance $appliance, brand $brand), kb ${kb?.version}")
+        // "My TV remote isn't working": with an IR blaster, Fixy tests the device with its own remote right away,
+        // which tells whether the device or the user's remote is at fault (the battery tips come with the verdict).
+        val remoteKind = deviceOf(match.entry.appliance)
+        if (match.entry.id.endsWith("remote_not_working") && remoteKind != null && remote.ui.value.available) {
+            endGuide()
+            remoteTrouble = null
+            Log.i(TAG, "Remote not working: testing the ${remoteKind.id} with Fixy's remote instead of ${match.entry.id}")
+            remote.startRemoteTest(remoteKind, text)
+            return true
+        }
         showGuide(text, Guide.start(match.entry))
         return true
     }
@@ -807,7 +1045,11 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
         clearMarker()
         guideJob?.cancel()
         guideState = state
+        // A "remote not working" repair: if its fix doesn't help, Fixy can test the device with its own remote.
+        state.entry()?.let { e -> remoteTrouble = if (e.id.endsWith("remote_not_working")) deviceOf(e.appliance) else null }
         val ins = Guide.instruction(state) ?: return endGuide()
+        // A routine check was finished: Fixy schedules the next one (the Done line says when).
+        if (state is GuideState.Done) scheduleReminder(state.entry)
         _state.update {
             it.copy(
                 question = question, questionFinal = true, answer = ins.say, timing = "Repair guide · ${kb?.version}",
@@ -818,11 +1060,25 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
         // The KB's words, spoken verbatim; the step's part is pointed at meanwhile.
         voice.speak(ins.say, voice.epoch())
         _state.value.session?.let { saveTurn(it.id, question, ins.say, null, 0) }
+        remoteTrouble?.let { kind ->
+            if (remote.ui.value.available) {
+                _state.update { it.copy(hint = "Still not working? Say so and I'll test the ${kind.noun} with my own remote") }
+            }
+        }
         if (ins.target == null && ins.verify == null) return
         guideJob = viewModelScope.launch {
             ins.target?.let { pointAtStep(it) }
             ins.verify?.let { verifyStep(state, it) }
         }
+    }
+
+    /** The KB's appliance name → the remote's device kind (only the ones Fixy has a remote for). */
+    private fun deviceOf(appliance: String): com.fixlens.ir.DeviceKind? = when (appliance) {
+        "television", "tv" -> com.fixlens.ir.DeviceKind.Tv
+        "air_conditioner", "ac" -> com.fixlens.ir.DeviceKind.Ac
+        "projector" -> com.fixlens.ir.DeviceKind.Projector
+        "fan", "ceiling_fan" -> com.fixlens.ir.DeviceKind.Fan
+        else -> null
     }
 
     private fun endGuide() {
@@ -969,5 +1225,7 @@ class FixLensViewModel(app: Application) : AndroidViewModel(app) {
         const val SEEN_DONE = "✓ Looks done"
         const val HOLD_HINT = "Hold the mic while you talk"
         const val HINT_MS = 2500L
+        /** "Test" on an alert: it fires this soon, to show the notification. */
+        const val TEST_ALERT_MS = 5000L
     }
 }

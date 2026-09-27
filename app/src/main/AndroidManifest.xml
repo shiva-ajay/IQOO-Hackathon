@@ -10,6 +10,9 @@
     <!-- "Fixy takes the remote": the phone's IR blaster (a normal permission: no prompt, no network). -->
     <uses-permission android:name="android.permission.TRANSMIT_IR" />
     <uses-feature android:name="android.hardware.consumerir" android:required="false" />
+    <!-- Fixy's reminders for routine checks (alerts/): a local notification, and re-arming them after a reboot. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <!-- Offline by design: strip any network permission a library tries to merge in. -->
     <uses-permission android:name="android.permission.INTERNET" tools:node="remove" />
@@ -36,5 +39,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <receiver
+            android:name=".alerts.AlertReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>

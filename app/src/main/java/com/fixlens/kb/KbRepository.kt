@@ -47,6 +47,12 @@ object KbRepository {
             if (e.safetyAnim.size > e.safety.size) out += "$at: safety_anim has more items than safety"
             e.safetyAnim.forEachIndexed { i, a -> a?.let { animProblem(it, e.safety[minOf(i, e.safety.lastIndex)]) }?.let { out += "$at: safety ${i + 1} $it" } }
             e.steps.forEach { s -> s.anim?.let { animProblem(it, s.say) }?.let { out += "$at: step ${s.n} $it" } }
+            e.remind?.let { r ->
+                if (e.severity == Severity.CallTechnician) out += "$at: call_technician entries set no reminder"
+                if (r.afterDays !in 1..MAX_REMIND_DAYS) out += "$at: remind after_days must be 1..$MAX_REMIND_DAYS"
+                if (r.say.isBlank()) out += "$at: remind has nothing to say"
+                if (words(r.say) > MAX_SAY_WORDS) out += "$at: remind is ${words(r.say)} words (max $MAX_SAY_WORDS)"
+            }
             if (e.source.isBlank()) out += "$at: no source"
             e.brandCodes.filter { it.brand.isBlank() || it.codes.isEmpty() }.forEach { out += "$at: a brand_codes item needs a brand and codes" }
             for ((brand, forms) in e.codeForms()) for (code in forms.filter { !it.contains(' ') }) {
@@ -87,7 +93,9 @@ object KbRepository {
 
     /** CLAUDE.md §7 / kb-collection-plan.md: one action per step, speakable in one breath. */
     const val MAX_SAY_WORDS = 20
-    /** `meaning` and safety lines are spoken too, a little longer is fine. */
+    /** A routine check comes round at least once a year. */
+    const val MAX_REMIND_DAYS = 365
+        /** `meaning` and safety lines are spoken too, a little longer is fine. */
     const val MAX_LINE_WORDS = 25
     /** Normalized codes that are everyday words ("AC" the appliance, "ON"), so they'd match ordinary speech. */
     private val WORD_CODES = setOf("AC", "TV", "0N", "N0", "0K", "IF", "IS", "IT", "AT", "AN", "AS", "BE", "D0", "G0", "UP", "US", "WE", "MY", "BY", "T0", "S0", "0R", "0F", "IN", "A", "I")

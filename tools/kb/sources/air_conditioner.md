@@ -181,3 +181,11 @@ straight to a technician (conservative; `call_technician` entries have no steps)
 - "my AC is leaking" and "the AC smells" deliberately tie (→ no stage-2 match) so that "AC gas leak" and "burning
   smell from the AC" always reach this technician entry rather than the water or smell guides.
 - "not cooling" with no appliance named ties with `refrigerator_not_cooling` (as intended); "AC not cooling" wins.
+
+---
+
+## Reminder interval (`remind`, checked 2026-09-27)
+
+| Entry | after_days | Sources |
+|---|---|---|
+| air_conditioner_not_cooling | 14 | Steps 6-10 clean the filters. LG India filter page, Samsung India optimum-cooling page and Daikin manual p.34/36 all say every 2 weeks (Panasonic: "regularly") |

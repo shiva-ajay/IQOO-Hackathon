@@ -241,3 +241,11 @@ not listed and nothing here uses E3. Its Bosch rows come from an aggregator, so 
   `build_kb.py` and `KbTest` weren't run, because they write outside this category's files.
 - Gap: "leaking" matches no entry. Leaks have their own DIY checks (Samsung p.53, IFB p.66: tighten the hose
   connections and the drain filter), so a leak entry would be the next one to write.
+
+---
+
+## Reminder interval (`remind`, checked 2026-09-27)
+
+| Entry | after_days | Sources |
+|---|---|---|
+| washing_machine_bad_smell | 30 | Tub clean monthly: IFB p.61, LG error list (tcL), Whirlpool odour page; Samsung p.43 every 40 washes |

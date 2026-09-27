@@ -1,5 +1,6 @@
 package com.fixlens.ui
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.LinearEasing
@@ -30,6 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -80,6 +82,7 @@ import kotlin.math.sin
 // cap, chevrons along the way a dipstick comes out, drops falling in). One amber motion per pictogram, a slow loop
 // with a long rest, and still when the system has animations off. What to show comes from the KB, never the VLM.
 
+private const val TAG = "FixLens"
 private val TechRed = Color(0xFFFF5A5F)
 private val Ok = Online
 private val Line = Paper.copy(alpha = 0.92f)
@@ -91,8 +94,8 @@ private const val STILL_MS = 1700f
 /** The on-part cue waits for the marker's lock-on to finish. */
 private const val CUE_AFTER_IMPACT_MS = 900f
 
-private val CARD_WIDTH = 96.dp
-private val GLYPH_SIZE = 60.dp
+private val CARD_WIDTH = 112.dp
+private val GLYPH_SIZE = 72.dp
 /** Below the top bar and the hint chip. */
 private val CARD_TOP = 112.dp
 private val CARD_SIDE = 12.dp
@@ -114,7 +117,8 @@ private data class HowTo(val glyph: Glyph, val dir: AnimDir?) {
         }
 
     /** Pictograms that also have a cue on the tracked part. */
-    val onPart: Boolean get() = glyph == Glyph.Turn || glyph == Glyph.Pull || glyph == Glyph.Push || glyph == Glyph.Pour
+    val onPart: Boolean
+        get() = glyph == Glyph.Turn || glyph == Glyph.Pull || glyph == Glyph.Push || glyph == Glyph.Pour || glyph == Glyph.Level
 }
 
 private fun howTo(guide: GuideView?): HowTo? {
@@ -135,8 +139,8 @@ private fun howTo(guide: GuideView?): HowTo? {
 }
 
 /**
- * The how-to card (top right, or top left when the tracked part is under it) and the cue on the tracked part.
- * [marker] and the loop are read only while drawing, so tracking and animation redraw without recomposing.
+ * The how-to card: top right, or top left when the tracked part is under it. The cue on the part itself is
+ * [StepPartCueLayer], drawn above the cards so a part low on screen doesn't hide it.
  */
 @Composable
 fun StepCueLayer(guide: GuideView?, marker: State<MarkerState?>, motion: MarkerMotion, modifier: Modifier = Modifier) {
@@ -165,26 +169,6 @@ fun StepCueLayer(guide: GuideView?, marker: State<MarkerState?>, motion: MarkerM
     }
 
     Box(modifier.fillMaxSize().onSizeChanged { layer = it }) {
-        if (cue != null && cue.onPart) {
-            Canvas(Modifier.fillMaxSize()) {
-                val m = marker.value ?: return@Canvas
-                val t = m.targets.firstOrNull() ?: return@Canvas
-                if (m.status == MarkerState.Status.Lost) return@Canvas
-                val since = motion.sinceImpact(m.seedId, 0)
-                if (since < CUE_AFTER_IMPACT_MS) return@Canvas
-                val appear = easeOutCubic(window(since, CUE_AFTER_IMPACT_MS, 320f))
-                val a = appear * (if (m.status == MarkerState.Status.Holding) 0.6f else 1f)
-                val v = BoxMapper.fillCenter(m.frameWidth, m.frameHeight, size.width, size.height).map(t.box)
-                val box = Rect(v.left, v.top, v.right, v.bottom)
-                val p = if (still) STILL_MS / LOOP_MS else loop.value
-                when (cue.glyph) {
-                    Glyph.Turn -> drawTurnCue(box, cue.dir, p, a)
-                    Glyph.Pull, Glyph.Push -> drawSlideCue(box, cue, p, a)
-                    Glyph.Pour -> drawPourCue(box, p, a)
-                    else -> Unit
-                }
-            }
-        }
         AnimatedVisibility(
             visible = cue != null,
             enter = fadeIn(tween(220)) + scaleIn(tween(260), initialScale = 0.9f),
@@ -198,6 +182,39 @@ fun StepCueLayer(guide: GuideView?, marker: State<MarkerState?>, motion: MarkerM
             var shown by remember { mutableStateOf(cue) }
             if (cue != null) shown = cue
             shown?.let { HowToCard(it, loop, still) }
+        }
+    }
+}
+
+/**
+ * The cue on the tracked part (arrows round a cap, chevrons along a dipstick, drops, a MIN–MAX bracket). Put it
+ * over the cards: the marker's part is often low on screen, under the step and answer cards. [marker] and the loop
+ * are read only while drawing, so tracking and animation redraw without recomposing.
+ */
+@Composable
+fun StepPartCueLayer(guide: GuideView?, marker: State<MarkerState?>, motion: MarkerMotion, modifier: Modifier = Modifier) {
+    val cue = remember(guide) { howTo(guide) }?.takeIf { it.onPart } ?: return
+    val still = reducedMotion()
+    val loop = rememberInfiniteTransition(label = "partCue")
+        .animateFloat(0f, 1f, infiniteRepeatable(tween(LOOP_MS, easing = LinearEasing)), label = "partCueLoop")
+    LaunchedEffect(cue) { Log.i(TAG, "Step cue: ${cue.glyph} ${cue.dir ?: ""} (card + on the part)") }
+    Canvas(modifier.fillMaxSize()) {
+        val m = marker.value ?: return@Canvas
+        val t = m.targets.firstOrNull() ?: return@Canvas
+        if (m.status == MarkerState.Status.Lost) return@Canvas
+        val since = motion.sinceImpact(m.seedId, 0)
+        if (since < CUE_AFTER_IMPACT_MS) return@Canvas
+        val appear = easeOutCubic(window(since, CUE_AFTER_IMPACT_MS, 320f))
+        val a = appear * (if (m.status == MarkerState.Status.Holding) 0.6f else 1f)
+        val v = BoxMapper.fillCenter(m.frameWidth, m.frameHeight, size.width, size.height).map(t.box)
+        val box = Rect(v.left, v.top, v.right, v.bottom)
+        val p = if (still) STILL_MS / LOOP_MS else loop.value
+        when (cue.glyph) {
+            Glyph.Turn -> drawTurnCue(box, cue.dir, p, a)
+            Glyph.Pull, Glyph.Push -> drawSlideCue(box, cue, p, a)
+            Glyph.Pour -> drawPourCue(box, p, a)
+            Glyph.Level -> drawLevelCue(box, p, a)
+            else -> Unit
         }
     }
 }
@@ -225,7 +242,7 @@ private fun HowToCard(howTo: HowTo, loop: State<Float>, still: Boolean) {
                 h.label,
                 color = Paper,
                 maxLines = 2,
-                style = TextStyle(fontSize = 12.sp, lineHeight = 15.sp, fontWeight = FontWeight.Medium, textAlign = TextAlign.Center),
+                style = TextStyle(fontSize = 13.sp, lineHeight = 16.sp, fontWeight = FontWeight.SemiBold, textAlign = TextAlign.Center),
             )
         }
     }
@@ -513,4 +530,24 @@ private fun DrawScope.drawPourCue(box: Rect, p: Float, a: Float) {
         drawCircle(HALO.copy(alpha = HALO.alpha * alpha), 6.5.dp.toPx(), Offset(x, y))
         drawCircle(Amber.copy(alpha = alpha), 4.5.dp.toPx(), Offset(x, y))
     }
+}
+
+/** A MIN–MAX gauge beside the part: the level rises into the green band between the marks and holds there. */
+private fun DrawScope.drawLevelCue(box: Rect, p: Float, a: Float) {
+    val gap = 18.dp.toPx()
+    val w = 14.dp.toPx()
+    val h = (box.height * 0.9f).coerceIn(64.dp.toPx(), 150.dp.toPx())
+    val left = if (box.right + gap + w + 8.dp.toPx() < size.width) box.right + gap else box.left - gap - w
+    val top = box.center.y - h / 2f
+    val max = top + h * 0.3f
+    val min = top + h * 0.62f
+    val stroke = 2.5.dp.toPx()
+    drawRoundRect(HALO.copy(alpha = 0.8f * a), Offset(left - 3.dp.toPx(), top - 3.dp.toPx()), Size(w + 6.dp.toPx(), h + 6.dp.toPx()), CornerRadius(w / 2 + 3.dp.toPx()))
+    drawRect(Ok.copy(alpha = 0.35f * a), Offset(left, max), Size(w, min - max))
+    val ms = p * LOOP_MS
+    val rise = easeOutBack(window(ms, 160f, 1100f), 1.1f) * (1f - window(ms, LOOP_MS - 380f, 330f))
+    val level = lerp(top + h - 3.dp.toPx(), (max + min) / 2f, rise)
+    clipRect(left, top, left + w, top + h) { drawRect(Amber.copy(alpha = 0.95f * a), Offset(left, level), Size(w, top + h - level)) }
+    drawRoundRect(Paper.copy(alpha = a), Offset(left, top), Size(w, h), CornerRadius(w / 2), style = Stroke(stroke))
+    for (y in listOf(max, min)) drawLine(Paper.copy(alpha = a), Offset(left - 5.dp.toPx(), y), Offset(left + w + 5.dp.toPx(), y), stroke, StrokeCap.Round)
 }

@@ -58,6 +58,7 @@ The app reads `app/src/main/assets/kb/fixlens_kb.json`. It is **generated** by `
 | `brand` | `"generic"`. |
 | `error_code`, `code_aliases` | `null` / `[]` for generic entries (kept for old brand-specific entries). |
 | `brand_codes` | Optional. Per brand, the codes that mean **this** fault, from that brand's official source. `spoken` = how a person says it ("five c", "oh e"). A code already covered by letter/digit normalization ("5 C", "O E", "0E") needs no spoken form. Leave out codes that are ordinary words ("AC", "TV", "ON", "NO"). Never list a code for a brand unless you saw it in that brand's source. |
+| `remind` | Optional, only for routine checks (never `call_technician`): `{"after_days": 7, "say": "Time for your weekly engine oil check."}`. When the guide is finished, the app schedules a local reminder `after_days` later; `say` is the notification text, verbatim, ≤ 20 words. The interval is the most frequent one ≥ 2 manuals agree on; write it up under "Reminder intervals" in the sources file. No reminder for daily pre-ride checks. |
 | `symptoms`, `aliases` | 5–10 short phrases a user would really say. See matching below. |
 | `severity` | `diy` \| `caution` (hot, sharp, heavy, water near power, acid) \| `call_technician` (no steps, no safety needed). |
 | `escalate_if` | 2–5 danger signs or "it didn't work" signals, **2–3 meaningful words each** ("burning smell", "sparks", "water on the floor", "still showing", "gas smell"). |
